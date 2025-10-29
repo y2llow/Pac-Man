@@ -1,8 +1,19 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Window");
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Show Image");
+
+    sf::Texture texture;
+    if (!texture.loadFromFile("sprites/sprite.png")) {
+        std::cerr << "Error: could not load image\n";
+        return -1;
+    }
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    sprite.setPosition(30, 20); // optional: move image
 
     while (window.isOpen())
     {
@@ -14,6 +25,7 @@ int main()
         }
 
         window.clear(sf::Color::Black);
+        window.draw(sprite);
         window.display();
     }
 
