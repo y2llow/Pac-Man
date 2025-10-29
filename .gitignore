@@ -1,0 +1,7 @@
+# IDE-bestanden
+.idea/
+
+# Logs
+*.log
+
+#SFML
