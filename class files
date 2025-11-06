@@ -1,22 +1,34 @@
-CORE INFRASTRUCTURE (Solo Files)
+COMPLETE PROJECT STRUCTURE (All Required Files)
+
+CORE INFRASTRUCTURE
 ┌─────────────────┐
-│    Random       │  ← Singleton
-│   Stopwatch     │  ← Singleton
-│   GameEvent     │  ← Enum/Events
+│    Random       │ ← Singleton
+│   Stopwatch     │ ← Singleton
+│   GameEvent     │ ← Events enum
+│   Observer      │ ← Pattern interfaces
+│   Subject       │ ← Pattern interfaces
+│   State         │ ← State pattern base
+│   StateManager  │ ← State stack
+│ AbstractFactory │ ← Factory pattern
 └─────────────────┘
          ↓
 
-BASE ENTITIES
+ENTITY HIERARCHY
 ┌─────────────────┐
-│     Entity      │  ← Base class (abstract)
-│   Collectable   │  ← Inherits Entity (abstract)
+│     Entity      │ ← Abstract base
+│  StaticEntity   │ ← Walls, Collectables
+│ DynamicEntity   │ ← Moving entities
+│   Character     │ ← PacMan & Ghosts base
+│  Collectable    │ ← Coin & Fruit base
 └─────────────────┘
          ↓
     ┌─────┴─────┐
     ↓           ↓
-CONCRETE ENTITIES    UTILITIES
+CONCRETE ENTITIES    WORLD MANAGEMENT
 ┌─────────────────┐  ┌─────────────────┐
-│      Coin       │  │   Collision     │
+│      PacMan     │  │     World       │ ← Main game orchestrator
+│      Ghost      │  │    Camera       │ ← Coordinate projection
+│      Coin       │  │   Collision     │ ← Detection system
 │     Fruit       │  │                 │
 │      Wall       │  └─────────────────┘
 └─────────────────┘
@@ -24,7 +36,47 @@ CONCRETE ENTITIES    UTILITIES
          └───────────┘
                ↓
 
-ORCHESTRATOR
+SCORING & GAME FLOW
 ┌─────────────────┐
-│      World      │  ← Depends on ALL above
+│      Score      │ ← Score calculation
+│HighScoreManager │ ← Top 5 scores + file I/O
+│   GameStates:   │
+│   - MenuState   │
+│   - LevelState  │
+│   - PausedState │
+│   - VictoryState│
+│   -GameOverState│
 └─────────────────┘
+
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+REPRESENTATION CORE
+┌─────────────────┐
+│      Game       │ ← SFML window & main loop
+│   SFMLFactory   │ ← Concrete factory
+│  SpriteManager  │ ← Texture loading
+│   Animation     │ ← Sprite animations
+└─────────────────┘
+         ↓
+
+VIEW HIERARCHY (Observers)
+┌─────────────────┐
+│   EntityView    │ ← Base view class
+│ StaticEntityView│
+│DynamicEntityView│
+│  CharacterView  │
+│ CollectableView │
+└─────────────────┘
+         ↓
+    ┌─────┴─────┐
+    ↓           ↓
+CONCRETE VIEWS       STATE VIEWS
+┌─────────────────┐  ┌─────────────────┐
+│   PacManView    │  │   MenuState     │ ← Renders menu
+│   GhostView     │  │   LevelState    │ ← Renders gameplay
+│   CoinView      │  │   PausedState   │ ← Renders pause screen
+│   FruitView     │  │   VictoryState  │ ← Renders win screen
+│   WallView      │  │   GameOverState │ ← Renders game over
+└─────────────────┘  └─────────────────┘
