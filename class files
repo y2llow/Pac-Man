@@ -1,0 +1,30 @@
+CORE INFRASTRUCTURE (Solo Files)
+┌─────────────────┐
+│    Random       │  ← Singleton
+│   Stopwatch     │  ← Singleton
+│   GameEvent     │  ← Enum/Events
+└─────────────────┘
+         ↓
+
+BASE ENTITIES
+┌─────────────────┐
+│     Entity      │  ← Base class (abstract)
+│   Collectable   │  ← Inherits Entity (abstract)
+└─────────────────┘
+         ↓
+    ┌─────┴─────┐
+    ↓           ↓
+CONCRETE ENTITIES    UTILITIES
+┌─────────────────┐  ┌─────────────────┐
+│      Coin       │  │   Collision     │
+│     Fruit       │  │                 │
+│      Wall       │  └─────────────────┘
+└─────────────────┘
+         │           ↑
+         └───────────┘
+               ↓
+
+ORCHESTRATOR
+┌─────────────────┐
+│      World      │  ← Depends on ALL above
+└─────────────────┘
