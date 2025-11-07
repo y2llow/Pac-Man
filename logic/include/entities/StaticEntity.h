@@ -4,5 +4,9 @@
 
 #ifndef STATICENTITY_H
 #define STATICENTITY_H
+#include "EntityModel.h"
 
+class StaticEntity : EntityModel {
+
+};
 #endif //STATICENTITY_H

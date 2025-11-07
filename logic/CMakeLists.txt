@@ -22,7 +22,7 @@ add_library(PacMan-logic STATIC
         src/patterns/AbstractFactory.cpp
 
         # === Entity Base Classes ===
-        include/entities/Entity.h
+        include/entities/EntityModel.h
         include/entities/StaticEntity.h
         src/entities/StaticEntity.cpp
         include/entities/DynamicEntity.h
@@ -57,6 +57,9 @@ add_library(PacMan-logic STATIC
         src/scoring/Score.cpp
         include/scoring/HighScoreManager.h
         src/scoring/HighScoreManager.cpp
+        src/entities/EntityModel.cpp
+        src/patterns/Subject.cpp
+        include/entities/Subject.h
 )
 
 # Set include directories
