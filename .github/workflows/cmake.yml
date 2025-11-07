@@ -1,7 +1,3 @@
-5. Alternative: GitHub Actions (Easier Setup)
-Create .github/workflows/cmake.yml:
-
-yaml
 name: CMake Build
 
 on:
