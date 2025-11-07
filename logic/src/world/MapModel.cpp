@@ -1,8 +1,14 @@
 #include "world/MapModel.h"
+#include "entities/StaticEntity_collectibles/WallModel.h" // Include the WallModel class
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
-MapModel::MapModel() : m_tileSize(0.05f) { // Small size for normalized coords
+MapModel::MapModel() {
+}
+
+MapModel::~MapModel() {
+    // unique_ptrs will automatically clean up
 }
 
 bool MapModel::loadFromFile(const std::string& filename) {
@@ -13,6 +19,7 @@ bool MapModel::loadFromFile(const std::string& filename) {
     }
 
     m_grid.clear();
+    m_walls.clear();
     std::string line;
 
     while (std::getline(file, line)) {
@@ -24,31 +31,45 @@ bool MapModel::loadFromFile(const std::string& filename) {
         return false;
     }
 
-    // Set map size based on loaded grid
-    m_size.y = m_grid.size();
-    m_size.x = m_grid[0].size(); // Assume all rows have same length
+    m_gridSize.y = m_grid.size();
+    m_gridSize.x = m_grid[0].size();
 
+    createWallsFromGrid();
+
+    //TODO delete this
+    std::cout << "Map loaded: " << m_gridSize.x << "x" << m_gridSize.y
+              << " with " << m_walls.size() << " walls" << std::endl;
     return true;
 }
 
-bool MapModel::isWall(const sf::Vector2f& position) const {
-    // Convert normalized coordinates to grid coordinates
-    int gridX = static_cast<int>((position.x + 1.0f) / (2.0f / m_size.x));
-    int gridY = static_cast<int>((position.y + 1.0f) / (2.0f / m_size.y));
+void MapModel::createWallsFromGrid() {
+    if (m_grid.empty()) return;
 
-    // Check bounds and if it's a wall
-    if (gridX < 0 || gridX >= static_cast<int>(m_size.x) ||
-        gridY < 0 || gridY >= static_cast<int>(m_size.y)) {
-        return true; // Treat out-of-bounds as walls
+    float tileWidth = 2.0f / m_gridSize.x;
+    float tileHeight = 2.0f / m_gridSize.y;
+
+    for (unsigned int y = 0; y < m_gridSize.y; ++y) {
+        for (unsigned int x = 0; x < m_gridSize.x; ++x) {
+            if (m_grid[y][x] == 'x') {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                // Create wall with texture ID - you can customize this based on position or type
+                std::string textureId = "wall_basic"; // Default texture
+
+                // Example: Different textures for different wall positions
+                if (x == 0 || x == m_gridSize.x - 1 || y == 0 || y == m_gridSize.y - 1) {
+                    textureId = "wall_border"; // Border walls
+                }
+
+                auto wall = std::make_unique<WallModel>(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    textureId
+                );
+
+                m_walls.push_back(std::move(wall));
+            }
         }
-
-    return m_grid[gridY][gridX] == '#';
-}
-
-sf::Vector2u MapModel::getSize() const {
-    return m_size;
-}
-
-float MapModel::getTileSize() const {
-    return m_tileSize;
+    }
 }

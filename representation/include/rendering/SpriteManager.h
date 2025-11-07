@@ -1,8 +1,24 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/6/25.
-//
+#ifndef TEXTURE_MANAGER_H
+#define TEXTURE_MANAGER_H
 
-#ifndef SPRITEMANAGER_H
-#define SPRITEMANAGER_H
+#include <SFML/Graphics.hpp>
+#include <unordered_map>
+#include <string>
+#include <memory>
 
-#endif //SPRITEMANAGER_H
+class TextureManager {
+public:
+    static TextureManager& getInstance();
+    
+    bool loadTexture(const std::string& id, const std::string& filename);
+    const sf::Texture* getTexture(const std::string& id) const;
+    void setRepeated(const std::string& id, bool repeated);
+    
+private:
+    TextureManager() = default;
+    ~TextureManager() = default;
+    
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> m_textures;
+};
+
+#endif

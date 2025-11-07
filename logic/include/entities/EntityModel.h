@@ -1,19 +1,23 @@
-#ifndef ENTITY_MODEL_H
-#define ENTITY_MODEL_H
+#ifndef ENTITY_H
+#define ENTITY_H
 
-#include "Subject.h"
 #include <SFML/System/Vector2.hpp>
 
-class EntityModel : public Subject {
+class Entity {
 public:
-    virtual ~EntityModel() = default;
-    virtual void update(float deltaTime) = 0;
+    virtual ~Entity() = default;
 
-    sf::Vector2f getPosition() const { return m_position; }
-    // ... other common entity properties
+    // Pure virtual methods - all entities must implement these
+    virtual void update(float deltaTime) = 0;
+    virtual sf::Vector2f getPosition() const = 0;
+    virtual void setPosition(const sf::Vector2f& position) = 0;
+
+    // Common properties
+    sf::Vector2f getSize() const { return m_size; }
+    void setSize(const sf::Vector2f& size) { m_size = size; }
 
 protected:
-    sf::Vector2f m_position;
+    sf::Vector2f m_size;
 };
 
 #endif

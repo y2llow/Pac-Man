@@ -1,19 +1,20 @@
 #ifndef SUBJECT_H
 #define SUBJECT_H
 
-#include <memory>
 #include <vector>
 
+// Forward declaration
 class Observer;
 
 class Subject {
 public:
-    virtual ~Subject() = default;
-    void attachObserver(std::unique_ptr<Observer> observer);
+    virtual ~Subject();
+    void attachObserver(Observer* observer);
+    void detachObserver(Observer* observer);
     void notifyObservers();
 
-private:
-    std::vector<std::unique_ptr<Observer>> m_observers;
+protected:
+    std::vector<Observer*> m_observers;
 };
 
 #endif

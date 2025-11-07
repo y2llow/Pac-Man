@@ -41,8 +41,8 @@ add_library(PacMan-logic STATIC
         src/entities/Coin.cpp
         include/entities/StaticEntity_collectibles/Fruit.h
         src/entities/Fruit.cpp
-        include/entities/StaticEntity_collectibles/wall.h
-        src/entities/wall.cpp
+        include/entities/StaticEntity_collectibles/WallModel.h
+        src/entities/WallModel.cpp
 
         # === World Management ===
         include/world/World.h

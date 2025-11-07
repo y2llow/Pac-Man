@@ -106,10 +106,10 @@ target_compile_options(PacMan-representation PRIVATE
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>
 )
 
-# Copy resources to build directory (sprites, maps, etc.)
-add_custom_command(TARGET PacMan-representation POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/sprites
-        ${CMAKE_BINARY_DIR}/bin/sprites
-        COMMENT "Copying sprite resources to build directory"
-)
+## Copy resources to build directory (sprites, maps, etc.)
+#add_custom_command(TARGET PacMan-representation POST_BUILD
+#        COMMAND ${CMAKE_COMMAND} -E copy_directory
+#        ${CMAKE_SOURCE_DIR}/sprites
+#        ${CMAKE_BINARY_DIR}/bin/sprites
+#        COMMENT "Copying sprite resources to build directory"
+#)
