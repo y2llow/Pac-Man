@@ -1,0 +1,40 @@
+5. Alternative: GitHub Actions (Easier Setup)
+Create .github/workflows/cmake.yml:
+
+yaml
+name: CMake Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install SFML
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsfml-dev
+        
+    - name: Configure CMake
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+        
+    - name: Build Project
+      run: |
+        cd build
+        make -j4
+        
+    - name: Verify Executable
+      run: |
+        cd build
+        file Pac-Man
+        echo "Build successful!"
