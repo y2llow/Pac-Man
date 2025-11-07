@@ -1,27 +1,23 @@
 #ifndef GAME_H
 #define GAME_H
+
 #include "Window.h"
 #include "world/World.h"
+#include "views/MapView.h" // This is OK here - Game is in representation layer
 
-
-class Game{
+class Game {
 public:
     Game();
     ~Game();
-    // void HandleInput();
     void Update();
     void Render();
     Window* GetWindow();
 
-    // void RestartClock();
-
-
-
 private:
     Window m_window;
-    World m_world;
-    // float m_elapsed;
+    World m_world;          // Logic
+    MapView m_mapView;      // Representation
+    bool m_initialized;
+};
 
-
-   };
-#endif //GAME_H
+#endif

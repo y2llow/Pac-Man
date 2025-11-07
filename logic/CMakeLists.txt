@@ -60,6 +60,8 @@ add_library(PacMan-logic STATIC
         src/entities/EntityModel.cpp
         src/patterns/Subject.cpp
         include/entities/Subject.h
+        include/world/MapModel.h
+        src/world/MapModel.cpp
 )
 
 # Set include directories
