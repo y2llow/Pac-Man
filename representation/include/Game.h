@@ -8,16 +8,18 @@ class Game{
 public:
     Game();
     ~Game();
-    void HandleInput();
+    // void HandleInput();
     void Update();
     void Render();
     Window* GetWindow();
 
+    // void RestartClock();
+
 
 
 private:
-    void MoveMushroom();
     Window m_window;
+    // float m_elapsed;
 
    };
 #endif //GAME_H

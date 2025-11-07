@@ -19,3 +19,7 @@ void Game::Render(){
 [[nodiscard]] Window *Game::GetWindow() {
     return &m_window;
 }
+
+// void Game::RestartClock(){
+//     m_elapsed += m_clock.restart();
+// }
