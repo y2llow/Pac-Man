@@ -65,6 +65,8 @@ add_library(PacMan-representation STATIC
         # === Wall View ===
         include/views/WallView.h
         src/views/WallView.cpp
+        include/Window.h
+        src/Window.cpp
 )
 
 # Set include directories

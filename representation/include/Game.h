@@ -1,11 +1,23 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/6/25.
-//
-
 #ifndef GAME_H
 #define GAME_H
+#include "Window.h"
+#include <SFML/Graphics.hpp>
 
-class Game {
 
-};
+class Game{
+public:
+    Game();
+    ~Game();
+    void HandleInput();
+    void Update();
+    void Render();
+    Window* GetWindow();
+
+
+
+private:
+    void MoveMushroom();
+    Window m_window;
+
+   };
 #endif //GAME_H
