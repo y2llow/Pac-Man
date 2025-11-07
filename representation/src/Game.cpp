@@ -1,7 +1,7 @@
 #include "Game.h"
 
 
-Game::Game(): m_window("Map", sf::Vector2u(800,600)){
+Game::Game(): m_window("Map", sf::Vector2u(800,600)), m_world(sf::Vector2u(800,600)){
 }
 
 Game::~Game(){};
@@ -12,6 +12,7 @@ void Game::Update(){
 
 void Game::Render(){
     m_window.BeginDraw(); // Clear.
+    m_world.Render( m_window.GetRenderWindow());
     // m_window.Draw();
     m_window.EndDraw(); // Display.
 }

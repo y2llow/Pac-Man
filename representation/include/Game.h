@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 #include "Window.h"
-#include <SFML/Graphics.hpp>
+#include "world/World.h"
 
 
 class Game{
@@ -19,6 +19,7 @@ public:
 
 private:
     Window m_window;
+    World m_world;
     // float m_elapsed;
 
 
