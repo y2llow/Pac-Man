@@ -9,25 +9,28 @@ set(CMAKE_CXX_STANDARD 17)
 # find SFML (graphics, window, system)
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
+add_subdirectory(logic)
+add_subdirectory(representation)
+
 # add the executable
 add_executable(Pac-Man main.cpp
-        Logic_Library/include/core/Random.h
-        Logic_Library/include/core/Stopwatch.h
-        Logic_Library/include/world/World.h
-        Logic_Library/include/core/GameEvent.h
-        Logic_Library/include/core/Constants.h
-        Logic_Library/include/patterns/Observer.h
-        Logic_Library/include/patterns/AbstractFactory.h
-        Logic_Library/include/entitities/Entity.h
-        Logic_Library/include/entitities/DynamicEntity/Pacman.h
-        Logic_Library/include/entitities/DynamicEntity/Ghost.h
-        Logic_Library/include/entitities/StaticEntity_collectibles/Coin.h
-        Logic_Library/include/entitities/StaticEntity_collectibles/Fruit.h
-        Logic_Library/include/entitities/StaticEntity_collectibles/wall.h
-        Logic_Library/include/world/Camera.h
-        Logic_Library/include/world/collision.h
-        Logic_Library/include/scoring/Score.h
-        Logic_Library/include/scoring/HighScoreManager.h
+        logic/include/core/Random.h
+        logic/include/core/Stopwatch.h
+        logic/include/world/World.h
+        logic/include/core/GameEvent.h
+        logic/include/core/Constants.h
+        logic/include/patterns/Observer.h
+        logic/include/patterns/AbstractFactory.h
+        logic/include/entitities/Entity.h
+        logic/include/entitities/DynamicEntity/Pacman.h
+        logic/include/entitities/DynamicEntity/Ghost.h
+        logic/include/entitities/StaticEntity_collectibles/Coin.h
+        logic/include/entitities/StaticEntity_collectibles/Fruit.h
+        logic/include/entitities/StaticEntity_collectibles/wall.h
+        logic/include/world/Camera.h
+        logic/include/world/collision.h
+        logic/include/scoring/Score.h
+        logic/include/scoring/HighScoreManager.h
         representation/include/Game.h
         representation/src/Game.cpp
         representation/include/factory/ConcreteFactory.h
@@ -43,26 +46,26 @@ add_executable(Pac-Man main.cpp
         representation/include/states/PausedState.h
         representation/include/states/VictoryState.h
         representation/include/states/GameOverState.h
-        Logic_Library/include/entitities/StaticEntity.h
-        Logic_Library/include/entitities/DynamicEntity.h
-        Logic_Library/include/entitities/DynamicEntity/Character.h
-        Logic_Library/include/patterns/subject.h
-        Logic_Library/src/entitities/StaticEntity.cpp
-        Logic_Library/src/entitities/DynamicEntity.cpp
-        Logic_Library/src/entitities/Character.cpp
-        Logic_Library/src/entitities/Pacman.cpp
-        Logic_Library/src/entitities/Ghost.cpp
-        Logic_Library/src/entitities/Collectable.cpp
-        Logic_Library/src/entitities/Coin.cpp
-        Logic_Library/src/entitities/Fruit.cpp
-        Logic_Library/src/entitities/wall.cpp
-        Logic_Library/src/core/Random.cpp
-        Logic_Library/src/core/Stopwatch.cpp
-        Logic_Library/src/scoring/HighScoreManager.cpp
-        Logic_Library/src/scoring/Score.cpp
-        Logic_Library/src/world/Camera.cpp
-        Logic_Library/src/world/collision.cpp
-        Logic_Library/src/world/World.cpp
+        logic/include/entitities/StaticEntity.h
+        logic/include/entitities/DynamicEntity.h
+        logic/include/entitities/DynamicEntity/Character.h
+        logic/include/patterns/subject.h
+        logic/src/entitities/StaticEntity.cpp
+        logic/src/entitities/DynamicEntity.cpp
+        logic/src/entitities/Character.cpp
+        logic/src/entitities/Pacman.cpp
+        logic/src/entitities/Ghost.cpp
+        logic/src/entitities/Collectable.cpp
+        logic/src/entitities/Coin.cpp
+        logic/src/entitities/Fruit.cpp
+        logic/src/entitities/wall.cpp
+        logic/src/core/Random.cpp
+        logic/src/core/Stopwatch.cpp
+        logic/src/scoring/HighScoreManager.cpp
+        logic/src/scoring/Score.cpp
+        logic/src/world/Camera.cpp
+        logic/src/world/collision.cpp
+        logic/src/world/World.cpp
         representation/include/views/StaticEntityView.h
         representation/include/views/DynamicEntityView.h
         representation/include/views/CharacterView.h
