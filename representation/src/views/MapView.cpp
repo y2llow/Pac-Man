@@ -39,7 +39,6 @@ bool MapView::loadTextures() {
 void MapView::createWallShapes(const MapModel& mapModel, const sf::Vector2u& windowSize) {
     m_wallShapes.clear();
 
-    const auto& grid = mapModel.getGrid();
     sf::Vector2u mapSize = mapModel.getGridSize();
     const auto& walls = mapModel.getWalls(); // Get the actual wall entities
 

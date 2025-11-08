@@ -7,9 +7,6 @@
 #include "MapModel.h"
 #include "entities/EntityModel.h"
 
-// Forward declarations
-class Entity;
-
 class World {
 public:
     World(const sf::Vector2u& windowSize);
@@ -18,19 +15,15 @@ public:
     void update(float deltaTime);
 
     // Entity management
-    const std::vector<Entity*>& getEntities() const { return m_entities; }
+    const std::vector<std::unique_ptr<WallModel>>& getWalls() const { return m_mapModel.getWalls(); }
     const MapModel& getMapModel() const { return m_mapModel; }
 
     // Collision detection
-    bool isCollision(const sf::Vector2f& position, const sf::Vector2f& size) const;
+    bool isCollisionWithWalls(const sf::Vector2f& position, const sf::Vector2f& size) const;
 
 private:
     MapModel m_mapModel;
     sf::Vector2u m_windowSize;
-    std::vector<Entity*> m_entities; // Use raw pointers for now
-
-    void addEntitiesFromMap();
-    void clearEntities();
 };
 
 #endif

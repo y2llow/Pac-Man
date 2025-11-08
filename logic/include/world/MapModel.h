@@ -16,9 +16,9 @@ public:
     ~MapModel();
     bool loadFromFile(const std::string& filename);
 
-    const std::vector<std::unique_ptr<WallModel>>& getWalls() const { return m_walls; }
-    sf::Vector2u getGridSize() const { return m_gridSize; }
-    const std::vector<std::string>& getGrid() const { return m_grid; }
+    [[nodiscard]] const std::vector<std::unique_ptr<WallModel>>& getWalls() const { return m_walls; }
+    [[nodiscard]] const std::vector<std::string>& getGrid() const { return m_grid; }
+    [[nodiscard]] sf::Vector2u getGridSize() const { return m_gridSize; }
 
 private:
     std::vector<std::string> m_grid;
