@@ -62,18 +62,16 @@ void MapView::createWallShapes(const MapModel& mapModel, const sf::Vector2u& win
 
         // Apply texture based on texture ID from WallModel
         const std::string& textureId = wall->getTextureId();
-        const sf::Texture* texture = textureManager.getTexture(textureId);
 
-        if (texture) {
-            wallShape.setTexture(texture);
-            // If texture not found, you could try fallback texture
-            // texture = textureManager.getTexture("wall_basic");
+        if (textureManager.hasTexture(textureId)) {
+            const sf::Texture& texture = textureManager.getTexture(textureId);
+            wallShape.setTexture(&texture); // SFML verwacht pointer, maar we geven address van reference
         } else {
-            // Fallback: use color if texture not available
+            // Fallback: use color
             if (textureId == "wall_border") {
-                wallShape.setFillColor(sf::Color(100, 100, 200)); // Dark blue for borders
+                wallShape.setFillColor(sf::Color(100, 100, 200));
             } else {
-                wallShape.setFillColor(sf::Color(70, 70, 200)); // Blue for basic walls
+                wallShape.setFillColor(sf::Color(70, 70, 200));
             }
         }
 

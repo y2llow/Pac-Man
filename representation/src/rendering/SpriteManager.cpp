@@ -18,13 +18,16 @@ bool TextureManager::loadTexture(const std::string& id, const std::string& filen
     return true;
 }
 
-const sf::Texture* TextureManager::getTexture(const std::string& id) const {
+const sf::Texture& TextureManager::getTexture(const std::string& id) const {
     auto it = m_textures.find(id);
     if (it != m_textures.end()) {
-        return it->second.get();
+        return *(it->second); // Dereference the unique_ptr
     }
-    std::cerr << "Texture not found: " << id << std::endl;
-    return nullptr;
+    throw std::runtime_error("Texture not found: " + id);
+}
+
+bool TextureManager::hasTexture(const std::string& id) const {
+    return m_textures.find(id) != m_textures.end();
 }
 
 void TextureManager::setRepeated(const std::string& id, bool repeated) {

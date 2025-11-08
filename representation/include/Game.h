@@ -11,10 +11,12 @@ public:
     ~Game();
     void Update();
     void Render();
-    Window* GetWindow();
+    // Return reference instead of pointer
+    Window& GetWindow() { return *m_window; }
+    const Window& GetWindow() const { return *m_window; }
 
 private:
-    Window m_window;
+    std::unique_ptr<Window> m_window;
     World m_world;          // Logic
     MapView m_mapView;      // Representation
     bool m_initialized;

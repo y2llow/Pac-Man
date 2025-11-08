@@ -11,7 +11,8 @@ public:
     static TextureManager& getInstance();
     
     bool loadTexture(const std::string& id, const std::string& filename);
-    const sf::Texture* getTexture(const std::string& id) const;
+    const sf::Texture& getTexture(const std::string& id) const;
+    bool hasTexture(const std::string& id) const;
     void setRepeated(const std::string& id, bool repeated);
     
 private:
