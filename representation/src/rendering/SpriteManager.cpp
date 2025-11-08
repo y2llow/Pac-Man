@@ -21,7 +21,7 @@ bool TextureManager::loadTexture(const std::string& id, const std::string& filen
 const sf::Texture& TextureManager::getTexture(const std::string& id) const {
     auto it = m_textures.find(id);
     if (it != m_textures.end()) {
-        return *(it->second); // Dereference the unique_ptr
+        return *it->second; // Dereference the unique_ptr
     }
     throw std::runtime_error("Texture not found: " + id);
 }
