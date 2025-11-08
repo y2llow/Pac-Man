@@ -37,8 +37,8 @@ add_library(PacMan-logic STATIC
         src/entities/Ghost.cpp
 
         # === Collectible Entities (Static) ===
-        include/entities/StaticEntity_collectibles/Coin.h
-        src/entities/Coin.cpp
+        include/entities/StaticEntity_collectibles/CoinModel.h
+        src/entities/CoinModel.cpp
         include/entities/StaticEntity_collectibles/Fruit.h
         src/entities/Fruit.cpp
         include/entities/StaticEntity_collectibles/WallModel.h

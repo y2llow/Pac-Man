@@ -57,10 +57,6 @@ void MapModel::createWallsFromGrid() {
                 // Create wall with texture ID - you can customize this based on position or type
                 std::string textureId = "wall_basic"; // Default texture
 
-                // Example: Different textures for different wall positions
-                if (x == 0 || x == m_gridSize.x - 1 || y == 0 || y == m_gridSize.y - 1) {
-                    textureId = "wall_border"; // Border walls
-                }
 
                 auto wall = std::make_unique<WallModel>(
                     sf::Vector2f(posX, posY),
@@ -69,6 +65,23 @@ void MapModel::createWallsFromGrid() {
                 );
 
                 m_walls.push_back(std::move(wall));
+            }
+
+            if (m_grid[y][x] == '.') {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                // Create wall with texture ID - you can customize this based on position or type
+                std::string textureId = "Coin"; // Default texture
+
+
+                auto coin = std::make_unique<CoinModel>(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    textureId
+                );
+
+                m_coins.push_back(std::move(coin));
             }
         }
     }

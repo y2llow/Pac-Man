@@ -1,14 +1,17 @@
-#ifndef WALL_MODEL_H
-#define WALL_MODEL_H
+//
+// Created by s0243673@ad.ua.ac.be on 11/6/25.
+//
 
-#include <SFML/Graphics/Texture.hpp>
-
+#ifndef COIN_MODEL_H
+#define COIN_MODEL_H
 #include "entities/EntityModel.h"
+#include <SFML/Graphics/Texture.hpp>
 #include "patterns/Subject.h"
 #include <SFML/System/Vector2.hpp>
-class WallModel : public Entity {
+
+class CoinModel : Entity {
 public:
-    WallModel(const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textureId = "");
+    CoinModel(const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textureId = "");
 
     // Entity interface implementation
     void update(float deltaTime) override;
@@ -25,4 +28,4 @@ private:
 };
 
 
-#endif
+#endif //COIN_MODEL_H

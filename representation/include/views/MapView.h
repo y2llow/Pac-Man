@@ -14,9 +14,13 @@ public:
 
 private:
     std::vector<sf::RectangleShape> m_wallShapes;
+    std::vector<sf::RectangleShape> m_coinShapes;
+
     std::unordered_map<std::string, sf::Texture> m_textures;
 
     void createWallShapes(const MapModel& mapModel, const sf::Vector2u& windowSize);
+    void createCoinShapes(const MapModel& mapModel, const sf::Vector2u& windowSize);
+
     bool loadTextures();
 };
 #endif
