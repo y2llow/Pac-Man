@@ -1,12 +1,12 @@
 #ifndef WALL_VIEW_H
 #define WALL_VIEW_H
 
-#include "patterns/Observer.h"
+#include "EntityView.h"
 #include <SFML/Graphics.hpp>
 
 class WallModel; // Forward declaration
 
-class WallView : public Observer {
+class WallView : public EntityView {
 public:
     WallView(WallModel& model, sf::RenderWindow& window);
     void update() override; // From Observer

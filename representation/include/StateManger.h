@@ -1,8 +1,32 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/6/25.
-//
+#ifndef STATE_MANAGER_H
+#define STATE_MANAGER_H
 
-#ifndef STATEMANGER_H
-#define STATEMANGER_H
+#include <memory>
+#include <vector>
+#include <SFML/Graphics.hpp>
 
-#endif //STATEMANGER_H
+class State;
+
+class StateManager {
+public:
+    explicit StateManager(sf::RenderWindow& window);
+
+    // State stack management
+    void pushState(std::unique_ptr<State> state);
+    void popState();
+    void clearStates();
+
+    // Check if stack is empty (for quitting)
+    bool isEmpty() const { return m_states.empty(); }
+
+    // Main loop methods
+    void update(float deltaTime);
+    void render();
+    void handleEvent(const sf::Event& event);
+
+private:
+    std::vector<std::unique_ptr<State>> m_states;
+    sf::RenderWindow& m_window;
+};
+
+#endif

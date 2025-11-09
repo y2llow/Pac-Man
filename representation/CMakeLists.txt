@@ -35,20 +35,14 @@ add_library(PacMan-representation STATIC
         # === Rendering & Animation ===
         include/rendering/SpriteManager.h
         src/rendering/SpriteManager.cpp
-        include/rendering/Animation.h
-        src/rendering/Animation.cpp
+        include/rendering/Animations.h
+        src/rendering/Animations.cpp
 
         # === View Base Classes ===
         include/views/EntityView.h
         src/views/EntityView.cpp
-        include/views/StaticEntityView.h
-        src/views/StaticEntityView.cpp
-        include/views/DynamicEntityView.h
-        src/views/DynamicEntityView.cpp
 
         # === Character Views ===
-        include/views/CharacterView.h
-        src/views/CharacterView.cpp
         include/views/characterview/PacManView.h
         src/views/characterview/PacManView.cpp
         include/views/characterview/GhostView.h
@@ -57,8 +51,8 @@ add_library(PacMan-representation STATIC
         # === Collectible Views ===
         include/views/CollectibleView.h
         src/views/CollectibleView.cpp
-        include/views/CollectibleView/coinView.h
-        src/views/CollectibleView/coinView.cpp
+        include/views/CollectibleView/CoinView.h
+        src/views/CollectibleView/CoinView.cpp
         include/views/CollectibleView/FruitView.h
         src/views/CollectibleView/FruitView.cpp
 
@@ -69,6 +63,8 @@ add_library(PacMan-representation STATIC
         src/Window.cpp
         include/views/MapView.h
         src/views/MapView.cpp
+        include/states/State.h
+        src/states/State.cpp
 )
 
 # Set include directories

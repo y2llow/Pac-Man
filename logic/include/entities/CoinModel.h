@@ -1,15 +1,12 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/6/25.
-//
-
 #ifndef COIN_MODEL_H
 #define COIN_MODEL_H
+
 #include "entities/EntityModel.h"
-#include <SFML/Graphics/Texture.hpp>
 #include "patterns/Subject.h"
+#include <string>
 #include <SFML/System/Vector2.hpp>
 
-class CoinModel : Entity {
+class CoinModel : public Entity, public Subject {
 public:
     CoinModel(const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textureId = "");
 
@@ -18,14 +15,16 @@ public:
     [[nodiscard]] sf::Vector2f getPosition() const override { return m_position; }
     void setPosition(const sf::Vector2f& position) override;
 
-    // Texture management (logic only - no SFML types!)
+    // Coin-specific functionality
+    void collect();  // This will notify observers!
+    
+    [[nodiscard]] bool isCollected() const { return m_collected; }
     [[nodiscard]] const std::string& getTextureId() const { return m_textureId; }
-    void setTextureId(const std::string& textureId) { m_textureId = textureId; }
 
 private:
     sf::Vector2f m_position;
-    std::string m_textureId; // Store texture identifier, not the actual texture
+    std::string m_textureId;
+    bool m_collected = false;  // Track collection state
 };
 
-
-#endif //COIN_MODEL_H
+#endif

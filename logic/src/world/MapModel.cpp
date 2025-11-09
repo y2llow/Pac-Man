@@ -1,5 +1,5 @@
 #include "world/MapModel.h"
-#include "entities/StaticEntity_collectibles/WallModel.h" // Include the WallModel class
+#include "../../include/entities/WallModel.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>

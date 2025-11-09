@@ -1,7 +1,7 @@
 #include "views/MapView.h"
 #include "rendering/SpriteManager.h"
 #include <iostream>
-#include "entities/StaticEntity_collectibles/WallModel.h"
+#include "../../../logic/include/entities/WallModel.h"
 #include "world/MapModel.h"
 
 
@@ -13,7 +13,6 @@ bool MapView::initialize(const MapModel& mapModel, sf::RenderWindow& window) {
     // Load textures first
     loadTextures();
     createWallShapes(mapModel, window.getSize());
-    createCoinShapes(mapModel, window.getSize());
 
     return true;
 }

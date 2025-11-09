@@ -1,39 +1,53 @@
 #include "Game.h"
-#include <iostream>
 
-Game::Game(): m_window(std::make_unique<Window>("Pac-Man", sf::Vector2u(800,600))),
-              m_world(sf::Vector2u(800,600)),
-              m_initialized(false) {
+namespace pacman::representation {
+
+Game::Game()
+    : m_window(std::make_unique<sf::RenderWindow>(
+          sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
+          "Pac-Man"
+      ))
+    , m_stateManager(*m_window) {
+
+    m_window->setFramerateLimit(FPS_LIMIT);
 }
 
-Game::~Game(){}
+/**
+ * Main game loop. Starts with Pushing the MenuState, Loops thru (processes events, updates (logic), renders update (representation)).
+ */
+void Game::run() {
+    // Push MenuState so Menu can be shown on screen
+    m_stateManager.pushState(std::make_unique<MenuState>(m_stateManager, *m_window));
 
-void Game::Update(){
-    m_window->Update(); // Update window events.
+    while (m_window->isOpen()) {
+        processEvents();
+        update(1.0f / 60.0f); // Fixed delta time for simplicity
+        render();
+    }
+}
 
-    if (!m_initialized) {
-        // Initialize logic first
-        if (m_world.initialize()) {
-            // Then initialize representation with logic data
-            m_mapView.initialize(m_world.getMapModel(), m_window->GetRenderWindow());
-            m_initialized = true;
-        } else {
-            std::cerr << "Failed to initialize world!" << std::endl;
+/**
+ * First Checks if window is closed then handles event in StateManager puhsing or popping states from stack
+ */
+void Game::processEvents() {
+    sf::Event event{};
+    while (m_window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed) {
+            m_window->close();
         }
+        m_stateManager.handleEvent(event);
     }
-
-    // Update game logic (we'll add delta time later)
-    // m_world.update(deltaTime);
 }
 
-void Game::Render(){
-    m_window->BeginDraw(); // Clear.
-
-    if (m_initialized) {
-        m_mapView.draw(m_window->GetRenderWindow());
-        // Later we'll add other entities here
-    }
-
-    m_window->EndDraw(); // Display.
+void Game::update(float deltaTime) {
+    m_stateManager.update(deltaTime);
 }
 
+
+void Game::render() {
+    m_window->clear();
+    m_stateManager.render();
+    m_window->display();
+}
+
+} // namespace pacman::representation

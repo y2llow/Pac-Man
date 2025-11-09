@@ -1,4 +1,4 @@
-#include "entities/StaticEntity_collectibles/WallModel.h"
+#include "../../include/entities/WallModel.h"
 
 WallModel::WallModel(const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textureId)
     : m_position(position), m_textureId(textureId) {

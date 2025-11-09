@@ -1,23 +1,23 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "patterns/Subject.h"
 #include <SFML/System/Vector2.hpp>
 
-class Entity {
+class EntityModel : public Subject {
 public:
-    virtual ~Entity() = default;
+    virtual ~EntityModel() = default;
 
-    // Pure virtual methods - all entities must implement these
     virtual void update(float deltaTime) = 0;
     virtual sf::Vector2f getPosition() const = 0;
-    virtual void setPosition(const sf::Vector2f& position) = 0;
+    virtual void setPosition(const sf::Vector2f& position);
 
-    // Common properties
-    sf::Vector2f getSize() const { return m_size; }
-    void setSize(const sf::Vector2f& size) { m_size = size; }
+    // Other common properties that might trigger notifications
+    virtual void setActive(bool active);
 
 protected:
-    sf::Vector2f m_size;
+    // Helper method for derived classes
+    void notifyPositionChanged() { notifyObservers(); }
 };
 
 #endif

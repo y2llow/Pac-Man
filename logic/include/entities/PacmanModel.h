@@ -4,10 +4,7 @@
 
 #ifndef PACMAN_H
 #define PACMAN_H
-#include "entities/DynamicEntity.h"
-#include "entities/EntityModel.h"
-
-class Pacman: public DynamicEntity {
+class PacmanModel {
 
 };
 

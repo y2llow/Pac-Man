@@ -1,3 +1,16 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/7/25.
-//
+#include "entities/EntityModel.h"
+
+void EntityModel::setPosition(const sf::Vector2f& position) {
+    // Only notify if position actually changed
+    // if (position != m_position) {
+    //     m_position = position;
+    notifyObservers();  // Notify all observing views
+    // }
+}
+
+void EntityModel::setActive(bool active) {
+    // if (m_active != active) {
+    //     m_active = active;
+    notifyObservers();  // Notify views about state change
+    // }
+}

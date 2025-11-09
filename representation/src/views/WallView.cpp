@@ -1,5 +1,5 @@
 #include "views/WallView.h"
-#include "entities/StaticEntity_collectibles/WallModel.h" // From logic library
+#include "../../../logic/include/entities/WallModel.h"
 
 WallView::WallView(WallModel& model, sf::RenderWindow& window) 
     : m_model(model) {

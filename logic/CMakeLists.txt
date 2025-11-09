@@ -11,8 +11,6 @@ add_library(PacMan-logic STATIC
         src/core/Stopwatch.cpp
         include/core/Random.h
         src/core/Random.cpp
-        include/core/GameEvent.h
-        include/core/Constants.h
 
         # === Design Pattern Interfaces ===
         include/patterns/Observer.h
@@ -23,25 +21,19 @@ add_library(PacMan-logic STATIC
 
         # === Entity Base Classes ===
         include/entities/EntityModel.h
-        include/entities/StaticEntity.h
-        src/entities/StaticEntity.cpp
-        include/entities/DynamicEntity.h
-        src/entities/DynamicEntity.cpp
 
         # === Character Entities (Dynamic) ===
-        include/entities/DynamicEntity/Character.h
-        src/entities/Character.cpp
-        include/entities/DynamicEntity/Pacman.h
-        src/entities/Pacman.cpp
-        include/entities/DynamicEntity/Ghost.h
-        src/entities/Ghost.cpp
+        include/entities/PacmanModel.h
+        src/entities/PacmanModel.cpp
+        include/entities/GhostModel.h
+        src/entities/GhostModel.cpp
 
         # === Collectible Entities (Static) ===
-        include/entities/StaticEntity_collectibles/CoinModel.h
+        include/entities/CoinModel.h
         src/entities/CoinModel.cpp
-        include/entities/StaticEntity_collectibles/Fruit.h
-        src/entities/Fruit.cpp
-        include/entities/StaticEntity_collectibles/WallModel.h
+        include/entities/FruitModel.h
+        src/entities/FruitModel.cpp
+        include/entities/WallModel.h
         src/entities/WallModel.cpp
 
         # === World Management ===
@@ -49,8 +41,6 @@ add_library(PacMan-logic STATIC
         src/world/World.cpp
         include/world/Camera.h
         src/world/Camera.cpp
-        include/world/Collision.h
-        src/world/Collision.cpp
 
         # === Scoring System ===
         include/scoring/Score.h
@@ -59,7 +49,6 @@ add_library(PacMan-logic STATIC
         src/scoring/HighScoreManager.cpp
         src/entities/EntityModel.cpp
         src/patterns/Subject.cpp
-        include/entities/Subject.h
         include/world/MapModel.h
         src/world/MapModel.cpp
 )

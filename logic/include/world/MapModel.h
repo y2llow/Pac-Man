@@ -1,7 +1,7 @@
 #ifndef MAP_MODEL_H
 #define MAP_MODEL_H
 
-#include "entities/StaticEntity_collectibles/CoinModel.h"
+#include "../entities/CoinModel.h"
 
 
 #include <vector>

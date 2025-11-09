@@ -1,25 +1,30 @@
-#ifndef GAME_H
-#define GAME_H
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include "StateManger.h"
+#include "states/MenuState.h"
 
-#include "Window.h"
-#include "world/World.h"
-#include "views/MapView.h" // This is OK here - Game is in representation layer
+namespace pacman::representation {
 
 class Game {
 public:
     Game();
-    ~Game();
-    void Update();
-    void Render();
-    // Return reference instead of pointer
-    Window& GetWindow() { return *m_window; }
-    const Window& GetWindow() const { return *m_window; }
+    ~Game() = default;
+
+    void run();
 
 private:
-    std::unique_ptr<Window> m_window;
-    World m_world;          // Logic
-    MapView m_mapView;      // Representation
-    bool m_initialized;
+    std::unique_ptr<sf::RenderWindow> m_window;
+    StateManager m_stateManager;
+
+    void processEvents();
+    void update(float deltaTime);
+    void render();
+
+    // Configuration - exactly like your image
+    static constexpr unsigned int WINDOW_WIDTH = 800;
+    static constexpr unsigned int WINDOW_HEIGHT = 600;
+    static constexpr unsigned int FPS_LIMIT = 60;
 };
 
-#endif
+} // namespace pacman::representation
