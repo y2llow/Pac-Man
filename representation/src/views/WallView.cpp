@@ -3,7 +3,7 @@
 
 WallView::WallView(WallModel& model, sf::RenderWindow& window) 
     : m_model(model) {
-    m_shape.setFillColor(((sf::Color::Red)));
+    m_shape.setFillColor(((sf::Color(33,33,255))));
     updateShape(); // Initial setup
 }
 

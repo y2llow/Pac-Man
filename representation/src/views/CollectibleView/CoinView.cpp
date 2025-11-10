@@ -6,9 +6,10 @@
 CoinView::CoinView(CoinModel& coinModel, sf::RenderWindow& window)
     : m_coinModel(coinModel), m_window(window) {
     // Setup circle shape for coin
-    m_circle.setFillColor(sf::Color::Yellow);
-    m_circle.setRadius(5.0f);  // Small radius for coins
-    m_circle.setOrigin(5.0f, 5.0f);  // Center the circle
+    m_circle.setFillColor(sf::Color(255, 184, 144));
+    float pellet = 1.15f;
+    m_circle.setRadius(pellet);  // Small radius for coins
+    m_circle.setOrigin(pellet, pellet);  // Center the circle
 
     updateShape();
 
