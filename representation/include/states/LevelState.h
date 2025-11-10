@@ -22,6 +22,8 @@ private:
     std::unique_ptr<SFMLFactory> m_factory;  // Factory for creating entities
     std::unique_ptr<World> m_world;          // World to manage entities
     Camera m_camera;                         // For coordinate conversion
+    sf::RectangleShape m_backgroundPanel; // NEW - background panel
+
 
     void loadMapFromFile(const std::string& filename);
     void createEntityFromGrid(char cellType, int x, int y);

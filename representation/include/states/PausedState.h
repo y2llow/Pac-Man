@@ -15,11 +15,15 @@ public:
     void render() override;
     void handleEvent(const sf::Event& event) override;
 
+
 private:
     sf::RenderWindow& m_window;
     sf::Font m_font;
     sf::Text m_pauseText;
     sf::Text m_continueText;
+    sf::Text m_menuText;           // NEW - separate text for menu option
+    sf::RectangleShape m_overlay;  // NEW - semi-transparent overlay
+    sf::RectangleShape m_backgroundPanel; // NEW - background panel
 };
 
 #endif

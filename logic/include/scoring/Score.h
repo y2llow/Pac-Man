@@ -3,6 +3,7 @@
 
 #include "patterns/Observer.h"
 #include <string>
+#include <vector>
 
 // Forward declaration
 class Subject;
@@ -23,7 +24,31 @@ public:
 
 private:
     int m_currentScore;
-    int m_highScore;
+    std::vector<int> m_highScores; // Top 5 scores
+    std::string m_highScoresFile = "assets/Highscores/highscores.txt.txt";
 };
 
 #endif
+
+// public:
+// Score();
+//
+// // Observer pattern - reageert op game events
+// void update() override;
+//
+// // Score modifiers voor verschillende events
+// void addCoinScore();
+// void addGhostScore();
+// void addFruitScore();
+// void addLevelClearBonus();
+//
+// // High score management
+// void saveHighScores();
+// void loadHighScores();
+// void addHighScore(int score);
+// const std::vector<int>& getHighScores() const { return m_highScores; }
+//
+// // Current score
+// int getCurrentScore() const { return m_currentScore; }
+// void resetCurrentScore() { m_currentScore = 0; }
+// };

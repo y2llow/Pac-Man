@@ -15,8 +15,13 @@ LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window)
  * Set window, load in walls, coins, fruits, pac-man and ghosts from map by using factory
  */
 void LevelState::initialize() {
-    // read characters from maps
-    // make
+    // Optional: Add a centered background panel like MenuState
+    m_backgroundPanel.setSize(sf::Vector2f(500, 350));
+    m_backgroundPanel.setFillColor(sf::Color(200, 33, 0, 220)); // Same blue as MenuState
+    m_backgroundPanel.setOutlineColor(sf::Color(255, 255, 0)); // Yellow border
+    m_backgroundPanel.setOutlineThickness(3);
+    m_backgroundPanel.setOrigin(100, 125); // Center the panel
+    m_backgroundPanel.setPosition(600 / 2, 600 / 2);
 }
 
 void LevelState::update(float deltaTime) {
@@ -24,8 +29,8 @@ void LevelState::update(float deltaTime) {
 }
 
 void LevelState::render() {
-    m_window.clear(sf::Color::Blue);  // Maze-like background
-    // m_window.draw(m_testShape);       // Simple Pac-Man placeholder
+    m_window.clear(sf::Color(5, 5, 20));
+    m_window.draw(m_backgroundPanel);
 }
 
 

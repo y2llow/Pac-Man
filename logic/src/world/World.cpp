@@ -3,7 +3,11 @@
 
 World::World(const sf::Vector2u& windowSize, LogicFactory& factory)
     :  m_factory(&factory) {
+    m_score = std::make_unique<Score>();
+
 }
+
+
 
 void World::createEntitiesFromMap() {
     // Use factory to create walls and coins

@@ -6,6 +6,7 @@
 #include <vector>
 #include "MapModel.h"
 #include "patterns/AbstractFactory.h"
+#include "scoring/Score.h"
 
 class World {
 public:
@@ -14,9 +15,13 @@ public:
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void createEntitiesFromMap(); // Use factory to create entities
 
+    Score& getScore() { return *m_score; }
+
+
 private:
     MapModel m_mapModel;
     LogicFactory* m_factory; // World uses factory to create entities
+    std::unique_ptr<Score> m_score;
     std::vector<std::unique_ptr<WallModel>> m_walls;
     std::vector<std::unique_ptr<CoinModel>> m_coins;
 };
