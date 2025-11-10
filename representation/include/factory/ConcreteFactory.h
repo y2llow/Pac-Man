@@ -25,6 +25,9 @@ public:
         const std::string& textureId = std::string("")
     ) override;
 
+    // NEW: Method to access views for rendering
+    const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
+
 private:
     sf::RenderWindow& m_window;
     std::vector<std::unique_ptr<EntityView>> m_views; // Store views!

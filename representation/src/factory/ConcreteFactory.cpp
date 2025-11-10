@@ -24,7 +24,14 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window)
     m_observers.push_back(std::move(wallView));
 
     // Attach raw pointer (temporary - views are owned by factory)
-    wallModel->attachObserver(std::unique_ptr<Observer>(m_observers.back().get()));
+    wallModel->attachObserver([view = wallView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    // Store the view in factory
+    m_views.push_back(std::move(wallView));
 
     return wallModel;
 }
@@ -40,7 +47,14 @@ std::unique_ptr<CoinModel> SFMLFactory::createCoin(
     auto coinView = std::make_unique<CoinView>(*coinModel, m_window);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
-    coinModel->attachObserver(std::move(coinView));
+    coinModel->attachObserver([view = coinView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    m_views.push_back(std::move(coinView));
+
 
     // 4. Return only the Model to World
     return coinModel;

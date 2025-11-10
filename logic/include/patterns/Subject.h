@@ -4,6 +4,7 @@
 #include "Observer.h"
 
 
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -11,10 +12,12 @@
 
 class Subject {
 public:
+    using Callback = std::function<void()>;
+
     virtual ~Subject() = default;
 
     // Observer management
-    void attachObserver(std::unique_ptr<Observer> observer);
+    void attachObserver(Callback callback);
     // detach observer
     void notifyObservers();
 
@@ -23,7 +26,7 @@ public:
     // virtual void notifyObservers(EventType eventType);
 
 protected:
-    std::vector<std::unique_ptr<Observer>> m_observers;
+    std::vector<Callback> m_observers;
 };
 
 #endif

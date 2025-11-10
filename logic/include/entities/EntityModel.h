@@ -14,7 +14,7 @@ public:
     [[nodiscard]] virtual sf::Vector2f getSize() const = 0;
 
     // Other common properties that might trigger notifications
-    virtual void setActive(bool active);
+    // virtual void setActive(bool active);
 
 protected:
     // Helper method for derived classes

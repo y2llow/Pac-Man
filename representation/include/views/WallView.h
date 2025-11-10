@@ -7,7 +7,7 @@
 class WallModel;
 class TextureManager;
 
-class WallView : public Observer {
+class WallView : public EntityView {
 public:
     WallView(WallModel& model, sf::RenderWindow& window);
     ~WallView() override = default;

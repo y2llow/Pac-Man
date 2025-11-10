@@ -1,14 +1,15 @@
 #ifndef COIN_VIEW_H
 #define COIN_VIEW_H
 
-#include "patterns/Observer.h"
+#include "views/EntityView.h"
+
 #include <SFML/Graphics.hpp>
 
 // Forward declarations
 class CoinModel;
 class TextureManager;
 
-class CoinView : public Observer {
+class CoinView : public EntityView {
 public:
     CoinView(CoinModel& coinModel, sf::RenderWindow& window);
     ~CoinView() override = default;
