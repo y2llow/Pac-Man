@@ -4,7 +4,7 @@
 
 class Camera {
 public:
-    Camera();
+    explicit Camera(sf::Vector2u m_windowsize);
 
     // Convert normalized [-1,1] coordinates to pixel coordinates
     static sf::Vector2f worldToPixel(float worldX, float worldY,

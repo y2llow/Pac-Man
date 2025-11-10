@@ -1,11 +1,13 @@
 #ifndef SUBJECT_H
 #define SUBJECT_H
 
+#include "Observer.h"
+
+
 #include <memory>
 #include <vector>
 
-// Forward declaration - Observer is in representation layer
-class Observer;
+
 
 class Subject {
 public:
@@ -13,7 +15,7 @@ public:
 
     // Observer management
     void attachObserver(std::unique_ptr<Observer> observer);
-    void detachObserver(Observer* observer);
+    // detach observer
     void notifyObservers();
 
     // Optional: different notification types for different events
@@ -25,3 +27,9 @@ protected:
 };
 
 #endif
+
+// pacman -> Observer1
+// ghost -> Observer1
+//
+// pacman -> observer2
+// coin -> observer2

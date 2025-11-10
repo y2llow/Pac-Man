@@ -1,6 +1,7 @@
 #include "states/PausedState.h"
 
 #include "StateManger.h"
+#include "states/MenuState.h"
 
 PausedState::PausedState(StateManager& stateManager, sf::RenderWindow& window)
     : State(stateManager), m_window(window) {
@@ -19,6 +20,18 @@ void PausedState::initialize() {
         m_continueText.setPosition(250, 300);
     }
 }
+
+
+void StateManager::switchToState(std::unique_ptr<State> state) {
+    // Clear all existing states
+    clearStates();
+
+    // Push the new state
+    pushState(std::move(state));
+}
+
+
+
 
 void PausedState::update(float deltaTime) {
     // Paused state doesn't update game logic
@@ -47,8 +60,7 @@ void PausedState::handleEvent(const sf::Event& event) {
             m_stateManager.popState();
             break;
         case sf::Keyboard::M:
-            m_stateManager.clearStates();
-            // Then push new MenuState (will be implemented later)
+            m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window));
             break;
         }
     }

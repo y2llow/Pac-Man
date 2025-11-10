@@ -1,32 +1,34 @@
 #ifndef CONCRETEFACTORY_H
 #define CONCRETEFACTORY_H
 #include "patterns/AbstractFactory.h"
+#include "views/EntityView.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-// Forward declarations
+class Observer;
 class WallView;
 class CoinView;
-class EntityView;
 
 class SFMLFactory : public LogicFactory {
 public:
-    SFMLFactory(sf::RenderWindow& window);
+    explicit SFMLFactory(sf::RenderWindow& window);
 
-    // Implement LogicFactory interface
     std::unique_ptr<WallModel> createWall(
         const sf::Vector2f& position,
-        const sf::Vector2f& size) override;
+        const sf::Vector2f& size,
+        const std::string& textureId = std::string("")
+    ) override;
 
     std::unique_ptr<CoinModel> createCoin(
         const sf::Vector2f& position,
         const sf::Vector2f& size,
-        const std::string& textureId = ""
+        const std::string& textureId = std::string("")
     ) override;
 
 private:
     sf::RenderWindow& m_window;
     std::vector<std::unique_ptr<EntityView>> m_views; // Store views!
+    std::vector<std::unique_ptr<Observer>> m_observers;
 
 };
 #endif //CONCRETEFACTORY_H

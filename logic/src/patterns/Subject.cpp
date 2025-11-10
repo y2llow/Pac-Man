@@ -8,15 +8,15 @@ void Subject::attachObserver(std::unique_ptr<Observer> observer) {
     }
 }
 
-void Subject::detachObserver(Observer* observer) {
-    m_observers.erase(
-        std::remove_if(m_observers.begin(), m_observers.end(),
-            [observer](const std::unique_ptr<Observer>& ptr) {
-                return ptr.get() == observer;
-            }),
-        m_observers.end()
-    );
-}
+// void Subject::detachObserver(Observer* observer) {
+//     m_observers.erase(
+//         std::remove_if(m_observers.begin(), m_observers.end(),
+//             [observer](const std::unique_ptr<Observer>& ptr) {
+//                 return ptr.get() == observer;
+//             }),
+//         m_observers.end()
+//     );
+// }
 
 void Subject::notifyObservers() {
     for (const auto& observer : m_observers) {

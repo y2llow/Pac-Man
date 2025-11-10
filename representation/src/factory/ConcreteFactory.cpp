@@ -3,25 +3,29 @@
 #include "entities/CoinModel.h"
 #include "views/WallView.h"
 #include "views/CollectibleView/CoinView.h"
+#include "patterns/Subject.h"
 
 SFMLFactory::SFMLFactory(sf::RenderWindow& window) 
     : m_window(window) {
 }
 
-std::unique_ptr<WallModel> SFMLFactory::createWall(
+ std::unique_ptr<WallModel> SFMLFactory::createWall(
     const sf::Vector2f&position,
-    const sf::Vector2f&size) {
+    const sf::Vector2f&size,
+    const std::string& textureId ) {
 
     // 1. Create the Model (logic)
-    auto wallModel = std::make_unique<WallModel>(position, size);
+    auto wallModel = std::make_unique<WallModel>(position, size, textureId);
 
-    // 2. Create the View (representation)
+    // // 2. Create the View (representation)
     auto wallView = std::make_unique<WallView>(*wallModel, m_window);
 
-    // 3. Link them: View observes Model
-    wallModel->attachObserver(std::move(wallView));
+    // Store the view in factory
+    m_observers.push_back(std::move(wallView));
 
-    // 4. Return only the Model to World
+    // Attach raw pointer (temporary - views are owned by factory)
+    wallModel->attachObserver(std::unique_ptr<Observer>(m_observers.back().get()));
+
     return wallModel;
 }
 std::unique_ptr<CoinModel> SFMLFactory::createCoin(

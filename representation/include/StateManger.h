@@ -14,6 +14,7 @@ public:
     // State stack management
     void pushState(std::unique_ptr<State> state);
     void popState();
+    void switchToState(std::unique_ptr<State>state);
     void clearStates();
 
     // Check if stack is empty (for quitting)

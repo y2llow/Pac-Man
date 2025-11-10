@@ -1,5 +1,18 @@
 #include "Camera.h"
 
+
+ /**
+  * Get window measurmetns from the LevelState
+  * @param m_windowsize
+  */
+ Camera::Camera(sf::Vector2u m_windowsize){
+     m_height = m_windowsize.y;
+     m_width = m_windowsize.x;
+
+     m_centerX = m_windowsize.x / 2.0f;
+     m_centerY = m_windowsize.y / 2.0f;
+}
+
 sf::Vector2f Camera::worldToPixel(float worldX, float worldY,
 unsigned int screenWidth,
 unsigned int screenHeight) {

@@ -2,6 +2,8 @@
 #define PAUSED_STATE_H
 
 #include "State.h"
+
+#include <memory>
 #include <SFML/Graphics.hpp>
 
 class PausedState : public State {

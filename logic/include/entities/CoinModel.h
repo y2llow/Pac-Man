@@ -2,11 +2,10 @@
 #define COIN_MODEL_H
 
 #include "entities/EntityModel.h"
-#include "patterns/Subject.h"
 #include <string>
 #include <SFML/System/Vector2.hpp>
 
-class CoinModel : public Entity, public Subject {
+class CoinModel : public EntityModel {
 public:
     CoinModel(const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textureId = "");
 
@@ -14,6 +13,7 @@ public:
     void update(float deltaTime) override;
     [[nodiscard]] sf::Vector2f getPosition() const override { return m_position; }
     void setPosition(const sf::Vector2f& position) override;
+    [[nodiscard]] sf::Vector2f getSize() const override { return m_size; }
 
     // Coin-specific functionality
     void collect();  // This will notify observers!
@@ -24,6 +24,7 @@ public:
 private:
     sf::Vector2f m_position;
     std::string m_textureId;
+    sf::Vector2f m_size;
     bool m_collected = false;  // Track collection state
 };
 

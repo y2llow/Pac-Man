@@ -7,16 +7,16 @@
 #include <memory>
 
 LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window)
-    : State(stateManager), m_window(window) {
+    : State(stateManager), m_window(window), m_factory(std::make_unique<SFMLFactory>(window)), m_camera(window.getSize()) {
 }
 
-void LevelState::initialize() {
-    // Simple test setup - replace with your World initialization
-    m_testShape.setSize(sf::Vector2f(50, 50));
-    m_testShape.setFillColor(sf::Color::Yellow);
-    m_testShape.setPosition(375, 275);
 
-    std::cout << "LevelState: Game started!" << std::endl;
+/**
+ * Set window, load in walls, coins, fruits, pac-man and ghosts from map by using factory
+ */
+void LevelState::initialize() {
+    // read characters from maps
+    // make
 }
 
 void LevelState::update(float deltaTime) {
@@ -25,7 +25,7 @@ void LevelState::update(float deltaTime) {
 
 void LevelState::render() {
     m_window.clear(sf::Color::Blue);  // Maze-like background
-    m_window.draw(m_testShape);       // Simple Pac-Man placeholder
+    // m_window.draw(m_testShape);       // Simple Pac-Man placeholder
 }
 
 
@@ -41,4 +41,7 @@ void LevelState::handleEvent(const sf::Event& event) {
             break;default: ;
         }
     }
+}
+
+void LevelState::loadMapFromFile(const std::string& filename){
 }
