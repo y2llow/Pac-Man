@@ -25,7 +25,7 @@ public:
 private:
     int m_currentScore;
     std::vector<int> m_highScores; // Top 5 scores
-    std::string m_highScoresFile = "assets/Highscores/highscores.txt.txt";
+    std::string m_highScoresFile = "assets/highscores/highscore.txt.txt";
 };
 
 #endif

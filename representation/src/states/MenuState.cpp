@@ -80,7 +80,7 @@ void MenuState::initialize() {
 }
 
 void MenuState::loadHighScores() {
-    std::ifstream file("assets/Highscores/highscores.txt");
+    std::ifstream file("assets/highscores/highscore.txt");
     m_highScores.clear();
 
     if (file.is_open()) {
