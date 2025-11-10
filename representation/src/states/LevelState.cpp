@@ -31,15 +31,13 @@ void LevelState::update(float deltaTime) {
 void LevelState::render() {
     m_window.clear(sf::Color(5, 5, 20));
 
-
-    // NEW: Render all views
     for (const auto& view : m_factory->getViews()) {
         if (view) {
             view->draw(m_window);
         }
     }
 
-    m_window.display();  // Don't forget this!
+    m_window.display();
 }
 
 /**

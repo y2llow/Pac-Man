@@ -25,8 +25,11 @@ private:
     CoinModel& m_coinModel;  // Reference to the model we're observing
     sf::RenderWindow& m_window;  // PDF: "hold a pointer to your window object in your View"
     sf::Sprite m_sprite;
+    sf::CircleShape m_circle;
 
     void updateSprite();  // Update graphics based on model state
+    void updateShape();
+
 };
 
 #endif

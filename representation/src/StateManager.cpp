@@ -19,7 +19,6 @@ void StateManager::popState() {
 }
 
 void StateManager::clearStates() {
-    // TODO eerst alles verwijderen uit m_factory met unique ptr
     m_states.clear();
 }
 

@@ -19,10 +19,7 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window)
 
     // // 2. Create the View (representation)
     auto wallView = std::make_unique<WallView>(*wallModel, m_window);
-
-    // Store the view in factory
-    m_observers.push_back(std::move(wallView));
-
+    
     // Attach raw pointer (temporary - views are owned by factory)
     wallModel->attachObserver([view = wallView.get()]() {
         if (view) {
