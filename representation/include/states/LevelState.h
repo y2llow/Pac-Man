@@ -22,11 +22,11 @@ private:
     std::unique_ptr<SFMLFactory> m_factory;  // Factory for creating entities
     std::unique_ptr<World> m_world;          // World to manage entities
     Camera m_camera;                         // For coordinate conversion
-    sf::RectangleShape m_backgroundPanel; // NEW - background panel
+    std::vector<std::unique_ptr<Observer>> m_entityViews;
 
-
-    void loadMapFromFile(const std::string& filename);
-    void createEntityFromGrid(char cellType, int x, int y);
+    bool loadFromFile(const std::string& filename);
+    void createWallsFromGrid(std::vector<std::string> m_grid, sf::Vector2u m_gridSize);
+    void addEntityWithView(std::unique_ptr<EntityModel> entity, std::unique_ptr<Observer> view) ;
 };
 
 #endif

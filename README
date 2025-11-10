@@ -15,3 +15,116 @@ mkdir build && cd build
 cmake ..
 make
 ./Pac-Man
+
+Pac-Man/
+├── CMakeLists.txt
+├── README.md
+├── src/
+│   └── main.cpp
+├── logic/
+│   ├── CMakeLists.txt
+│   ├── include/
+│   │   ├── core/
+│   │   │   ├── Stopwatch.h
+│   │   │   └── Random.h
+│   │   ├── patterns/
+│   │   │   ├── Subject.h
+│   │   │   ├── Observer.h
+│   │   │   └── AbstractFactory.h
+│   │   ├── entities/
+│   │   │   ├── EntityModel.h
+│   │   │   ├── WallModel.h
+│   │   │   ├── CoinModel.h
+│   │   │   ├── PacmanModel.h
+│   │   │   ├── GhostModel.h
+│   │   │   └── FruitModel.h
+│   │   ├── world/
+│   │   │   ├── World.h
+│   │   │   ├── MapModel.h
+│   │   │   └── Camera.h
+│   │   └── scoring/
+│   │       ├── Score.h
+│   │       └── HighScoreManager.h
+│   └── src/
+│       ├── core/
+│       │   ├── Stopwatch.cpp
+│       │   └── Random.cpp
+│       ├── patterns/
+│       │   ├── Subject.cpp
+│       │   ├── Observer.cpp
+│       │   └── AbstractFactory.cpp
+│       ├── entities/
+│       │   ├── EntityModel.cpp
+│       │   ├── WallModel.cpp
+│       │   ├── CoinModel.cpp
+│       │   ├── PacmanModel.cpp
+│       │   ├── GhostModel.cpp
+│       │   └── FruitModel.cpp
+│       ├── world/
+│       │   ├── World.cpp
+│       │   ├── MapModel.cpp
+│       │   └── Camera.cpp
+│       └── scoring/
+│           ├── Score.cpp
+│           └── HighScoreManager.cpp
+├── representation/
+│   ├── CMakeLists.txt
+│   ├── include/
+│   │   ├── Game.h
+│   │   ├── StateManger.h
+│   │   ├── states/
+│   │   │   ├── State.h
+│   │   │   ├── MenuState.h
+│   │   │   ├── LevelState.h
+│   │   │   ├── PausedState.h
+│   │   │   ├── VictoryState.h
+│   │   │   └── GameOverState.h
+│   │   ├── factory/
+│   │   │   └── ConcreteFactory.h
+│   │   └── views/
+│   │       ├── EntityView.h
+│   │       ├── WallView.h
+│   │       ├── CollectibleView/
+│   │       │   ├── CoinView.h
+│   │       │   └── FruitView.h
+│   │       ├── characterview/
+│   │       │   ├── PacManView.h
+│   │       │   └── GhostView.h
+│   │       └── rendering/
+│   │           ├── SpriteManager.h
+│   │           └── Animation.h
+│   └── src/
+│       ├── Game.cpp
+│       ├── StateManger.cpp
+│       ├── states/
+│       │   ├── MenuState.cpp
+│       │   ├── LevelState.cpp
+│       │   ├── PausedState.cpp
+│       │   ├── VictoryState.cpp
+│       │   └── GameOverState.cpp
+│       ├── factory/
+│       │   └── ConcreteFactory.cpp
+│       └── views/
+│           ├── WallView.cpp
+│           ├── CollectibleView/
+│           │   ├── CoinView.cpp
+│           │   └── FruitView.cpp
+│           ├── characterview/
+│           │   ├── PacManView.cpp
+│           │   └── GhostView.cpp
+│           └── rendering/
+│               ├── SpriteManager.cpp
+│               └── Animation.cpp
+└── assets/
+    ├── fonts/
+    │   └── arial.ttf
+    ├── textures/
+    │   ├── wall.png
+    │   ├── coin.png
+    │   ├── pacman.png
+    │   ├── ghost.png
+    │   └── fruit.png
+    ├── maps/
+    │   └── map.txt
+    └── highscores/
+        └── highscores.txt

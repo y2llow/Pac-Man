@@ -10,7 +10,8 @@ class Subject;
 
 class Score : public Observer {
 public:
-    Score();
+    Score();  // Alleen declaratie
+    ~Score() = default;
 
     void update() override;
 

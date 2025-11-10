@@ -1,8 +1,25 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/6/25.
-//
+#include "scoring/Score.h"
 
-#ifndef SCORE_H
-#define SCORE_H
+Score::Score()
+    : m_currentScore(0) {  // Implementatie hier
+}
 
-#endif //SCORE_H
+void Score::update() {
+    // Implementatie later toevoegen
+}
+
+void Score::onCoinCollected() {
+    // Implementatie later toevoegen
+}
+
+void Score::onGhostEaten() {
+    // Implementatie later toevoegen
+}
+
+void Score::onPacManDied() {
+    // Implementatie later toevoegen
+}
+
+void Score::reset() {
+    m_currentScore = 0;
+}
