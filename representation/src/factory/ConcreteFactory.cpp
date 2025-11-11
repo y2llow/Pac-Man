@@ -1,9 +1,12 @@
 #include "factory/ConcreteFactory.h"
 #include "entities/WallModel.h"
 #include "entities/CoinModel.h"
+#include "entities/PacmanModel.h"
+#include "patterns/AbstractFactory.h"
 #include "views/WallView.h"
 #include "views/CollectibleView/CoinView.h"
 #include "patterns/Subject.h"
+#include "views/characterview/PacmanView.h"
 
 SFMLFactory::SFMLFactory(sf::RenderWindow& window) 
     : m_window(window) {
@@ -19,7 +22,7 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window)
 
     // // 2. Create the View (representation)
     auto wallView = std::make_unique<WallView>(*wallModel, m_window);
-    
+
     // Attach raw pointer (temporary - views are owned by factory)
     wallModel->attachObserver([view = wallView.get()]() {
         if (view) {
@@ -55,4 +58,29 @@ std::unique_ptr<CoinModel> SFMLFactory::createCoin(
 
     // 4. Return only the Model to World
     return coinModel;
+}
+
+std::unique_ptr<PacmanModel> SFMLFactory::createPacman(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId) {
+
+    // 1. Create the Model (logic)
+    auto pacmanModel = std::make_unique<PacmanModel>(position, size, textureId);
+
+    // 2. Create the View (representation)
+    auto pacmanView = std::make_unique<PacmanView>(*pacmanModel, m_window);
+
+    // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
+    pacmanModel->attachObserver([view = pacmanView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    m_views.push_back(std::move(pacmanView));
+
+
+    // 4. Return only the Model to World
+    return pacmanModel;
 }

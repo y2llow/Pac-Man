@@ -17,7 +17,6 @@ add_library(PacMan-logic STATIC
         src/patterns/Observer.cpp
         include/patterns/Subject.h
         include/patterns/AbstractFactory.h
-        src/patterns/AbstractFactory.cpp
 
         # === Entity Base Classes ===
         include/entities/EntityModel.h

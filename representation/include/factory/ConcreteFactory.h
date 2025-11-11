@@ -25,6 +25,12 @@ public:
         const std::string& textureId = std::string("")
     ) override;
 
+    std::unique_ptr<PacmanModel>createPacman(
+        const sf::Vector2f&position,
+        const sf::Vector2f&size,
+        const std::string&textureId= std::string("")
+        ) override;
+
     // NEW: Method to access views for rendering
     const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
 

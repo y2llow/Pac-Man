@@ -43,8 +43,8 @@ add_library(PacMan-representation STATIC
         src/views/EntityView.cpp
 
         # === Character Views ===
-        include/views/characterview/PacManView.h
-        src/views/characterview/PacManView.cpp
+        include/views/characterview/PacmanView.h
+        src/views/characterview/PacmanView.cpp
         include/views/characterview/GhostView.h
         src/views/characterview/GhostView.cpp
 

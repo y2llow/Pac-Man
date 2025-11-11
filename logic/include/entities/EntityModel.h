@@ -6,7 +6,7 @@
 
 class EntityModel : public Subject {
 public:
-    virtual ~EntityModel() = default;
+    ~EntityModel() override = default;
 
     virtual void update(float deltaTime) = 0;
     [[nodiscard]] virtual sf::Vector2f getPosition() const = 0;

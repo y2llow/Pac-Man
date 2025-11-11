@@ -48,6 +48,17 @@ void World::createEntitiesFromMap() {
                 );
                 m_coins.push_back(std::move(coin));
             }
+            else if (grid[y][x] == 'P') {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                auto pacman = m_factory->createPacman(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    "Pacman");
+
+                m_pacman.push_back(std::move(pacman));
+            }
         }
     }
     //TODO remove

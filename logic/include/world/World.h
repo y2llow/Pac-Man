@@ -11,6 +11,7 @@
 #include "scoring/Score.h"
 #include "entities/WallModel.h"
 #include "entities/CoinModel.h"
+#include "entities/PacmanModel.h"
 
 class World {
 public:
@@ -26,8 +27,9 @@ public:
     Score& getScore() { return *m_score; }
 
     // Add getters for LevelState to access entities for rendering
-    const std::vector<std::unique_ptr<WallModel>>& getWalls() const { return m_walls; }
-    const std::vector<std::unique_ptr<CoinModel>>& getCoins() const { return m_coins; }
+    [[nodiscard]] const std::vector<std::unique_ptr<WallModel>>& getWalls() const { return m_walls; }
+    [[nodiscard]] const std::vector<std::unique_ptr<CoinModel>>& getCoins() const { return m_coins; }
+    [[nodiscard]] const std::vector<std::unique_ptr<PacmanModel>>& getPacman() const { return m_pacman; }
 
 private:
     MapModel m_mapModel;
@@ -37,6 +39,7 @@ private:
     // World stores all entities
     std::vector<std::unique_ptr<WallModel>> m_walls;
     std::vector<std::unique_ptr<CoinModel>> m_coins;
+    std::vector<std::unique_ptr<PacmanModel>> m_pacman;
     // Add other entities later: PacMan, Ghosts, Fruits
 
     sf::Vector2u m_windowSize;
