@@ -50,7 +50,7 @@ void World::createEntitiesFromMap() {
             }
         }
     }
-
+    //TODO remove
     std::cout << "World: Created " << m_walls.size() << " walls and " << m_coins.size() << " coins" << std::endl;
 }
 
