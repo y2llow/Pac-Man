@@ -10,7 +10,7 @@ World::World(const sf::Vector2u& windowSize, LogicFactory& factory)
 
 void World::initialize() {
     // Load map and create entities
-    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
     }
 }
