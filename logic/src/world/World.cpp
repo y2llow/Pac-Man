@@ -59,6 +59,21 @@ void World::createEntitiesFromMap() {
 
                 m_pacman.push_back(std::move(pacman));
             }
+            else if ((grid[y][x] == '0')||(grid[y][x] == '1')||(grid[y][x] == '2')||(grid[y][x] == '3')) {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                auto pacman = m_factory->createPacman(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth * 1.0f, tileHeight * 1.0f),
+                    "Pacman");
+
+                m_pacman.push_back(std::move(pacman));
+            }
+            // 0 = red
+            // 1 = blue
+            // 2 = pink
+            // 3 = orange
         }
     }
     //TODO remove
@@ -76,6 +91,9 @@ void World::update(float deltaTime) {
     }
     for (auto& coin : m_coins) {
         coin->update(deltaTime);
+    }
+    for (auto& pacman : m_pacman) {
+        pacman->update(deltaTime);
     }
 
 }
