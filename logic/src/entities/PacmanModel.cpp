@@ -5,8 +5,6 @@
 PacmanModel::PacmanModel(const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textureId )
     : m_position(position), m_textureId(textureId) { m_size = size; }
 
-
-
 void PacmanModel::update(float deltaTime) {
     if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
         direction = 0;
