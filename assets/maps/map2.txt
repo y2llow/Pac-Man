@@ -13,9 +13,9 @@ xxxxx.x.xxxxx.x.xxxxx
  xxxx.x.xxxxx.x.xxxx
  x........x........x
  x.xx.xxx.x.xxx.xx.x
- xf.x.....P.....x.fx
+ x..x.....P.....x..x
  xx.x.x.xxxxx.x.x.xx
  x....x...x...x....x
- x.xxxxxx.x.xxxxxx.x
+ xfxxxxxx.x.xxxxxxfx
  x.................x
  xxxxxxxxxxxxxxxxxxx
