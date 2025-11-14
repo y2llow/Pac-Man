@@ -11,57 +11,46 @@ PausedState::PausedState(StateManager& stateManager, sf::RenderWindow& window)
 void PausedState::initialize() {
     if (m_font.loadFromFile("assets/fonts/arial.ttf")) {
         const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
-        const float windowHeight =  pacman::representation::Game::WINDOW_HEIGHT;
+        const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
 
-        // Paused title (same style as MenuState title)
-        m_pauseText.setFont(m_font);
-        m_pauseText.setString("PAUSED");
-        m_pauseText.setCharacterSize(64);
-        m_pauseText.setFillColor(sf::Color(255, 255, 0)); // Bright yellow like Pac-Man
-        m_pauseText.setStyle(sf::Text::Bold);
-
-        // Center the pause text
-        sf::FloatRect pauseBounds = m_pauseText.getLocalBounds();
-        m_pauseText.setOrigin(pauseBounds.width / 2, pauseBounds.height / 2);
-        m_pauseText.setPosition(windowWidth / 2, 215);
-
-        // Continue instructions
-        m_continueText.setFont(m_font);
-        m_continueText.setString("PRESS ESC TO CONTINUE");
-        m_continueText.setCharacterSize(28);
-        m_continueText.setFillColor(sf::Color::White);
-        m_continueText.setStyle(sf::Text::Bold);
-
-        // Center the continue text
-        sf::FloatRect continueBounds = m_continueText.getLocalBounds();
-        m_continueText.setOrigin(continueBounds.width / 2, continueBounds.height / 2);
-        m_continueText.setPosition(windowWidth / 2, 300);
-
-        // Menu instructions
-        m_menuText.setFont(m_font);
-        m_menuText.setString("PRESS M FOR MAIN MENU");
-        m_menuText.setCharacterSize(28);
-        m_menuText.setFillColor(sf::Color::White);
-        m_menuText.setStyle(sf::Text::Bold);
-
-        // Center the menu text
-        sf::FloatRect menuBounds = m_menuText.getLocalBounds();
-        m_menuText.setOrigin(menuBounds.width / 2, menuBounds.height / 2);
-        m_menuText.setPosition(windowWidth / 2, 361);
-
-        // Create a semi-transparent overlay (darker than MenuState for better contrast)
+        // Create the overlay first (darker for contrast)
         m_overlay.setSize(sf::Vector2f(windowWidth, windowHeight));
         m_overlay.setFillColor(sf::Color(0, 0, 0, 180)); // Darker overlay for better readability
 
-        // Optional: Add a centered background panel like MenuState
-        m_backgroundPanel.setSize(sf::Vector2f(400, 250));
+        // Create the background panel
+        m_backgroundPanel.setSize(sf::Vector2f(400, 150));
         m_backgroundPanel.setFillColor(sf::Color(30, 30, 60, 220)); // Same blue as MenuState
         m_backgroundPanel.setOutlineColor(sf::Color(255, 255, 0)); // Yellow border
         m_backgroundPanel.setOutlineThickness(3);
         m_backgroundPanel.setOrigin(200, 125); // Center the panel
         m_backgroundPanel.setPosition(windowWidth / 2, windowHeight / 2);
+
+        // Create and position texts (PAUSED, Continue, Menu)
+        auto createText = [&](sf::Text& text, const std::string& content, unsigned int charSize, const sf::Color& color, sf::Text::Style style,
+                              float xOffset, float yOffset) {
+            text.setFont(m_font);
+            text.setString(content);
+            text.setCharacterSize(charSize);
+            text.setFillColor(color);
+            text.setStyle(style);
+
+            // Center the text based on window width/height and offsets
+            sf::FloatRect textBounds = text.getLocalBounds();
+            text.setOrigin(textBounds.width / 2, textBounds.height / 2);
+            text.setPosition(windowWidth * xOffset, windowHeight * yOffset);
+        };
+
+        // PAUSED title text (same style as MenuState title)
+        createText(m_pauseText, "PAUSED", 64, sf::Color(255, 255, 0), sf::Text::Bold, 0.5f, 0.25f);
+
+        // Continue instructions
+        createText(m_continueText, "PRESS ESC TO CONTINUE", 28, sf::Color::White, sf::Text::Bold, 0.5f, 0.4f);
+
+        // Menu instructions
+        createText(m_menuText, "PRESS M FOR MAIN MENU", 28, sf::Color::White, sf::Text::Bold, 0.5f, 0.45f);
     }
 }
+
 
 void PausedState::update(float deltaTime) {
     // Optional: Add blinking effect for instructions (like MenuState)

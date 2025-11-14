@@ -1,4 +1,6 @@
 #include "states/MenuState.h"
+
+#include "Game.h"
 #include "StateManger.h"
 #include "states/LevelState.h"
 #include <fstream>
@@ -15,8 +17,7 @@ void MenuState::initialize() {
     // Load font
     if (m_font.loadFromFile("assets/fonts/arial.ttf")) {
         // Window dimensions for centering
-        const float windowWidth = 800;
-        const float windowHeight = m_window.getSize().y;
+        const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
 
         // Title with gradient effect (yellow like Pac-Man)
         m_titleText.setFont(m_font);
