@@ -43,7 +43,7 @@ void World::createEntitiesFromMap() {
 
                 auto coin = m_factory->createCoin(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    sf::Vector2f(tileWidth , tileHeight ),
                     "Coin"
                 );
                 m_coins.push_back(std::move(coin));
@@ -54,21 +54,10 @@ void World::createEntitiesFromMap() {
 
                 auto pacman = m_factory->createPacman(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    sf::Vector2f(tileWidth, tileHeight ),
                     "Pacman");
 
                 m_pacman.push_back(std::move(pacman));
-            }
-            else if ((grid[y][x] == 'r')||(grid[y][x] == 'b')||(grid[y][x] == 'p')||(grid[y][x] == 'o')) {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
-                auto ghost = m_factory->createGhost(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * 1.0f, tileHeight * 1.0f),
-                    "ghost");
-
-                m_ghosts.push_back(std::move(ghost));
             }
             else if (grid[y][x] == 'f' ){
                 float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
@@ -76,10 +65,21 @@ void World::createEntitiesFromMap() {
 
                 auto fruit = m_factory->createFruit(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * 1.0f, tileHeight * 1.0f),
+                    sf::Vector2f(tileWidth , tileHeight ),
                     "fruit");
 
                 m_fruits.push_back(std::move(fruit));
+            }
+            else if ((grid[y][x] == 'r')||(grid[y][x] == 'b')||(grid[y][x] == 'p')||(grid[y][x] == 'o')) {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                auto ghost = m_factory->createGhost(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth, tileHeight),
+                    "ghost");
+
+                m_ghosts.push_back(std::move(ghost));
             }
             // r = red
             // b = blue

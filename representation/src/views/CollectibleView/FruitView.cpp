@@ -1,4 +1,6 @@
 #include "views/CollectibleView/FruitView.h"
+
+#include "Game.h"
 FruitView::FruitView(FruitModel& fruitmodel, sf::RenderWindow& window): m_fruitmodel(fruitmodel), m_window(window) {
     //set shape
     m_circle.setFillColor(sf::Color(0,255,0));
@@ -24,8 +26,8 @@ void FruitView::updateShape() {
     // Convert normalized coordinates [-1, 1] to pixel coordinates
     sf::Vector2f logicPos = m_fruitmodel.getPosition();
 
-    const float windowWidth = 800.0f;
-    const float windowHeight = 600.0f;
+    const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
+    const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
 
     // Convert from normalized [-1,1] to pixel coordinates [0,800]
     float pixelX = (logicPos.x + 1.0f) * (windowWidth / 2.0f);

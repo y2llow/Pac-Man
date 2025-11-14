@@ -13,6 +13,11 @@ public:
 
     void run();
 
+    // Configuration - exactly like your image
+    static constexpr unsigned int WINDOW_WIDTH = 800;
+    static constexpr unsigned int WINDOW_HEIGHT = 800;
+    static constexpr unsigned int FPS_LIMIT = 60;
+
 private:
     std::unique_ptr<sf::RenderWindow> m_window;
     StateManager m_stateManager;
@@ -21,10 +26,7 @@ private:
     void update(float deltaTime);
     void render();
 
-    // Configuration - exactly like your image
-    static constexpr unsigned int WINDOW_WIDTH = 800;
-    static constexpr unsigned int WINDOW_HEIGHT = 600;
-    static constexpr unsigned int FPS_LIMIT = 60;
+
 };
 
 } // namespace pacman::representation

@@ -1,5 +1,6 @@
 #include "views/characterview/PacmanView.h"
 
+#include "Game.h"
 #include "entities/PacmanModel.h"
 
 PacmanView::PacmanView(PacmanModel& coinModel, sf::RenderWindow& window)
@@ -26,8 +27,8 @@ void PacmanView::updateShape() {
     // Convert normalized coordinates [-1, 1] to pixel coordinates
     sf::Vector2f logicPos = m_pacmanmodel.getPosition();
 
-    const float windowWidth = 800.0f;
-    const float windowHeight = 600.0f;
+    const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
+    const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
 
     // Convert from normalized [-1,1] to pixel coordinates [0,800]
     float pixelX = (logicPos.x + 1.0f) * (windowWidth / 2.0f);

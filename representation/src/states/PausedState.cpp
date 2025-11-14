@@ -1,4 +1,6 @@
 #include "states/PausedState.h"
+
+#include "Game.h"
 #include "StateManger.h"
 #include "states/MenuState.h"
 
@@ -8,8 +10,8 @@ PausedState::PausedState(StateManager& stateManager, sf::RenderWindow& window)
 
 void PausedState::initialize() {
     if (m_font.loadFromFile("assets/fonts/arial.ttf")) {
-        const float windowWidth = 800;
-        const float windowHeight = 600;
+        const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
+        const float windowHeight =  pacman::representation::Game::WINDOW_HEIGHT;
 
         // Paused title (same style as MenuState title)
         m_pauseText.setFont(m_font);

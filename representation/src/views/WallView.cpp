@@ -1,4 +1,6 @@
 #include "views/WallView.h"
+
+#include "Game.h"
 #include "../../../logic/include/entities/WallModel.h"
 
 WallView::WallView(WallModel& model, sf::RenderWindow& window) 
@@ -23,8 +25,8 @@ void WallView::updateShape() {
 
     // Use proper coordinate conversion (you'll need to pass Camera to WallView)
     // For now, use the same conversion but make it consistent
-    const float windowWidth = 800.0f;  // Match your window size
-    const float windowHeight = 600.0f;
+    const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;  // Match your window size
+    const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
 
     float pixelX = (logicPos.x + 1.0f) * (windowWidth / 2.0f);
     float pixelY = (logicPos.y + 1.0f) * (windowHeight / 2.0f);

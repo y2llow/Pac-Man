@@ -6,7 +6,7 @@
  x....x...x...x....x
  xxxx.xxx.x.xxx.xxxx
     x.x...r...x.x
-xxxxx.x.xx=xx.x.xxxxx
+xxxxx.x.xx xx.x.xxxxx
      ...xbpox...
 xxxxx.x.xxxxx.x.xxxxx
     x.x.......x.x
