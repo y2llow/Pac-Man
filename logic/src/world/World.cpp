@@ -59,21 +59,32 @@ void World::createEntitiesFromMap() {
 
                 m_pacman.push_back(std::move(pacman));
             }
-            else if ((grid[y][x] == '0')||(grid[y][x] == '1')||(grid[y][x] == '2')||(grid[y][x] == '3')) {
+            else if ((grid[y][x] == 'r')||(grid[y][x] == 'b')||(grid[y][x] == 'p')||(grid[y][x] == 'o')) {
                 float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
-                auto pacman = m_factory->createPacman(
+                auto ghost = m_factory->createGhost(
                     sf::Vector2f(posX, posY),
                     sf::Vector2f(tileWidth * 1.0f, tileHeight * 1.0f),
-                    "Pacman");
+                    "ghost");
 
-                m_pacman.push_back(std::move(pacman));
+                m_ghosts.push_back(std::move(ghost));
             }
-            // 0 = red
-            // 1 = blue
-            // 2 = pink
-            // 3 = orange
+            else if (grid[y][x] == 'f' ){
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                auto fruit = m_factory->createFruit(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth * 1.0f, tileHeight * 1.0f),
+                    "fruit");
+
+                m_fruits.push_back(std::move(fruit));
+            }
+            // r = red
+            // b = blue
+            // p = pink
+            // o = orange
         }
     }
     //TODO remove
@@ -95,6 +106,13 @@ void World::update(float deltaTime) {
     for (auto& pacman : m_pacman) {
         pacman->update(deltaTime);
     }
+    for (auto& ghost : m_ghosts) {
+        ghost->update(deltaTime);
+    }
+    for (auto& fruit : m_fruits) {
+        fruit->update(deltaTime);
+    }
+
 
 }
 

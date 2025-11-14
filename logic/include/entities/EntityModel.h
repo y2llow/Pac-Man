@@ -3,6 +3,7 @@
 
 #include "patterns/Subject.h"
 #include <SFML/System/Vector2.hpp>
+#include <string>
 
 class EntityModel : public Subject {
 public:

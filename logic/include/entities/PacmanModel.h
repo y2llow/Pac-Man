@@ -2,7 +2,6 @@
 #define PACMAN_H
 
 #include "EntityModel.h"
-#include <SFML/System.hpp>
 
 
 class PacmanModel : public EntityModel {
@@ -17,7 +16,7 @@ public:
 
     // Pacman specific funcitons
 
-    private:
+private:
     //default privates
     sf::Vector2f m_position;
     std::string m_textureId;

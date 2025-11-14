@@ -1,11 +1,14 @@
 #include "factory/ConcreteFactory.h"
 #include "entities/WallModel.h"
 #include "entities/CoinModel.h"
+#include "entities/FruitModel.h"
+#include "entities/GhostModel.h"
 #include "entities/PacmanModel.h"
-#include "patterns/AbstractFactory.h"
 #include "views/WallView.h"
 #include "views/CollectibleView/CoinView.h"
 #include "patterns/Subject.h"
+#include "views/CollectibleView/FruitView.h"
+#include "views/characterview/GhostView.h"
 #include "views/characterview/PacmanView.h"
 
 SFMLFactory::SFMLFactory(sf::RenderWindow& window) 
@@ -83,4 +86,54 @@ std::unique_ptr<PacmanModel> SFMLFactory::createPacman(
 
     // 4. Return only the Model to World
     return pacmanModel;
+}
+
+std::unique_ptr<GhostModel> SFMLFactory::createGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId) {
+
+    // 1. Create the Model (logic)
+    auto ghostModel = std::make_unique<GhostModel>(position, size, textureId);
+
+    // 2. Create the View (representation)
+    auto ghostView = std::make_unique<GhostView>(*ghostModel, m_window);
+
+    // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
+    ghostModel->attachObserver([view = ghostView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    m_views.push_back(std::move(ghostView));
+
+
+    // 4. Return only the Model to World
+    return ghostModel;
+}
+
+std::unique_ptr<FruitModel> SFMLFactory::createFruit(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId) {
+
+    // 1. Create the Model (logic)
+    auto fruitModel = std::make_unique<FruitModel>(position, size, textureId);
+
+    // 2. Create the View (representation)
+    auto fruitView = std::make_unique<FruitView>(*fruitModel, m_window);
+
+    // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
+    fruitModel->attachObserver([view = fruitView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    m_views.push_back(std::move(fruitView));
+
+
+    // 4. Return only the Model to World
+    return fruitModel;
 }

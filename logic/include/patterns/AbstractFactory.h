@@ -38,6 +38,19 @@ public:
     const std::string& textureId = std::string("")
     ) = 0;
 
+    virtual std::unique_ptr<GhostModel> createGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) = 0;
+
+    virtual std::unique_ptr<FruitModel> createFruit(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) = 0;
+
+
 };
 
 #endif //ABSTRACTFACTORY_H
