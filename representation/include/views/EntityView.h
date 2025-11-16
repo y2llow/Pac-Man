@@ -3,12 +3,12 @@
 #include "patterns/Observer.h"
 #include <SFML/Graphics.hpp>
 
-class EntityView : public Observer{  // ← AbstractProductB interface
+class EntityView : public Observer{
 public:
     virtual ~EntityView() = default;
-    // Make these virtual but not pure virtual
+
     virtual void update() {}
-    virtual void draw(sf::RenderWindow& window) = 0; // Keep this pure virtual
+    virtual void draw(sf::RenderWindow& window) = 0;
 
 };
 #endif //ENTITYVIEZ_H

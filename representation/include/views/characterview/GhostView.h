@@ -19,8 +19,8 @@ protected:
     sf::Sprite m_sprite;
     sf::CircleShape m_circle;
 
-    virtual void updateShape();  // Made virtual for overriding
-    virtual void setupShape();   // Added for initial shape setup
+    virtual void updateShape();
+    virtual void setupShape();
 };
 
 class RedGhostView : public GhostView {
@@ -43,8 +43,7 @@ public:
     void draw(sf::RenderWindow& window) override;
 
 protected:
-    void setupShape() override;   // Override for different color/setup
-    // Don't override updateShape() unless you need different positioning logic
+    void setupShape() override;
 };
 
 class OrangeGhostView : public GhostView {
@@ -55,8 +54,7 @@ public:
     void draw(sf::RenderWindow& window) override;
 
 protected:
-    void setupShape() override;   // Override for different color/setup
-    // Don't override updateShape() unless you need different positioning logic
+    void setupShape() override;
 };
 
 class PinkGhostView : public GhostView {
@@ -67,8 +65,7 @@ public:
     void draw(sf::RenderWindow& window) override;
 
 protected:
-    void setupShape() override;   // Override for different color/setup
-    // Don't override updateShape() unless you need different positioning logic
+    void setupShape() override;
 };
 
 #endif //GHOSTVIEW_H

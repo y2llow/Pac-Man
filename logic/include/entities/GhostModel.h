@@ -13,15 +13,16 @@ public:
     void setPosition(const sf::Vector2f& position) override;
     [[nodiscard]]  sf::Vector2f getSize() const override{return m_size;}
 
-    // Pacman specific funcitons
+    //Ghost specific funcitons
     sf::Vector2f CheckTunneling(sf::Vector2f position);
 
-protected:    //default privates
+protected:
+    //default privates
     sf::Vector2f m_position;
     std::string m_textureId;
     sf::Vector2f m_size;
 
-    //pacman specific privates
+    //Ghost specific privates
     double GHOST_SPEED = 0.1;
 
     };
@@ -34,11 +35,11 @@ public:
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
 
-    // Pacman specific funcitons
+    // RedGhost specific funcitons
 
 private:
 
-    //pacman specific privates
+    //RedGhost specific privates
 };
 
 class BlueGhostModel : public GhostModel {
@@ -49,11 +50,11 @@ public:
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
 
-    // Pacman specific funcitons
+    // BlueGhost specific funcitons
 
 private:
 
-    //pacman specific privates
+    //BlueGhost specific privates
 };
 
 class OrangeGhostModel : public GhostModel {
@@ -64,11 +65,11 @@ public:
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
 
-    // Pacman specific funcitons
+    // PacOrangeGhostman specific funcitons
 
 private:
 
-    //pacman specific privates
+    //OrangeGhost specific privates
 };
 
 class PinkGhostModel : public GhostModel {
@@ -79,10 +80,10 @@ public:
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
 
-    // Pacman specific funcitons
+    // PinkGhost specific funcitons
 
 private:
 
-    //pacman specific privates
+    //PinkGhost specific privates
 };
 #endif //GHOST_H
