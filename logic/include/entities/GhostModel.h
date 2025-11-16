@@ -14,6 +14,7 @@ public:
     [[nodiscard]]  sf::Vector2f getSize() const override{return m_size;}
 
     // Pacman specific funcitons
+    sf::Vector2f CheckTunneling(sf::Vector2f position);
 
 protected:    //default privates
     sf::Vector2f m_position;
@@ -21,7 +22,7 @@ protected:    //default privates
     sf::Vector2f m_size;
 
     //pacman specific privates
-    unsigned char GHOST_SPEED = 3;
+    double GHOST_SPEED = 0.1;
 
     };
 
