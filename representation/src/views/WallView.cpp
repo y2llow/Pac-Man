@@ -40,7 +40,4 @@ void WallView::updateShape() {
 
     // Set position
     m_shape.setPosition(pixelPos);
-
-    // NO SCALING - we already set the correct size above
-    // Remove this line: m_shape.setScale(scaleX, scaleY);
 }
