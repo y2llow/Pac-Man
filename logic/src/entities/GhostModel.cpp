@@ -7,7 +7,7 @@
  }
 
 void GhostModel::update(float deltaTime)  {
-     // notify observer when soemthing happens
+     // m_position.x += GHOST_SPEED;
  }
 
 
@@ -20,20 +20,31 @@ void GhostModel::setPosition(const sf::Vector2f& position)  {
 // RedGhostModel constructor is now just calling base constructor
 void RedGhostModel::update(float deltaTime) {
      // RedGhost-specific update logic
+     m_position.x += 0.1 * deltaTime ;
+     notifyObservers();
+
  }
 
 // RedGhostModel constructor is now just calling base constructor
 void BlueGhostModel::update(float deltaTime) {
      // RedGhost-specific update logic
+     m_position.x -= 0.1*deltaTime ;
+     notifyObservers();
  }
 
 // RedGhostModel constructor is now just calling base constructor
 void OrangeGhostModel::update(float deltaTime) {
      // RedGhost-specific update logic
+     m_position.y += 0.1*deltaTime ;
+     notifyObservers();
+
  }
 
 // RedGhostModel constructor is now just calling base constructor
 void PinkGhostModel::update(float deltaTime) {
      // RedGhost-specific update logic
+     m_position.y -= 0.1*deltaTime ;
+     notifyObservers();
+
  }
 

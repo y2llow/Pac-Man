@@ -21,6 +21,8 @@ protected:    //default privates
     sf::Vector2f m_size;
 
     //pacman specific privates
+    unsigned char GHOST_SPEED = 3;
+
     };
 
 class RedGhostModel : public GhostModel {
