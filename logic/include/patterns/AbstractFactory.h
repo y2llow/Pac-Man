@@ -1,6 +1,9 @@
 #ifndef ABSTRACTFACTORY_H
 #define ABSTRACTFACTORY_H
 
+#include "entities/GhostModel.h"
+
+
 #include <memory>
 #include <string>
 #include"entities/WallModel.h"
@@ -38,7 +41,25 @@ public:
     const std::string& textureId = std::string("")
     ) = 0;
 
-    virtual std::unique_ptr<GhostModel> createGhost(
+    virtual std::unique_ptr<RedGhostModel> createRedGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) = 0;
+
+    virtual std::unique_ptr<BlueGhostModel> createBlueGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) = 0;
+
+    virtual std::unique_ptr<OrangeGhostModel> createOrangeGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) = 0;
+
+    virtual std::unique_ptr<PinkGhostModel> createPinkGhost(
     const sf::Vector2f& position,
     const sf::Vector2f& size,
     const std::string& textureId = std::string("")

@@ -88,16 +88,91 @@ std::unique_ptr<PacmanModel> SFMLFactory::createPacman(
     return pacmanModel;
 }
 
-std::unique_ptr<GhostModel> SFMLFactory::createGhost(
+std::unique_ptr<RedGhostModel> SFMLFactory::createRedGhost(
     const sf::Vector2f& position,
     const sf::Vector2f& size,
     const std::string& textureId) {
 
     // 1. Create the Model (logic)
-    auto ghostModel = std::make_unique<GhostModel>(position, size, textureId);
+    auto ghostModel = std::make_unique<RedGhostModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto ghostView = std::make_unique<GhostView>(*ghostModel, m_window);
+    auto ghostView = std::make_unique<RedGhostView>(*ghostModel, m_window);
+
+    // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
+    ghostModel->attachObserver([view = ghostView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    m_views.push_back(std::move(ghostView));
+
+
+    // 4. Return only the Model to World
+    return ghostModel;
+}
+
+std::unique_ptr<BlueGhostModel> SFMLFactory::createBlueGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId) {
+
+    // 1. Create the Model (logic)
+    auto ghostModel = std::make_unique<BlueGhostModel>(position, size, textureId);
+
+    // 2. Create the View (representation)
+    auto ghostView = std::make_unique<BlueGhostView>(*ghostModel, m_window);
+
+    // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
+    ghostModel->attachObserver([view = ghostView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    m_views.push_back(std::move(ghostView));
+
+
+    // 4. Return only the Model to World
+    return ghostModel;
+}
+
+std::unique_ptr<OrangeGhostModel> SFMLFactory::createOrangeGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId) {
+
+    // 1. Create the Model (logic)
+    auto ghostModel = std::make_unique<OrangeGhostModel>(position, size, textureId);
+
+    // 2. Create the View (representation)
+    auto ghostView = std::make_unique<OrangeGhostView>(*ghostModel, m_window);
+
+    // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
+    ghostModel->attachObserver([view = ghostView.get()]() {
+        if (view) {
+            view->update();
+        }
+    });
+
+    m_views.push_back(std::move(ghostView));
+
+
+    // 4. Return only the Model to World
+    return ghostModel;
+}
+
+std::unique_ptr<PinkGhostModel> SFMLFactory::createPinkGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId) {
+
+    // 1. Create the Model (logic)
+    auto ghostModel = std::make_unique<PinkGhostModel>(position, size, textureId);
+
+    // 2. Create the View (representation)
+    auto ghostView = std::make_unique<PinkGhostView>(*ghostModel, m_window);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     ghostModel->attachObserver([view = ghostView.get()]() {

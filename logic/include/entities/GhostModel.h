@@ -5,7 +5,7 @@
 
 class GhostModel : public EntityModel {
 public:
-    GhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "") ;
+    GhostModel(const sf::Vector2f& position, const sf::Vector2f& size,std::string  textureId = "") ;
 
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
@@ -15,12 +15,71 @@ public:
 
     // Pacman specific funcitons
 
-private:
-    //default privates
+protected:    //default privates
     sf::Vector2f m_position;
     std::string m_textureId;
     sf::Vector2f m_size;
 
     //pacman specific privates
     };
+
+class RedGhostModel : public GhostModel {
+public:
+    RedGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    : GhostModel(position,size,textureId){}
+
+    // overwritten functiosn from entityModel
+    void update(float deltaTime) override ;
+
+    // Pacman specific funcitons
+
+private:
+
+    //pacman specific privates
+};
+
+class BlueGhostModel : public GhostModel {
+public:
+    BlueGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    : GhostModel(position,size,textureId){}
+
+    // overwritten functiosn from entityModel
+    void update(float deltaTime) override ;
+
+    // Pacman specific funcitons
+
+private:
+
+    //pacman specific privates
+};
+
+class OrangeGhostModel : public GhostModel {
+public:
+    OrangeGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    : GhostModel(position,size,textureId){}
+
+    // overwritten functiosn from entityModel
+    void update(float deltaTime) override ;
+
+    // Pacman specific funcitons
+
+private:
+
+    //pacman specific privates
+};
+
+class PinkGhostModel : public GhostModel {
+public:
+    PinkGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    : GhostModel(position,size,textureId){}
+
+    // overwritten functiosn from entityModel
+    void update(float deltaTime) override ;
+
+    // Pacman specific funcitons
+
+private:
+
+    //pacman specific privates
+};
 #endif //GHOST_H

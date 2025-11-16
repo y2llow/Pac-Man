@@ -5,7 +5,7 @@
 
 PacmanView::PacmanView(PacmanModel& coinModel, sf::RenderWindow& window)
      : m_pacmanmodel(coinModel), m_window(window){
-    m_circle.setFillColor(sf::Color(255,255,0));
+    m_circle.setFillColor(sf::Color(252, 252, 2));
     m_circle.setRadius(10);
     m_circle.setOrigin(10.0f, 10.0f);
 

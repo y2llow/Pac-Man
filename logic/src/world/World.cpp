@@ -70,14 +70,45 @@ void World::createEntitiesFromMap() {
 
                 m_fruits.push_back(std::move(fruit));
             }
-            else if ((grid[y][x] == 'r')||(grid[y][x] == 'b')||(grid[y][x] == 'p')||(grid[y][x] == 'o')) {
+            else if (grid[y][x] == 'r') {
                 float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
-                auto ghost = m_factory->createGhost(
+                auto ghost = m_factory->createRedGhost(
                     sf::Vector2f(posX, posY),
                     sf::Vector2f(tileWidth, tileHeight),
-                    "ghost");
+                    "red_ghost");
+
+                m_ghosts.push_back(std::move(ghost));
+            }
+            else if (grid[y][x] == 'b') {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                auto ghost = m_factory->createBlueGhost(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth, tileHeight),
+                    "blue_ghost");
+
+                m_ghosts.push_back(std::move(ghost));
+            }            else if (grid[y][x] == 'o') {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                auto ghost = m_factory->createOrangeGhost(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth, tileHeight),
+                    "orange_ghost");
+
+                m_ghosts.push_back(std::move(ghost));
+            }            else if (grid[y][x] == 'p') {
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+
+                auto ghost = m_factory->createPinkGhost(
+                    sf::Vector2f(posX, posY),
+                    sf::Vector2f(tileWidth, tileHeight),
+                    "pink_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
             }

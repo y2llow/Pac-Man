@@ -31,11 +31,29 @@ public:
         const std::string&textureId= std::string("")
         ) override;
 
-    std::unique_ptr<GhostModel> createGhost(
+    std::unique_ptr<RedGhostModel> createRedGhost(
         const sf::Vector2f& position,
         const sf::Vector2f& size,
         const std::string& textureId = std::string("")
         ) override ;
+
+    std::unique_ptr<BlueGhostModel> createBlueGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) override ;
+
+    std::unique_ptr<OrangeGhostModel> createOrangeGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) override ;
+
+    std::unique_ptr<PinkGhostModel> createPinkGhost(
+    const sf::Vector2f& position,
+    const sf::Vector2f& size,
+    const std::string& textureId = std::string("")
+    ) override ;
 
     std::unique_ptr<FruitModel> createFruit(
         const sf::Vector2f& position,
