@@ -18,19 +18,19 @@ void PacmanModel::update(float deltaTime) {
 
     switch (direction){
     case 0 :{
-        m_position.x += PACMAN_SPEED;
+        m_position.x -= PACMAN_SPEED*deltaTime;
         break;
         }
     case 1:{
-        m_position.y -= PACMAN_SPEED;
+        m_position.y += PACMAN_SPEED*deltaTime;
         break;
     }
     case 2:{
-        m_position.x -= PACMAN_SPEED;
+        m_position.x += PACMAN_SPEED*deltaTime;
         break;
         }
     case 3:{
-        m_position.y += PACMAN_SPEED;
+        m_position.y -= PACMAN_SPEED*deltaTime;
         }
     }
 
@@ -106,17 +106,16 @@ void PacmanModel::update(float deltaTime) {
 
     // tunneling
     m_position = CheckTunneling(m_position);
+    notifyObservers();
 }
 
 sf::Vector2f PacmanModel::CheckTunneling(sf::Vector2f position) {
-    // TODO remove the hardcoded x
-    int x = 270;
-
-    if (x <= position.x){
-        position.x = -x ;
+    float edge = 1 + m_size.x / 2;
+    if (-edge >= position.x){
+        position.x = edge ;
         return position;
-    }if (-x >= position.x){
-        position.x = x;
+    }if (edge <= position.x){
+        position.x = -edge;
         return position;
     }
     return position;

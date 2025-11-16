@@ -14,6 +14,7 @@ PacmanView::PacmanView(PacmanModel& coinModel, sf::RenderWindow& window)
 
 void PacmanView::update(){
     // Update sprite when moving left or right
+    updateShape();
 
     // Update sprite when dying
 
@@ -21,7 +22,6 @@ void PacmanView::update(){
 
 void PacmanView::draw(sf::RenderWindow& window) {
 
-    m_circle.setOrigin(m_pacmanmodel.getPosition());
     m_window.draw(m_circle);
 }
 

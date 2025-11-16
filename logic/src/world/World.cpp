@@ -49,8 +49,8 @@ void World::createEntitiesFromMap() {
                 m_coins.push_back(std::move(coin));
             }
             else if (grid[y][x] == 'P') {
-                float posX = -1.03333333f + (x * tileWidth) + (tileWidth / 2.0f) ;
-                float posY = -1.03333333f + (y * tileHeight) + (tileHeight / 2.0f);
+                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f) ;
+                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto pacman = m_factory->createPacman(
                     sf::Vector2f(posX, posY),
