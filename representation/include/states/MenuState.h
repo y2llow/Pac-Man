@@ -17,14 +17,20 @@ private:
     sf::RenderWindow& m_window;
     sf::Font m_font;
     sf::Text m_titleText;
-    sf::Text m_playText;
+    sf::Text m_playButtonText;
+    sf::RectangleShape m_playButton;
     sf::Text m_highScoreTitle;
     std::vector<sf::Text> m_highScoreTexts;
     std::vector<int> m_highScores;
     sf::RectangleShape m_highScoreBackground;
 
-    void loadHighScores();  // laadt scores uit bestand
-    void updateHighScoreDisplay();  // update de display
+    bool m_isButtonHovered;
+
+    void loadHighScores();
+    void updateHighScoreDisplay();
+    void updateLayout();  // Updates positions when window resizes
+    bool isMouseOverButton(const sf::Vector2i& mousePos) const;
+    void startGame();
 
 };
 

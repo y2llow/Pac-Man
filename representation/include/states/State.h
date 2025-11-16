@@ -15,6 +15,8 @@ public:
     virtual void update(float deltaTime) = 0;
     virtual void render() = 0;
     virtual void handleEvent(const sf::Event& event) = 0;
+    virtual void onEnter() {}  // Called when state becomes active (optional override)
+
 
 protected:
     StateManager& m_stateManager;

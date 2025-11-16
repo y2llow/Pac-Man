@@ -17,6 +17,11 @@ LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window)
  * Set window, load in walls, coins, fruits, pac-man and ghosts from map by using factory
  */
 void LevelState::initialize() {
+    // Reset the view to match current window size
+    sf::Vector2u windowSize = m_window.getSize();
+    sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);
+    m_window.setView(sf::View(visibleArea));
+
     //initialise world
     m_world = std::make_unique<World>(m_window.getSize(), *m_factory);
     m_world->initialize();
