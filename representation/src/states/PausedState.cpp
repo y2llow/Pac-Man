@@ -4,8 +4,8 @@
 #include "StateManger.h"
 #include "states/MenuState.h"
 
-PausedState::PausedState(StateManager& stateManager, sf::RenderWindow& window)
-    : State(stateManager), m_window(window) {
+PausedState::PausedState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
+    : State(stateManager), m_window(window), m_camera(camera) {
 }
 
 void PausedState::initialize() {
@@ -104,7 +104,7 @@ void PausedState::handleEvent(const sf::Event& event) {
             m_stateManager.popState();
             break;
         case sf::Keyboard::M:
-            m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window));
+            m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
             break;
         }
     }

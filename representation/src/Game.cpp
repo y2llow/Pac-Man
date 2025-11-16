@@ -7,7 +7,7 @@ Game::Game()
           sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
           "Pac-Man"
       ))
-    , m_stateManager(*m_window) {
+    , m_camera(Camera(*m_window)), m_stateManager(*m_window) {
 
     m_window->setFramerateLimit(FPS_LIMIT);
 }
@@ -17,7 +17,7 @@ Game::Game()
  */
 void Game::run() {
     // Push MenuState so Menu can be shown on screen
-    m_stateManager.pushState(std::make_unique<MenuState>(m_stateManager, *m_window));
+    m_stateManager.pushState(std::make_unique<MenuState>(m_stateManager, *m_window, m_camera));
 
     while (m_window->isOpen()) {
         processEvents();

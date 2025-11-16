@@ -1,34 +1,32 @@
 #include "Camera.h"
 
-
- /**
-  * Get window measurmetns from the LevelState
-  * @param m_windowsize
-  */
- Camera::Camera(sf::Vector2u m_windowsize){
-     m_height = m_windowsize.y;
-     m_width = m_windowsize.x;
-
-     m_centerX = m_windowsize.x / 2.0f;
-     m_centerY = m_windowsize.y / 2.0f;
+Camera::Camera(sf::RenderWindow& window)
+    : m_window(window) {
+    updateWindowSize();
 }
 
-sf::Vector2f Camera::worldToPixel(float worldX, float worldY,
-unsigned int screenWidth,
-unsigned int screenHeight) {
-    // Convert from [-1,1] to [0, screenSize]
-    float pixelX = (worldX + 1.0f) * 0.5f * screenWidth;
-    float pixelY = (1.0f - worldY) * 0.5f * screenHeight; // Flip Y-axis
+sf::Vector2f Camera::worldToPixel(const sf::Vector2f& worldPos) const {
+    // Convert from normalized [-1, 1] to pixel coordinates [0, windowSize]
+    float pixelX = (worldPos.x + 1.0f) * (m_windowSize.x / 2.0f);
+    float pixelY = (worldPos.y + 1.0f) * (m_windowSize.y / 2.0f);
 
-    return {pixelX, pixelY};
+    return sf::Vector2f(pixelX, pixelY);
 }
 
-sf::Vector2f Camera::pixelToWorld(int pixelX, int pixelY,
-                             unsigned int screenWidth,
-                             unsigned int screenHeight) const {
-    // Convert from [0, screenSize] to [-1,1]
-    float worldX = (pixelX / static_cast<float>(screenWidth)) * 2.0f - 1.0f;
-    float worldY = 1.0f - (pixelY / static_cast<float>(screenHeight)) * 2.0f;
+sf::Vector2f Camera::worldToPixelSize(const sf::Vector2f& worldSize) const {
+    // Convert normalized size to pixel size
+    float pixelWidth = worldSize.x * (m_windowSize.x / 2.0f);
+    float pixelHeight = worldSize.y * (m_windowSize.y / 2.0f);
 
-    return {worldX, worldY};
+    return sf::Vector2f(pixelWidth, pixelHeight);
+}
+
+sf::Vector2f Camera::getWindowSize() const {
+    return m_windowSize;
+}
+
+void Camera::updateWindowSize() {
+    sf::Vector2u windowSize = m_window.getSize();
+    m_windowSize = sf::Vector2f(static_cast<float>(windowSize.x),
+                               static_cast<float>(windowSize.y));
 }

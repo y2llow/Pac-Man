@@ -1,6 +1,7 @@
 #ifndef PAUSED_STATE_H
 #define PAUSED_STATE_H
 
+#include "Camera.h"
 #include "State.h"
 
 #include <memory>
@@ -8,7 +9,7 @@
 
 class PausedState : public State {
 public:
-    PausedState(StateManager& stateManager, sf::RenderWindow& window);
+    PausedState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera);
 
     void initialize() override;
     void update(float deltaTime) override;
@@ -18,6 +19,7 @@ public:
 
 private:
     sf::RenderWindow& m_window;
+    Camera& m_camera;
     sf::Font m_font;
     sf::Text m_pauseText;
     sf::Text m_continueText;

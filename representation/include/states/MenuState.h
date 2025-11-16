@@ -1,12 +1,13 @@
 #ifndef MENU_STATE_H
 #define MENU_STATE_H
 
+#include "Camera.h"
 #include "State.h"
 #include <SFML/Graphics.hpp>
 
 class MenuState : public State {
 public:
-    MenuState(StateManager& stateManager, sf::RenderWindow& window);
+    MenuState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera);
     
     void initialize() override;
     void update(float deltaTime) override;
@@ -15,6 +16,7 @@ public:
 
 private:
     sf::RenderWindow& m_window;
+    Camera& m_camera;
     sf::Font m_font;
     sf::Text m_titleText;
     sf::Text m_playButtonText;

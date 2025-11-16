@@ -11,8 +11,8 @@
 
 class LevelState;
 
-MenuState::MenuState(StateManager& stateManager, sf::RenderWindow& window)
-    : State(stateManager), m_window(window), m_isButtonHovered(false) {
+MenuState::MenuState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
+    : State(stateManager), m_window(window), m_isButtonHovered(false), m_camera(camera) {
 }
 
 void MenuState::initialize() {
@@ -163,7 +163,7 @@ bool MenuState::isMouseOverButton(const sf::Vector2i& mousePos) const {
 }
 
 void MenuState::startGame() {
-    m_stateManager.pushState(std::make_unique<LevelState>(m_stateManager, m_window));
+    m_stateManager.pushState(std::make_unique<LevelState>(m_stateManager, m_window, m_camera));
 }
 
 void MenuState::update(float deltaTime) {

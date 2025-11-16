@@ -1,16 +1,21 @@
 #include "views/WallView.h"
-
 #include "Game.h"
 #include "../../../logic/include/entities/WallModel.h"
 
-WallView::WallView(WallModel& model, sf::RenderWindow& window) 
-    : m_model(model) {
-    m_shape.setFillColor(((sf::Color(33,33,255))));
+WallView::WallView(WallModel& model, sf::RenderWindow& window, Camera& camera)
+    : m_window(window), m_model(model), m_camera(camera) {
+    setupRectangle();
     updateShape(); // Initial setup
 }
 
+void WallView::setupRectangle() {
+    m_shape.setFillColor(sf::Color::Blue);
+
+    // Center the origin (we'll set the actual size in updateShape)
+    m_shape.setOrigin(0.5f, 0.5f); // This will be relative to whatever size we set later
+}
+
 void WallView::update() {
-    // Called when WallModel notifies observers
     updateShape();
 }
 
@@ -21,18 +26,21 @@ void WallView::draw(sf::RenderWindow& window) {
 void WallView::updateShape() {
     // Convert normalized coordinates [-1, 1] to pixel coordinates
     sf::Vector2f logicPos = m_model.getPosition();
+    sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
+
+    // Convert normalized size to pixel size
     sf::Vector2f logicSize = m_model.getSize();
+    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Use proper coordinate conversion (you'll need to pass Camera to WallView)
-    // For now, use the same conversion but make it consistent
-    const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;  // Match your window size
-    const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
+    // Set the actual size - this determines the rectangle dimensions
+    m_shape.setSize(pixelSize);
 
-    float pixelX = (logicPos.x + 1.0f) * (windowWidth / 2.0f);
-    float pixelY = (logicPos.y + 1.0f) * (windowHeight / 2.0f);
-    float pixelWidth = logicSize.x * (windowWidth / 2.0f);
-    float pixelHeight = logicSize.y * (windowHeight / 2.0f);
+    // Update origin to be centered based on current size
+    m_shape.setOrigin(pixelSize.x / 2.0f, pixelSize.y / 2.0f);
 
-    m_shape.setPosition(pixelX - pixelWidth / 2, pixelY - pixelHeight / 2); // Center
-    m_shape.setSize(sf::Vector2f(pixelWidth, pixelHeight));
+    // Set position
+    m_shape.setPosition(pixelPos);
+
+    // NO SCALING - we already set the correct size above
+    // Remove this line: m_shape.setScale(scaleX, scaleY);
 }

@@ -2,8 +2,8 @@
 
 #include "Game.h"
 
-GhostView::GhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
-    :m_ghostmodel(ghostmodel), m_window(window) {
+GhostView::GhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
+    :m_ghostmodel(ghostmodel), m_window(window),m_camera(camera) {
 
     setupShape();
     updateShape();
@@ -12,8 +12,8 @@ GhostView::GhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
 void GhostView::setupShape() {
     // Default ghost shape - white
     m_circle.setFillColor(sf::Color(255, 255, 255));
-    m_circle.setRadius(10);
-    m_circle.setOrigin(10.0f, 10.0f);
+    m_circle.setRadius(GHOST_SIZE);
+    m_circle.setOrigin(GHOST_SIZE, GHOST_SIZE);
 }
 
 void GhostView::update() {
@@ -25,29 +25,27 @@ void GhostView::draw(sf::RenderWindow& window) {
 }
 
 void GhostView::updateShape() {
-    // Convert normalized coordinates [-1, 1] to pixel coordinates
+    // Convert normalized coordinates to pixel coordinates using camera
     sf::Vector2f logicPos = m_ghostmodel.getPosition();
+    sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
-    const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
-    const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
-
-    // Convert from normalized [-1,1] to pixel coordinates [0,800]
-    float pixelX = (logicPos.x + 1.0f) * (windowWidth / 2.0f);
-    float pixelY = (logicPos.y + 1.0f) * (windowHeight / 2.0f);
-
-    // Set position - circle is already centered due to setOrigin
-    m_circle.setPosition(pixelX, pixelY);
-
-    // Optional: Scale based on coin size if needed
+    // Convert normalized size to pixel size
     sf::Vector2f logicSize = m_ghostmodel.getSize();
-    float scaleX = logicSize.x * 15.0f;  // Adjust scaling factor as needed
-    float scaleY = logicSize.y * 15.0f;
+    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
+
+    // Set position
+    m_circle.setPosition(pixelPos);
+
+    // Scale based on converted size
+    float baseRadius = 10.0f;  // Base radius in pixels
+    float scaleX = pixelSize.x / baseRadius;
+    float scaleY = pixelSize.y / baseRadius;
     m_circle.setScale(scaleX, scaleY);
 }
 
 // ---------------------------------------------REDGHOST--------------------------------------------
-RedGhostView::RedGhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
-    : GhostView(ghostmodel, window) {  // Initialize base members
+RedGhostView::RedGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
+    : GhostView(ghostmodel, window, camera) {  // Initialize base members
 
     // Now re-setup with red color (overrides base setup)
     setupShape();
@@ -57,8 +55,8 @@ RedGhostView::RedGhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
 void RedGhostView::setupShape() {
     //set shape
     m_circle.setFillColor(sf::Color(233, 3, 8));
-    m_circle.setRadius(10);
-    m_circle.setOrigin(10.0f, 10.0f);
+    m_circle.setRadius(GHOST_SIZE);
+    m_circle.setOrigin(GHOST_SIZE, GHOST_SIZE);
 }
 
 void RedGhostView::update() {
@@ -76,8 +74,8 @@ void RedGhostView::draw(sf::RenderWindow& window) {
 }
 
 // ---------------------------------------------BLUEGHOST--------------------------------------------
-BlueGhostView::BlueGhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
-    : GhostView(ghostmodel, window) {  // Initialize base members
+BlueGhostView::BlueGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
+    : GhostView(ghostmodel, window, camera) {  // Initialize base members
 
     // Now re-setup with red color (overrides base setup)
     setupShape();
@@ -87,8 +85,8 @@ BlueGhostView::BlueGhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
 void BlueGhostView::setupShape() {
     //set shape
     m_circle.setFillColor(sf::Color(6, 176, 232));
-    m_circle.setRadius(10);
-    m_circle.setOrigin(10.0f, 10.0f);
+    m_circle.setRadius(GHOST_SIZE);
+    m_circle.setOrigin(GHOST_SIZE, GHOST_SIZE);
 }
 
 void BlueGhostView::update() {
@@ -106,8 +104,8 @@ void BlueGhostView::draw(sf::RenderWindow& window) {
 }
 
 // ---------------------------------------------ORANGEGHOST--------------------------------------------
-OrangeGhostView::OrangeGhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
-    : GhostView(ghostmodel, window) {  // Initialize base members
+OrangeGhostView::OrangeGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
+    : GhostView(ghostmodel, window,camera) {  // Initialize base members
 
     // Now re-setup with red color (overrides base setup)
     setupShape();
@@ -117,8 +115,8 @@ OrangeGhostView::OrangeGhostView(GhostModel& ghostmodel, sf::RenderWindow& windo
 void OrangeGhostView::setupShape() {
     //set shape
     m_circle.setFillColor(sf::Color(234, 133, 12));
-    m_circle.setRadius(10);
-    m_circle.setOrigin(10.0f, 10.0f);
+    m_circle.setRadius(GHOST_SIZE);
+    m_circle.setOrigin(GHOST_SIZE, GHOST_SIZE);
 }
 
 void OrangeGhostView::update() {
@@ -136,8 +134,8 @@ void OrangeGhostView::draw(sf::RenderWindow& window) {
 }
 
 // ---------------------------------------------PINKGHOST--------------------------------------------
-PinkGhostView::PinkGhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
-    : GhostView(ghostmodel, window) {  // Initialize base members
+PinkGhostView::PinkGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
+    : GhostView(ghostmodel, window,camera) {  // Initialize base members
 
     // Now re-setup with red color (overrides base setup)
     setupShape();
@@ -147,8 +145,8 @@ PinkGhostView::PinkGhostView(GhostModel& ghostmodel, sf::RenderWindow& window)
 void PinkGhostView::setupShape() {
     //set shape
     m_circle.setFillColor(sf::Color(240, 157, 178));
-    m_circle.setRadius(10);
-    m_circle.setOrigin(10.0f, 10.0f);
+    m_circle.setRadius(GHOST_SIZE);
+    m_circle.setOrigin(GHOST_SIZE, GHOST_SIZE);
 }
 
 void PinkGhostView::update() {

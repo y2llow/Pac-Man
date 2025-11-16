@@ -7,10 +7,10 @@
 #include <iostream>
 #include <memory>
 
-LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window)
+LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
     : State(stateManager), m_window(window),
-      m_factory(std::make_unique<SFMLFactory>(window)),
-      m_camera(window.getSize()) {
+      m_factory(std::make_unique<SFMLFactory>(window, camera)),
+      m_camera(camera) {
 }
 
 /**
@@ -53,7 +53,7 @@ void LevelState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
         case sf::Keyboard::Escape:
-            m_stateManager.pushState(std::make_unique<PausedState>(m_stateManager, m_window));
+            m_stateManager.pushState(std::make_unique<PausedState>(m_stateManager, m_window, m_camera));
             break;default: ;
         }
     }

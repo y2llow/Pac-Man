@@ -1,7 +1,10 @@
 #ifndef CONCRETEFACTORY_H
 #define CONCRETEFACTORY_H
+#include "Camera.h"
 #include "patterns/AbstractFactory.h"
 #include "views/EntityView.h"
+#include "views/CollectibleView/CoinView.h"
+
 #include <SFML/Graphics.hpp>
 #include <memory>
 
@@ -11,7 +14,7 @@ class CoinView;
 
 class SFMLFactory : public LogicFactory {
 public:
-    explicit SFMLFactory(sf::RenderWindow& window);
+    explicit SFMLFactory(sf::RenderWindow& window, Camera& camera);
 
     std::unique_ptr<WallModel> createWall(
         const sf::Vector2f& position,
@@ -65,6 +68,7 @@ public:
 
 private:
     sf::RenderWindow& m_window;
+    Camera m_camera;
     std::vector<std::unique_ptr<EntityView>> m_views; // Store views!
     std::vector<std::unique_ptr<Observer>> m_observers;
 

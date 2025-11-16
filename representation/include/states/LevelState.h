@@ -10,7 +10,7 @@
 
 class LevelState : public State {
 public:
-    LevelState(StateManager& stateManager, sf::RenderWindow& window);
+    LevelState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera);
 
     void initialize() override;
     void update(float deltaTime) override;
@@ -21,7 +21,7 @@ private:
     sf::RenderWindow& m_window;
     std::unique_ptr<SFMLFactory> m_factory;  // Factory for creating entities
     std::unique_ptr<World> m_world;          // World to manage entities
-    Camera m_camera;                         // For coordinate conversion
+    Camera& m_camera;                         // For coordinate conversion
     std::vector<std::unique_ptr<Observer>> m_entityViews;
 
     bool loadFromFile(const std::string& filename);

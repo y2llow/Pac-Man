@@ -4,13 +4,13 @@
 #include "entities/CoinModel.h"
 #include "rendering/SpriteManager.h"
 
-CoinView::CoinView(CoinModel& coinModel, sf::RenderWindow& window)
-    : m_coinModel(coinModel), m_window(window) {
+CoinView::CoinView(CoinModel& coinModel, sf::RenderWindow& window, Camera& camera)
+    : m_coinModel(coinModel), m_window(window), m_camera(camera){
     // Setup circle shape for coin
     m_circle.setFillColor(sf::Color(255, 184, 144));
-    float pellet = 1.15f;
-    m_circle.setRadius(pellet);  // Small radius for coins
-    m_circle.setOrigin(pellet, pellet);  // Center the circle
+
+    m_circle.setRadius(PELLET_SIZE);  // Small radius for coins
+    m_circle.setOrigin(PELLET_SIZE, PELLET_SIZE);  // Center the circle
 
     updateShape();
 
@@ -48,23 +48,21 @@ bool CoinView::shouldRender() const {
     return !m_coinModel.isCollected();  // Don't render collected coins
 }
 
-void CoinView::updateShape() {
-    // Convert normalized coordinates [-1, 1] to pixel coordinates
+void    CoinView::updateShape() {
+    // Convert normalized coordinates to pixel coordinates using camera
     sf::Vector2f logicPos = m_coinModel.getPosition();
+    sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
-    const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
-    const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
-
-    // Convert from normalized [-1,1] to pixel coordinates [0,800]
-    float pixelX = (logicPos.x + 1.0f) * (windowWidth / 2.0f);
-    float pixelY = (logicPos.y + 1.0f) * (windowHeight / 2.0f);
-
-    // Set position - circle is already centered due to setOrigin
-    m_circle.setPosition(pixelX, pixelY);
-
-    // Optional: Scale based on coin size if needed
+    // Convert normalized size to pixel size
     sf::Vector2f logicSize = m_coinModel.getSize();
-    float scaleX = logicSize.x * 20.0f;  // Adjust scaling factor as needed
-    float scaleY = logicSize.y * 20.0f;
+    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
+
+    // Set position
+    m_circle.setPosition(pixelPos);
+
+    // Scale based on converted size
+    float baseRadius = 10.0f;  // Base radius in pixels
+    float scaleX = pixelSize.x / baseRadius;
+    float scaleY = pixelSize.y / baseRadius;
     m_circle.setScale(scaleX, scaleY);
 }

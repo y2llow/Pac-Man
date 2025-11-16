@@ -1,30 +1,27 @@
 #ifndef CAMERA_H
 #define CAMERA_H
-#include <SFML/System/Vector2.hpp>
+
+#include <SFML/Graphics.hpp>
 
 class Camera {
 public:
-    explicit Camera(sf::Vector2u m_windowsize);
+    Camera(sf::RenderWindow& window);
 
-    // Convert normalized [-1,1] coordinates to pixel coordinates
-    static sf::Vector2f worldToPixel(float worldX, float worldY,
-                         unsigned int screenWidth,
-                         unsigned int screenHeight) ;
+    // Convert normalized coordinates [-1, 1] to pixel coordinates
+    sf::Vector2f worldToPixel(const sf::Vector2f& worldPos) const;
 
-    // Convert pixel coordinates to normalized world coordinates
-    [[nodiscard]] sf::Vector2f pixelToWorld(int pixelX, int pixelY,
-                         unsigned int screenWidth,
-                         unsigned int screenHeight) const;
+    // Convert normalized size to pixel size
+    sf::Vector2f worldToPixelSize(const sf::Vector2f& worldSize) const;
 
-    // Get visible world bounds
-    [[nodiscard]] float getLeft() const { return m_centerX - m_width/2; }
-    [[nodiscard]] float getRight() const { return m_centerX + m_width/2; }
-    [[nodiscard]] float getTop() const { return m_centerY - m_height/2; }
-    [[nodiscard]] float getBottom() const { return m_centerY + m_height/2; }
+    // Get current window dimensions
+    sf::Vector2f getWindowSize() const;
+
+    // Update camera if window is resized
+    void updateWindowSize();
 
 private:
-    float m_centerX, m_centerY;
-    float m_width, m_height;  // In world units (normalized)
+    sf::RenderWindow& m_window;
+    sf::Vector2f m_windowSize;
 };
 
-#endif //CAMERA_H
+#endif // CAMERA_H

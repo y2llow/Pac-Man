@@ -20,6 +20,7 @@ public:
 
 private:
     std::unique_ptr<sf::RenderWindow> m_window;
+    Camera m_camera;
     StateManager m_stateManager;
 
     void processEvents();

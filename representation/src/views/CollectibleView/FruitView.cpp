@@ -1,11 +1,11 @@
 #include "views/CollectibleView/FruitView.h"
 
 #include "Game.h"
-FruitView::FruitView(FruitModel& fruitmodel, sf::RenderWindow& window): m_fruitmodel(fruitmodel), m_window(window) {
+FruitView::FruitView(FruitModel& fruitmodel, sf::RenderWindow& window, Camera& camera): m_fruitmodel(fruitmodel), m_window(window), m_camera(camera) {
     //set shape
     m_circle.setFillColor(sf::Color(0,255,0));
-    m_circle.setRadius(5);
-    m_circle.setOrigin(5.0f, 5.0f);
+    m_circle.setRadius(FRUIT_SIZE);
+    m_circle.setOrigin(FRUIT_SIZE, FRUIT_SIZE);
 
     updateShape();
 }
@@ -23,23 +23,21 @@ void FruitView::draw(sf::RenderWindow& window) {
 }
 
 void FruitView::updateShape() {
-    // Convert normalized coordinates [-1, 1] to pixel coordinates
+    // Convert normalized coordinates to pixel coordinates using camera
     sf::Vector2f logicPos = m_fruitmodel.getPosition();
+    sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
-    const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
-    const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
-
-    // Convert from normalized [-1,1] to pixel coordinates [0,800]
-    float pixelX = (logicPos.x + 1.0f) * (windowWidth / 2.0f);
-    float pixelY = (logicPos.y + 1.0f) * (windowHeight / 2.0f);
-
-    // Set position - circle is already centered due to setOrigin
-    m_circle.setPosition(pixelX, pixelY);
-
-    // Optional: Scale based on coin size if needed
+    // Convert normalized size to pixel size
     sf::Vector2f logicSize = m_fruitmodel.getSize();
-    float scaleX = logicSize.x * 15.0f;  // Adjust scaling factor as needed
-    float scaleY = logicSize.y * 15.0f;
+    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
+
+    // Set position
+    m_circle.setPosition(pixelPos);
+
+    // Scale based on converted size
+    float baseRadius = 10.0f;  // Base radius in pixels
+    float scaleX = pixelSize.x / baseRadius;
+    float scaleY = pixelSize.y / baseRadius;
     m_circle.setScale(scaleX, scaleY);
 }
 
