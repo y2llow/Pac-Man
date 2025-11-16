@@ -9,7 +9,7 @@ WallView::WallView(WallModel& model, sf::RenderWindow& window, Camera& camera)
 }
 
 void WallView::setupRectangle() {
-    m_shape.setFillColor(sf::Color::Blue);
+    m_shape.setFillColor(sf::Color(33, 33, 255));
 
     // Center the origin (we'll set the actual size in updateShape)
     m_shape.setOrigin(0.5f, 0.5f); // This will be relative to whatever size we set later
