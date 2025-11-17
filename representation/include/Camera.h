@@ -5,16 +5,16 @@
 
 class Camera {
 public:
-    Camera(sf::RenderWindow& window);
+    explicit Camera(sf::RenderWindow& window);
 
     // Convert normalized coordinates [-1, 1] to pixel coordinates
-    sf::Vector2f worldToPixel(const sf::Vector2f& worldPos) const;
+    [[nodiscard]] sf::Vector2f worldToPixel(const sf::Vector2f& worldPos) const;
 
     // Convert normalized size to pixel size
-    sf::Vector2f worldToPixelSize(const sf::Vector2f& worldSize) const;
+    [[nodiscard]] sf::Vector2f worldToPixelSize(const sf::Vector2f& worldSize) const;
 
     // Get current window dimensions
-    sf::Vector2f getWindowSize() const;
+    [[nodiscard]] sf::Vector2f getWindowSize() const;
 
     // Update camera if window is resized
     void updateWindowSize();

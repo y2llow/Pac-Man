@@ -10,7 +10,7 @@ sf::Vector2f Camera::worldToPixel(const sf::Vector2f& worldPos) const {
     float pixelX = (worldPos.x + 1.0f) * (m_windowSize.x / 2.0f);
     float pixelY = (worldPos.y + 1.0f) * (m_windowSize.y / 2.0f);
 
-    return sf::Vector2f(pixelX, pixelY);
+    return {pixelX, pixelY};
 }
 
 sf::Vector2f Camera::worldToPixelSize(const sf::Vector2f& worldSize) const {
@@ -18,7 +18,7 @@ sf::Vector2f Camera::worldToPixelSize(const sf::Vector2f& worldSize) const {
     float pixelWidth = worldSize.x * (m_windowSize.x / 2.0f);
     float pixelHeight = worldSize.y * (m_windowSize.y / 2.0f);
 
-    return sf::Vector2f(pixelWidth, pixelHeight);
+    return {pixelWidth, pixelHeight};
 }
 
 sf::Vector2f Camera::getWindowSize() const {
