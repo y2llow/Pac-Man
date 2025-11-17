@@ -54,9 +54,9 @@ void CoinView::updateShape() {
     // Set position
     m_circle.setPosition(pixelPos);
 
-    // Scale based on converted size
-    float baseRadius = PELLET_SIZE;
-    float scaleX = pixelSize.x / (baseRadius * 2.0f);
-    float scaleY = pixelSize.y / (baseRadius * 2.0f);
-    m_circle.setScale(scaleX, scaleY);
+    float newRadius = std::min(pixelSize.x, pixelSize.y) / (PELLET_SIZE * 2.0f);
+    m_circle.setRadius(newRadius);
+    m_circle.setOrigin(newRadius, newRadius); // Origin opnieuw centreren
+
+    // *
 }

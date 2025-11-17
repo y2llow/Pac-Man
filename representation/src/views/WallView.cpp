@@ -38,8 +38,4 @@ void WallView::updateShape() {
 
     // Zet positie
     m_shape.setPosition(pixelPos);
-
-    // Debug output om te zien wat er gebeurt
-    // std::cout << "Wall - Logic: " << logicSize.x << "x" << logicSize.y
-    //           << " -> Pixel: " << pixelSize.x << "x" << pixelSize.y << std::endl;
 }

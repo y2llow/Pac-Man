@@ -43,10 +43,9 @@ void FruitView::updateShape() {
     // Set position
     m_circle.setPosition(pixelPos);
 
-    // Scale based on converted size - use FRUIT_SIZE as base
-    float scaleX = pixelSize.x / (FRUIT_SIZE * 2.0f);
-    float scaleY = pixelSize.y / (FRUIT_SIZE * 2.0f);
-    m_circle.setScale(scaleX, scaleY);
+    float newRadius = std::min(pixelSize.x, pixelSize.y) / (FRUIT_SIZE * 2.0f);
+    m_circle.setRadius(newRadius);
+    m_circle.setOrigin(newRadius, newRadius); // Origin opnieuw centreren
 }
 
 
