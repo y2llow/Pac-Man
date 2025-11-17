@@ -83,8 +83,8 @@ void PausedState::updateLayout() {
 
     // Position all texts
     updateTextPosition(m_pauseText, 0.30f);      // 30% from top
-    updateTextPosition(m_continueText, 0.47f);   // 50% from top
-    updateTextPosition(m_menuText, 0.53f);       // 60% from top
+    updateTextPosition(m_continueText, 0.45f);   // 50% from top
+    updateTextPosition(m_menuText, 0.52f);       // 60% from top
 }
 
 void PausedState::update(float deltaTime) {
