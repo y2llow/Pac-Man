@@ -25,7 +25,7 @@ private:
 
     //pacman specific privates
     unsigned char direction;
-    double PACMAN_SPEED = 0.5;
+    double PACMAN_SPEED = 0.3;
 
 };
 

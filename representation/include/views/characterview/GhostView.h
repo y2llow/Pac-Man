@@ -20,7 +20,7 @@ protected:
     Camera& m_camera;
     sf::CircleShape m_circle;
 
-    static constexpr float GHOST_SIZE = 1.30f;
+    static constexpr float GHOST_SIZE = 5.0f;
 
     virtual void setupShape();
     virtual void updateShape();

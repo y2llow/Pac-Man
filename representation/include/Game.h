@@ -15,7 +15,7 @@ public:
 
     // Configuration - exactly like your image
     static constexpr unsigned int WINDOW_WIDTH = 800;
-    static constexpr unsigned int WINDOW_HEIGHT = 860;
+    static constexpr unsigned int WINDOW_HEIGHT = 880;
     static constexpr unsigned int FPS_LIMIT = 60;
 
 private:

@@ -21,7 +21,7 @@ private:
     sf::Sprite m_sprite;
     sf::CircleShape m_circle;
 
-    float FRUIT_SIZE = 2.5f;
+    float FRUIT_SIZE = 7.5f;
 
     void updateShape();
 };
