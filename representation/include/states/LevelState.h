@@ -16,6 +16,8 @@ public:
     void update(float deltaTime) override;
     void render() override;
     void handleEvent(const sf::Event& event) override;
+    void updateLayout();
+
 
 private:
     sf::RenderWindow& m_window;

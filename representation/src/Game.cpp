@@ -1,5 +1,7 @@
 #include "Game.h"
 
+#include "core/Stopwatch.h"
+
 namespace pacman::representation {
 
 Game::Game()
@@ -16,12 +18,17 @@ Game::Game()
  * Main game loop. Starts with Pushing the MenuState, Loops thru (processes events, updates (logic), renders update (representation)).
  */
 void Game::run() {
+    Stopwatch stopwatch;
+    stopwatch.start();
+
     // Push MenuState so Menu can be shown on screen
     m_stateManager.pushState(std::make_unique<MenuState>(m_stateManager, *m_window, m_camera));
 
     while (m_window->isOpen()) {
+        float deltaTime = stopwatch.tick();
+
         processEvents();
-        update(1.0f / 60.0f); // Fixed delta time for simplicity
+        update(deltaTime); // Now using actual delta time
         render();
     }
 }

@@ -1,16 +1,39 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/6/25.
-//
+#include "core/Stopwatch.h"
 
-#ifndef STOPWATCH_H
-#define STOPWATCH_H
+Stopwatch::Stopwatch() {
+    start();
+}
 
+void Stopwatch::start() {
+    m_startTime = Clock::now();
+    m_lastTickTime = m_startTime;
+}
 
+float Stopwatch::getElapsedTime() const {
+    auto currentTime = Clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+        currentTime - m_startTime
+    );
+    return duration.count() / 1000000.0f; // Convert to seconds
+}
 
-class Stopwatch {
+float Stopwatch::tick() {
+    auto currentTime = Clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+        currentTime - m_lastTickTime
+    );
 
-};
+    float deltaTime = duration.count() / 1000000.0f; // Convert to seconds
+    m_lastTickTime = currentTime;
 
+    return deltaTime;
+}
 
+float Stopwatch::peek() const {
+    auto currentTime = Clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+        currentTime - m_lastTickTime
+    );
+    return duration.count() / 1000000.0f; // Convert to seconds
+}
 
-#endif //STOPWATCH_H
