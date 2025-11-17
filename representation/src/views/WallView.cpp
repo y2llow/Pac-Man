@@ -5,14 +5,12 @@
 WallView::WallView(WallModel& model, sf::RenderWindow& window, Camera& camera)
     : m_window(window), m_model(model), m_camera(camera) {
     setupRectangle();
-    updateShape(); // Initial setup
+    updateShape();
 }
 
 void WallView::setupRectangle() {
     m_shape.setFillColor(sf::Color(33, 33, 255));
-
-    // Center the origin (we'll set the actual size in updateShape)
-    m_shape.setOrigin(0.5f, 0.5f); // This will be relative to whatever size we set later
+    // Laat de origin leeg - wordt in updateShape gezet
 }
 
 void WallView::update() {
@@ -32,12 +30,16 @@ void WallView::updateShape() {
     sf::Vector2f logicSize = m_model.getSize();
     sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Set the actual size - this determines the rectangle dimensions
+    // **CRUCIAAL: Gebruik de pixelSize direct als grootte**
     m_shape.setSize(pixelSize);
 
-    // Update origin to be centered based on current size
+    // Center de origin op de werkelijke grootte
     m_shape.setOrigin(pixelSize.x / 2.0f, pixelSize.y / 2.0f);
 
-    // Set position
+    // Zet positie
     m_shape.setPosition(pixelPos);
+
+    // Debug output om te zien wat er gebeurt
+    // std::cout << "Wall - Logic: " << logicSize.x << "x" << logicSize.y
+    //           << " -> Pixel: " << pixelSize.x << "x" << pixelSize.y << std::endl;
 }

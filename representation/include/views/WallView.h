@@ -12,19 +12,21 @@ public:
     WallView(WallModel& model, sf::RenderWindow& window, Camera& camera);
     ~WallView() override = default;
 
+    // Observer interface
     void update() override;
-    void draw(sf::RenderWindow& window);
-    void setupRectangle();
+
+    // Rendering
+    void draw(sf::RenderWindow& window) override;
 
 private:
     sf::RenderWindow& m_window;
     WallModel& m_model;
-    sf::RectangleShape m_shape;
     Camera& m_camera;
-    // Remove: sf::Sprite m_sprite; (you're not using it)
-    // Remove: float WALL_SIZE = 1; (not needed with Option 1)
+    sf::RectangleShape m_shape;
 
+    void setupRectangle();
     void updateShape();
 };
 
-#endif
+#endif // WALL_VIEW_H
+

@@ -21,6 +21,8 @@ void World::createEntitiesFromMap() {
 
     if (grid.empty()) return;
 
+    sf::Vector2u currentWindowSize = m_windowSize; // This should be updated on resize
+
     float tileWidth = 2.0f / gridSize.x;
     float tileHeight = 2.0f / gridSize.y;
 

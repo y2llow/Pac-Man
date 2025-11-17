@@ -1,15 +1,15 @@
-
 #ifndef GHOSTVIEW_H
 #define GHOSTVIEW_H
-#include "Camera.h"
+
 #include "entities/GhostModel.h"
+#include "Camera.h"
 #include "views/EntityView.h"
+#include <SFML/Graphics.hpp>
 
 class GhostView : public EntityView {
 public:
-
     GhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera);
-    ~GhostView()override  = default;
+    virtual ~GhostView() = default;
 
     void update() override;
     void draw(sf::RenderWindow& window) override;
@@ -17,32 +17,30 @@ public:
 protected:
     GhostModel& m_ghostmodel;
     sf::RenderWindow& m_window;
-    Camera& m_camera;  // Reference to camera
-    sf::Sprite m_sprite;
+    Camera& m_camera;
     sf::CircleShape m_circle;
 
-    float GHOST_SIZE = 4;
+    static constexpr float GHOST_SIZE = 10.0f;
 
-    virtual void updateShape();
     virtual void setupShape();
+    virtual void updateShape();
 };
 
+// Red Ghost View
 class RedGhostView : public GhostView {
 public:
     RedGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera);
-
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
 protected:
-    void setupShape() override;   // Override for different color/setup
-    // Don't override updateShape() unless you need different positioning logic
+    void setupShape() override;
 };
 
+// Blue Ghost View
 class BlueGhostView : public GhostView {
 public:
     BlueGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera);
-
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
@@ -50,10 +48,10 @@ protected:
     void setupShape() override;
 };
 
+// Orange Ghost View
 class OrangeGhostView : public GhostView {
 public:
     OrangeGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera);
-
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
@@ -61,10 +59,10 @@ protected:
     void setupShape() override;
 };
 
+// Pink Ghost View
 class PinkGhostView : public GhostView {
 public:
     PinkGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera);
-
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
@@ -72,4 +70,4 @@ protected:
     void setupShape() override;
 };
 
-#endif //GHOSTVIEW_H
+#endif // GHOSTVIEW_H

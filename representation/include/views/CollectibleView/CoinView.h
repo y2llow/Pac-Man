@@ -3,12 +3,10 @@
 
 #include "Camera.h"
 #include "views/EntityView.h"
-
 #include <SFML/Graphics.hpp>
 
 // Forward declarations
 class CoinModel;
-class TextureManager;
 
 class CoinView : public EntityView {
 public:
@@ -19,20 +17,19 @@ public:
     void update() override;
 
     // Rendering
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window) override;
     bool shouldRender() const;
 
 private:
-    CoinModel& m_coinModel;  // Reference to the model we're observing
-    sf::RenderWindow& m_window;  // PDF: "hold a pointer to your window object in your View"
+    CoinModel& m_coinModel;
+    sf::RenderWindow& m_window;
     Camera& m_camera;
-    sf::Sprite m_sprite;
     sf::CircleShape m_circle;
 
-    float PELLET_SIZE = 0.75f;
-    void updateSprite();  // Update graphics based on model state
-    void updateShape();
+    static constexpr float PELLET_SIZE = 100.0f;
 
+    void updateSprite();
+    void updateShape();
 };
 
-#endif
+#endif // COIN_VIEW_H

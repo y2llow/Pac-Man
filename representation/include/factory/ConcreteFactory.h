@@ -16,6 +16,10 @@ class SFMLFactory : public LogicFactory {
 public:
     explicit SFMLFactory(sf::RenderWindow& window, Camera& camera);
 
+    void handleResize(const sf::Vector2u& newSize, Camera& camera);
+
+    void handleResize(const sf::Vector2u& newSize) ;
+
     std::unique_ptr<WallModel> createWall(
         const sf::Vector2f& position,
         const sf::Vector2f& size,
@@ -68,7 +72,7 @@ public:
 
 private:
     sf::RenderWindow& m_window;
-    Camera m_camera;
+    Camera& m_camera;
     std::vector<std::unique_ptr<EntityView>> m_views; // Store views!
     std::vector<std::unique_ptr<Observer>> m_observers;
 

@@ -5,8 +5,8 @@ m_position = position, m_textureId = textureId;{m_size = size;}
 }
 
 void FruitModel::update(float deltaTime)  {
-     // notify observer when soemthing happens
- }
+    notifyObservers();
+}
 
 
 void FruitModel::setPosition(const sf::Vector2f& position)  {

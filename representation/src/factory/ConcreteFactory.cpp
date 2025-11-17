@@ -15,6 +15,7 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
     : m_window(window), m_camera(camera) {
 }
 
+
  std::unique_ptr<WallModel> SFMLFactory::createWall(
     const sf::Vector2f&position,
     const sf::Vector2f&size,
@@ -214,4 +215,14 @@ std::unique_ptr<FruitModel> SFMLFactory::createFruit(
 
     // 4. Return only the Model to World
     return fruitModel;
+}
+
+void SFMLFactory::handleResize(const sf::Vector2u& newSize, Camera& camera) {
+    m_camera.updateWindowSize(sf::Vector2f(newSize)); // You might need to add this method to Camera
+
+}
+
+// In ConcreteFactory.cpp
+void SFMLFactory::handleResize(const sf::Vector2u& newSize) {
+    m_camera.updateWindowSize(sf::Vector2f(newSize)); // Use the new method
 }

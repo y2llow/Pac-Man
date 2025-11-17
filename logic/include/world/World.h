@@ -19,6 +19,11 @@ class World {
 public:
     World(const sf::Vector2u& windowSize, LogicFactory& factory);
 
+    void handleResize(const sf::Vector2u& newSize) {
+        m_windowSize = newSize;
+        // You might need to recreate entities or update their positions
+    }
+
     void initialize();
     void update(float deltaTime);
 

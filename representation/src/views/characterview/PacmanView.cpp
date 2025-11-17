@@ -38,10 +38,9 @@ void PacmanView::updateShape() {
     m_circle.setPosition(pixelPos);
 
     // Scale based on converted size
-    float baseRadius = 10.0f;  // Base radius in pixels
-    float scaleX = pixelSize.x / baseRadius;
-    float scaleY = pixelSize.y / baseRadius;
+    float baseRadius = PACMAN_SIZE;
+    float scaleX = pixelSize.x / (baseRadius * 2.0f);
+    float scaleY = pixelSize.y / (baseRadius * 2.0f);
     m_circle.setScale(scaleX, scaleY);
 }
-
 

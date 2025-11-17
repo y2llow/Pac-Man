@@ -1,25 +1,34 @@
 #include "views/CollectibleView/FruitView.h"
 
 #include "Game.h"
-FruitView::FruitView(FruitModel& fruitmodel, sf::RenderWindow& window, Camera& camera): m_fruitmodel(fruitmodel), m_window(window), m_camera(camera) {
-    //set shape
-    m_circle.setFillColor(sf::Color(0,255,0));
+#include "entities/FruitModel.h"
+
+FruitView::FruitView(FruitModel& fruitmodel, sf::RenderWindow& window, Camera& camera)
+    : m_fruitmodel(fruitmodel), m_window(window), m_camera(camera) {
+
+    // Setup circle shape for fruit
+    m_circle.setFillColor(sf::Color(0, 255, 0));
     m_circle.setRadius(FRUIT_SIZE);
     m_circle.setOrigin(FRUIT_SIZE, FRUIT_SIZE);
 
     updateShape();
 }
 
+void FruitView::update() {
+    updateShape();
 
-void FruitView::update(){
-    // Update sprite when moving left or right
-
-    // Update sprite when dying
-
+    // You can add additional update logic here for:
+    // - Animation states
+    // - Collection effects
+    // - Visibility based on model state
 }
 
 void FruitView::draw(sf::RenderWindow& window) {
-    m_window.draw(m_circle);
+    // Only draw if the fruit is active/not collected
+    // if (!m_fruitmodel.isCollected()) {
+    //     window.draw(m_circle);
+    // }
+    window.draw(m_circle);
 }
 
 void FruitView::updateShape() {
@@ -34,10 +43,9 @@ void FruitView::updateShape() {
     // Set position
     m_circle.setPosition(pixelPos);
 
-    // Scale based on converted size
-    float baseRadius = 10.0f;  // Base radius in pixels
-    float scaleX = pixelSize.x / baseRadius;
-    float scaleY = pixelSize.y / baseRadius;
+    // Scale based on converted size - use FRUIT_SIZE as base
+    float scaleX = pixelSize.x / (FRUIT_SIZE * 2.0f);
+    float scaleY = pixelSize.y / (FRUIT_SIZE * 2.0f);
     m_circle.setScale(scaleX, scaleY);
 }
 
