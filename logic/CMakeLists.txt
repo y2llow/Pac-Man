@@ -38,8 +38,6 @@ add_library(PacMan-logic STATIC
         # === World Management ===
         include/world/World.h
         src/world/World.cpp
-        include/world/Camera.h
-        src/world/Camera.cpp
 
         # === Scoring System ===
         include/scoring/Score.h
