@@ -1,5 +1,4 @@
 #include "states/PausedState.h"
-
 #include "Game.h"
 #include "StateManger.h"
 #include "states/MenuState.h"
@@ -9,56 +8,91 @@ PausedState::PausedState(StateManager& stateManager, sf::RenderWindow& window, C
 }
 
 void PausedState::initialize() {
+    // Update camera with current window size
+    m_camera.updateWindowSize();
+
     if (m_font.loadFromFile("assets/fonts/arial.ttf")) {
-        const float windowWidth = pacman::representation::Game::WINDOW_WIDTH;
-        const float windowHeight = pacman::representation::Game::WINDOW_HEIGHT;
+        // Use camera to get current window size
+        sf::Vector2f windowSize = m_camera.getWindowSize();
+        const float windowWidth = windowSize.x;
+        const float windowHeight = windowSize.y;
 
-        // Create the overlay first (darker for contrast)
+        // Create the overlay
         m_overlay.setSize(sf::Vector2f(windowWidth, windowHeight));
-        m_overlay.setFillColor(sf::Color(0, 0, 0, 180)); // Darker overlay for better readability
+        m_overlay.setFillColor(sf::Color(0, 0, 0, 180));
 
-        // Create the background panel
-        m_backgroundPanel.setSize(sf::Vector2f(400, 150));
-        m_backgroundPanel.setFillColor(sf::Color(30, 30, 60, 220)); // Same blue as MenuState
-        m_backgroundPanel.setOutlineColor(sf::Color(255, 255, 0)); // Yellow border
+        // Create the background panel using camera for sizing
+        float panelWidth = windowWidth * 0.5f;  // 50% of window width
+        float panelHeight = windowHeight * 0.25f; // 25% of window height
+        m_backgroundPanel.setSize(sf::Vector2f(panelWidth, panelHeight));
+        m_backgroundPanel.setFillColor(sf::Color(30, 30, 60, 220));
+        m_backgroundPanel.setOutlineColor(sf::Color(255, 255, 0));
         m_backgroundPanel.setOutlineThickness(3);
-        m_backgroundPanel.setOrigin(200, 125); // Center the panel
+        m_backgroundPanel.setOrigin(panelWidth / 2, panelHeight / 2);
         m_backgroundPanel.setPosition(windowWidth / 2, windowHeight / 2);
 
-        // Create and position texts (PAUSED, Continue, Menu)
-        auto createText = [&](sf::Text& text, const std::string& content, unsigned int charSize, const sf::Color& color, sf::Text::Style style,
-                              float xOffset, float yOffset) {
-            text.setFont(m_font);
-            text.setString(content);
-            text.setCharacterSize(charSize);
-            text.setFillColor(color);
-            text.setStyle(style);
+        // Initialize text objects with the font
+        m_pauseText.setFont(m_font);
+        m_continueText.setFont(m_font);
+        m_menuText.setFont(m_font);
 
-            // Center the text based on window width/height and offsets
-            sf::FloatRect textBounds = text.getLocalBounds();
-            text.setOrigin(textBounds.width / 2, textBounds.height / 2);
-            text.setPosition(windowWidth * xOffset, windowHeight * yOffset);
-        };
+        // Set text content and styling
+        m_pauseText.setString("PAUSED");
+        m_pauseText.setCharacterSize(48);
+        m_pauseText.setFillColor(sf::Color::Yellow);
+        m_pauseText.setStyle(sf::Text::Bold);
 
-        // PAUSED title text (same style as MenuState title)
-        createText(m_pauseText, "PAUSED", 64, sf::Color(255, 255, 0), sf::Text::Bold, 0.5f, 0.25f);
+        m_continueText.setString("Press ESC to Continue");
+        m_continueText.setCharacterSize(34);
+        m_continueText.setFillColor(sf::Color::White);
 
-        // Continue instructions
-        createText(m_continueText, "PRESS ESC TO CONTINUE", 28, sf::Color::White, sf::Text::Bold, 0.5f, 0.4f);
+        m_menuText.setString("Press M for Main Menu");
+        m_menuText.setCharacterSize(34);
+        m_menuText.setFillColor(sf::Color::White);
 
-        // Menu instructions
-        createText(m_menuText, "PRESS M FOR MAIN MENU", 28, sf::Color::White, sf::Text::Bold, 0.5f, 0.45f);
+        // Initialize all UI elements
+        updateLayout();
+    } else {
+        // Handle font loading error
+        // You might want to log an error or use a default font
     }
 }
 
+void PausedState::updateLayout() {
+    // Get current window size from camera
+    sf::Vector2f windowSize = m_camera.getWindowSize();
+    const float windowWidth = windowSize.x;
+    const float windowHeight = windowSize.y;
+
+    // Update overlay size
+    m_overlay.setSize(sf::Vector2f(windowWidth, windowHeight));
+
+    // Update background panel size and position
+    float panelWidth = windowWidth * 0.5f;
+    float panelHeight = windowHeight * 0.25f;
+    m_backgroundPanel.setSize(sf::Vector2f(panelWidth, panelHeight));
+    m_backgroundPanel.setOrigin(panelWidth / 2, panelHeight / 2);
+    m_backgroundPanel.setPosition(windowWidth / 2, windowHeight / 2);
+
+    // Update text positions using percentages
+    auto updateTextPosition = [&](sf::Text& text, float verticalPercentage) {
+        sf::FloatRect textBounds = text.getLocalBounds();
+        text.setOrigin(textBounds.width / 2, textBounds.height / 2);
+        text.setPosition(windowWidth / 2, windowHeight * verticalPercentage);
+    };
+
+    // Position all texts
+    updateTextPosition(m_pauseText, 0.30f);      // 30% from top
+    updateTextPosition(m_continueText, 0.47f);   // 50% from top
+    updateTextPosition(m_menuText, 0.53f);       // 60% from top
+}
 
 void PausedState::update(float deltaTime) {
-    // Optional: Add blinking effect for instructions (like MenuState)
+    // Optional: Add blinking effect for instructions
     static float blinkTimer = 0;
     blinkTimer += deltaTime;
 
     if (blinkTimer >= 0.8f) {
-        // Toggle between white and gray for both instruction texts
         sf::Color newColor = (m_continueText.getFillColor() == sf::Color::White) ?
                             sf::Color(150, 150, 150) : sf::Color::White;
 
@@ -69,13 +103,12 @@ void PausedState::update(float deltaTime) {
 }
 
 void PausedState::render() {
-    // Note: LevelState is still in the stack below this one, so it gets rendered first
-    m_window.clear(sf::Color(10, 10, 40));
+    // Note: LevelState renders first, then we overlay our pause screen
 
-    // // Draw semi-transparent overlay (dims the game behind)
-    // m_window.draw(m_overlay);
+    // Draw semi-transparent overlay
+    m_window.draw(m_overlay);
 
-    // Draw background panel (optional - makes text more readable)
+    // Draw background panel
     m_window.draw(m_backgroundPanel);
 
     // Draw all text elements
@@ -84,20 +117,16 @@ void PausedState::render() {
     m_window.draw(m_menuText);
 }
 
-void StateManager::switchToState(std::unique_ptr<State> state) {
-    // Clear all existing states
-    clearStates();
-
-    // Push the new state
-    pushState(std::move(state));
-}
-
-/**
- * stateManager -> LevelState if esc is pressed
- * stateManager -> MenuState if M is pressed
- * @param event current SFML event
- */
 void PausedState::handleEvent(const sf::Event& event) {
+    // Handle window resize
+    if (event.type == sf::Event::Resized) {
+        // Update camera with new window size
+        m_camera.updateWindowSize();
+
+        // Recalculate all UI positions
+        updateLayout();
+    }
+
     if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
         case sf::Keyboard::Escape:
@@ -106,6 +135,17 @@ void PausedState::handleEvent(const sf::Event& event) {
         case sf::Keyboard::M:
             m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
             break;
+        }
+    }
+
+    // Handle mouse clicks for future button implementation
+    if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+            // Convert mouse coordinates using camera if you add buttons later
+            sf::Vector2f mousePos = m_window.mapPixelToCoords(
+                sf::Vector2i(event.mouseButton.x, event.mouseButton.y)
+            );
+            // Add button click detection here if needed
         }
     }
 }

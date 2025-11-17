@@ -17,6 +17,13 @@ void StateManager::popState() {
         m_states.pop_back();
     }
 }
+void StateManager::switchToState(std::unique_ptr<State> state) {
+    // Clear all existing states
+    clearStates();
+
+    // Push the new state
+    pushState(std::move(state));
+}
 
 void StateManager::clearStates() {
     m_states.clear();
