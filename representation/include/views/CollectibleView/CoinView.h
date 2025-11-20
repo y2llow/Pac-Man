@@ -10,7 +10,7 @@ class CoinModel;
 
 class CoinView : public EntityView {
 public:
-    CoinView(CoinModel& coinModel, sf::RenderWindow& window, Camera& camera);
+    CoinView(CoinModel& coinModel, Camera& camera);
     ~CoinView() override = default;
 
     // Observer interface
@@ -22,7 +22,6 @@ public:
 
 private:
     CoinModel& m_coinModel;
-    sf::RenderWindow& m_window;
     Camera& m_camera;
     sf::CircleShape m_circle;
 

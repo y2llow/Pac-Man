@@ -8,7 +8,7 @@
 class FruitView : public EntityView {
 public:
 
-    FruitView(FruitModel& fruitmodel, sf::RenderWindow& window, Camera& camera);
+    FruitView(FruitModel& fruitmodel, Camera& camera);
     ~FruitView()override  = default;
 
     void update() override;
@@ -16,7 +16,6 @@ public:
 
 private:
     FruitModel& m_fruitmodel;
-    sf::RenderWindow& m_window;
     Camera& m_camera;
     sf::Sprite m_sprite;
     sf::CircleShape m_circle;

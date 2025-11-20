@@ -2,8 +2,8 @@
 #include "Game.h"
 #include "../../../logic/include/entities/WallModel.h"
 
-WallView::WallView(WallModel& model, sf::RenderWindow& window, Camera& camera)
-    : m_window(window), m_model(model), m_camera(camera) {
+WallView::WallView(WallModel& model,  Camera& camera)
+    : m_model(model), m_camera(camera) {
     setupRectangle();
     updateShape();
 }

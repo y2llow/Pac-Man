@@ -4,8 +4,8 @@
 #include "entities/CoinModel.h"
 #include "rendering/SpriteManager.h"
 
-CoinView::CoinView(CoinModel& coinModel, sf::RenderWindow& window, Camera& camera)
-    : m_coinModel(coinModel), m_window(window), m_camera(camera) {
+CoinView::CoinView(CoinModel& coinModel, Camera& camera)
+    : m_coinModel(coinModel), m_camera(camera) {
 
     // Setup circle shape for coin
     m_circle.setFillColor(sf::Color(255, 184, 144));

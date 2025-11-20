@@ -3,8 +3,8 @@
 #include "Game.h"
 #include "entities/PacmanModel.h"
 
-PacmanView::PacmanView(PacmanModel& coinModel, sf::RenderWindow& window, Camera& camera)
-     : m_pacmanmodel(coinModel), m_window(window), m_camera(camera) {
+PacmanView::PacmanView(PacmanModel& coinModel,  Camera& camera)
+     : m_pacmanmodel(coinModel),  m_camera(camera) {
     m_circle.setFillColor(sf::Color(252, 252, 2));
     updateShape();
      }

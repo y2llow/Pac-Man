@@ -25,7 +25,7 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
     auto wallModel = std::make_unique<WallModel>(position, size, textureId);
 
     // // 2. Create the View (representation)
-    auto wallView = std::make_unique<WallView>(*wallModel, m_window, m_camera);
+    auto wallView = std::make_unique<WallView>(*wallModel, m_camera);
 
     // Attach raw pointer (temporary - views are owned by factory)
     wallModel->attachObserver([view = wallView.get()]() {
@@ -48,7 +48,7 @@ std::unique_ptr<CoinModel> SFMLFactory::createCoin(
     auto coinModel = std::make_unique<CoinModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto coinView = std::make_unique<CoinView>(*coinModel, m_window, m_camera);
+    auto coinView = std::make_unique<CoinView>(*coinModel, m_camera);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     coinModel->attachObserver([view = coinView.get()]() {
@@ -73,7 +73,7 @@ std::unique_ptr<PacmanModel> SFMLFactory::createPacman(
     auto pacmanModel = std::make_unique<PacmanModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto pacmanView = std::make_unique<PacmanView>(*pacmanModel, m_window, m_camera);
+    auto pacmanView = std::make_unique<PacmanView>(*pacmanModel,  m_camera);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     pacmanModel->attachObserver([view = pacmanView.get()]() {
@@ -201,7 +201,7 @@ std::unique_ptr<FruitModel> SFMLFactory::createFruit(
     auto fruitModel = std::make_unique<FruitModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto fruitView = std::make_unique<FruitView>(*fruitModel, m_window, m_camera);
+    auto fruitView = std::make_unique<FruitView>(*fruitModel, m_camera);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     fruitModel->attachObserver([view = fruitView.get()]() {

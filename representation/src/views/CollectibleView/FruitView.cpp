@@ -3,8 +3,8 @@
 #include "Game.h"
 #include "entities/FruitModel.h"
 
-FruitView::FruitView(FruitModel& fruitmodel, sf::RenderWindow& window, Camera& camera)
-    : m_fruitmodel(fruitmodel), m_window(window), m_camera(camera) {
+FruitView::FruitView(FruitModel& fruitmodel, Camera& camera)
+    : m_fruitmodel(fruitmodel), m_camera(camera) {
 
     // Setup circle shape for fruit
     m_circle.setFillColor(sf::Color(0, 255, 0));
