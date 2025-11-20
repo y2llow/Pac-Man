@@ -136,10 +136,15 @@ void World::update(float deltaTime) {
     for (auto& ghost : m_ghosts) {
         ghost->update(deltaTime);
     }
-    // Walls, coins, fruits typically don't need update if they're static
-    // for (auto& wall : m_walls) {
-    //     wall->update(deltaTime);  // Only if walls have animations
-    // }
+    for (auto& wall : m_walls) {
+        wall->update(deltaTime);
+    }
+    for (auto& coin : m_coins) {
+        coin->update(deltaTime);
+    }
+    for (auto& fruit : m_fruits) {
+        fruit->update(deltaTime);
+    }
 
     // Second: Handle collisions after all positions are updated
     handleCollisions();
