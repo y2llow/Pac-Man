@@ -16,6 +16,8 @@ void PacmanModel::update(float deltaTime) {
         direction = 3;
     }
 
+    m_lastMove = PACMAN_SPEED*deltaTime;
+
     switch (direction){
     case 0 :{
         m_position.x -= PACMAN_SPEED*deltaTime;
@@ -126,6 +128,28 @@ sf::Vector2f PacmanModel::CheckTunneling(sf::Vector2f position) {
 void PacmanModel::setPosition(const sf::Vector2f& position)  {
     m_position = position;
     notifyObservers();
+
+}
+
+void PacmanModel::undoLastMove() {
+
+    switch (direction){
+    case 0 :{
+        m_position.x += m_lastMove;
+        break;
+    }
+    case 1:{
+        m_position.y -=m_lastMove;
+        break;
+    }
+    case 2:{
+        m_position.x -= m_lastMove;
+        break;
+    }
+    case 3:{
+        m_position.y += m_lastMove;
+    }
+    }
 
 }
 

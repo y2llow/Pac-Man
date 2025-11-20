@@ -129,23 +129,151 @@ void World::addEntity(std::unique_ptr<EntityModel> entity) {
 }
 
 void World::update(float deltaTime) {
-    // Update all entities
-    for (auto& wall : m_walls) {
-        wall->update(deltaTime);
-    }
-    for (auto& coin : m_coins) {
-        coin->update(deltaTime);
-    }
+    // First: Update all entities (movement, animation, etc.)
     for (auto& pacman : m_pacman) {
         pacman->update(deltaTime);
     }
     for (auto& ghost : m_ghosts) {
         ghost->update(deltaTime);
     }
-    for (auto& fruit : m_fruits) {
-        fruit->update(deltaTime);
-    }
+    // Walls, coins, fruits typically don't need update if they're static
+    // for (auto& wall : m_walls) {
+    //     wall->update(deltaTime);  // Only if walls have animations
+    // }
 
+    // Second: Handle collisions after all positions are updated
+    handleCollisions();
 
+    // Third: Clean up collected items, check win/lose conditions
+    // cleanupCollectedItems();
+    // checkGameState();
 }
 
+void World::handleCollisions() {
+    // Pacman vs Walls
+    for (auto& pacman : m_pacman) {
+        for (auto& wall : m_walls) {
+            if (checkCollision(*pacman, *wall)) {
+                handlePacmanWallCollision(*pacman, *wall);
+            }
+        }
+    }
+
+    // // Pacman vs Coins
+    // for (auto& pacman : m_pacman) {
+    //     for (auto it = m_coins.begin(); it != m_coins.end(); ) {
+    //         if (checkCollision(*pacman, **it)) {
+    //             handlePacmanCoinCollision(*pacman, **it);
+    //             it = m_coins.erase(it); // Remove collected coin
+    //         } else {
+    //             ++it;
+    //         }
+    //     }
+    // }
+    //
+    // // Pacman vs Ghosts
+    // for (auto& pacman : m_pacman) {
+    //     for (auto& ghost : m_ghosts) {
+    //         if (checkCollision(*pacman, *ghost)) {
+    //             handlePacmanGhostCollision(*pacman, *ghost);
+    //         }
+    //     }
+    // }
+    //
+    // // Pacman vs Fruits
+    // for (auto& pacman : m_pacman) {
+    //     for (auto it = m_fruits.begin(); it != m_fruits.end(); ) {
+    //         if (checkCollision(*pacman, **it)) {
+    //             handlePacmanFruitCollision(*pacman, **it);
+    //             it = m_fruits.erase(it); // Remove collected fruit
+    //         } else {
+    //             ++it;
+    //         }
+    //     }
+    // }
+}
+
+bool World::checkCollision(const PacmanModel& pacman, const EntityModel& entity2) {
+    // Get bounds for pacman (assuming center-based coordinates)
+    float pacman_left = pacman.getPosition().x - (pacman.getSize().x / 2);
+    float pacman_right = pacman.getPosition().x + (pacman.getSize().x / 2);
+    float pacman_bottom = pacman.getPosition().y - (pacman.getSize().y / 2);
+    float pacman_top = pacman.getPosition().y + (pacman.getSize().y / 2);
+
+    // Get bounds for entity2
+    float e2_left = entity2.getPosition().x - (entity2.getSize().x / 2);
+    float e2_right = entity2.getPosition().x + (entity2.getSize().x / 2);
+    float e2_bottom = entity2.getPosition().y - (entity2.getSize().y / 2);
+    float e2_top = entity2.getPosition().y + (entity2.getSize().y / 2);
+
+    // Correct AABB collision detection
+    // Two rectangles collide if:
+    // - pacman's right edge is to the right of entity's left edge AND
+    // - pacman's left edge is to the left of entity's right edge AND
+    // - pacman's top edge is below entity's bottom edge AND
+    // - pacman's bottom edge is above entity's top edge
+    if (pacman_right > e2_left &&
+        pacman_left < e2_right &&
+        pacman_top > e2_bottom &&
+        pacman_bottom < e2_top) {
+        return true;  // Collision detected
+        }
+
+    return false;  // No collision
+}
+
+void World::handlePacmanWallCollision(PacmanModel& pacman, const WallModel& wall) {// Push pacman back to previous position
+    pacman.undoLastMove();
+    // Or prevent movement in that direction
+}
+
+// void World::handlePacmanCoinCollision(PacmanModel& pacman, const CoinModel& coin) {
+//     m_score->addPoints(10); // Add points for coin
+//     // Coin will be removed from vector in handleCollisions
+// }
+
+// void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
+//     if (ghost.isVulnerable()) {
+//         m_score->addPoints(200); // Points for eating ghost
+//         ghost.respawn();
+//     } else {
+//         // Pacman loses life
+//         pacman.loseLife();
+//         if (pacman.getLives() <= 0) {
+//             // Game over logic
+//         }
+//     }
+// }
+//
+// void World::handlePacmanFruitCollision(PacmanModel& pacman, const FruitModel& fruit) {
+//     m_score->addPoints(100); // Points for fruit
+//     // Fruit will be removed from vector in handleCollisions
+// }
+//
+// void World::cleanupCollectedItems() {
+//     // Remove any null pointers or cleanup
+//     m_coins.erase(std::remove_if(m_coins.begin(), m_coins.end(),
+//         [](const std::unique_ptr<CoinModel>& coin) {
+//             return coin->isCollected();
+//         }), m_coins.end());
+//
+//     m_fruits.erase(std::remove_if(m_fruits.begin(), m_fruits.end(),
+//         [](const std::unique_ptr<FruitModel>& fruit) {
+//             return fruit->isCollected();
+//         }), m_fruits.end());
+// }
+//
+// void World::checkGameState() {
+//     // Check win condition (all coins collected)
+//     if (m_coins.empty()) {
+//         // Level completed
+//     }
+//
+//     // Check lose condition (no lives left)
+//     for (auto& pacman : m_pacman) {
+//         if (pacman->getLives() <= 0) {
+//             // Game over
+//         }
+//     }
+// }
+//

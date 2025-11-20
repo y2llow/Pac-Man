@@ -14,8 +14,10 @@ public:
      void setPosition(const sf::Vector2f& position) override;
     [[nodiscard]]  sf::Vector2f getSize() const override{return m_size;}
 
+
     // Pacman specific funcitons
     sf::Vector2f CheckTunneling(sf::Vector2f position);
+    void undoLastMove();
 
 private:
     //default privates
@@ -25,7 +27,8 @@ private:
 
     //pacman specific privates
     unsigned char direction;
-    double PACMAN_SPEED = 0.3;
+    float PACMAN_SPEED = 0.3;
+    float m_lastMove;
 
 };
 

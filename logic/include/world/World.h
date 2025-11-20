@@ -2,6 +2,7 @@
 #define WORLD_H
 
 #include "MapModel.h"
+#include "core/Stopwatch.h"
 
 
 #include <SFML/System/Vector2.hpp>
@@ -26,6 +27,10 @@ public:
 
     void initialize();
     void update(float deltaTime);
+
+    void handleCollisions();
+    bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
+    void handlePacmanWallCollision(PacmanModel&pacman, const WallModel&wall);
 
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void createEntitiesFromMap();
