@@ -66,7 +66,7 @@ public:
         const std::string& textureId = std::string("")
         ) override ;
 
-    const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
+    [[nodiscard]] const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
 
     void cleanupCollectedViews();
 
