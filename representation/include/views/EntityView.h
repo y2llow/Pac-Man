@@ -9,6 +9,7 @@ public:
 
     virtual void update() {}
     virtual void draw(sf::RenderWindow& window) = 0;
+    // virtual bool shouldRender();
 
 };
 #endif //ENTITYVIEZ_H

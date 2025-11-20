@@ -20,11 +20,6 @@ class World {
 public:
     World(const sf::Vector2u& windowSize, LogicFactory& factory);
 
-    void handleResize(const sf::Vector2u& newSize) {
-        m_windowSize = newSize;
-        // You might need to recreate entities or update their positions
-    }
-
     void initialize();
     void update(float deltaTime);
 
@@ -37,10 +32,14 @@ public:
     void handlePacmanFruitCollision(FruitModel&fruit);
 
     void cleanupCollectedItems();
+    void checkGameState();
 
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void createEntitiesFromMap();
     void addEntity(std::unique_ptr<EntityModel> entity);
+    void handleResize(const sf::Vector2u& newSize);
+
+
 
     Score& getScore() { return *m_score; }
 

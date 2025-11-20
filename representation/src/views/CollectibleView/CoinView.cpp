@@ -45,19 +45,20 @@ void CoinView::updateShape() {
     sf::Vector2f logicPos = m_coinModel.getPosition();
     sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
-    // Convert normalized size to pixel size
-    sf::Vector2f logicSize = m_coinModel.getSize();
-    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
+        // Convert normalized size to pixel size
+        sf::Vector2f logicSize = m_coinModel.getSize();
+        sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Fixed base radius
-    float newRadius = std::min(pixelSize.x, pixelSize.y);
-    m_circle.setRadius(newRadius);
-    m_circle.setOrigin(newRadius, newRadius);
-    m_circle.setPosition(pixelPos); // Use world coordinates directly
+        // Fixed base radius
+        float newRadius = std::min(pixelSize.x, pixelSize.y);
+        m_circle.setRadius(newRadius);
+        m_circle.setOrigin(newRadius, newRadius);
+        m_circle.setPosition(pixelPos); // Use world coordinates directly
 
-    // Scale transforms world coordinates to screen coordinates
-    // This will stretch the circle into an oval
-    float scaleX = pixelSize.x / (newRadius * 2.0f);
-    float scaleY = pixelSize.y / (newRadius * 2.0f);
-    m_circle.setScale(scaleX, scaleY);
+        // Scale transforms world coordinates to screen coordinates
+        // This will stretch the circle into an oval
+        float scaleX = pixelSize.x / (newRadius * 2.0f);
+        float scaleY = pixelSize.y / (newRadius * 2.0f);
+        m_circle.setScale(scaleX, scaleY);
+
 }

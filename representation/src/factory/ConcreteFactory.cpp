@@ -217,12 +217,14 @@ std::unique_ptr<FruitModel> SFMLFactory::createFruit(
     return fruitModel;
 }
 
-void SFMLFactory::handleResize(const sf::Vector2u& newSize, Camera& camera) {
-    m_camera.updateWindowSize(sf::Vector2f(newSize)); // You might need to add this method to Camera
-
-}
-
 // In ConcreteFactory.cpp
 void SFMLFactory::handleResize(const sf::Vector2u& newSize) {
     m_camera.updateWindowSize(sf::Vector2f(newSize)); // Use the new method
 }
+
+// void SFMLFactory::cleanupCollectedViews() {
+//     m_views.erase(std::remove_if(m_views.begin(), m_views.end(),
+//         [](const std::unique_ptr<EntityView>& view) {
+//             return !view->shouldRender();
+//         }), m_views.end());
+// }

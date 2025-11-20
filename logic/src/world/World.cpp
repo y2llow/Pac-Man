@@ -275,18 +275,25 @@ void World::cleanupCollectedItems() {
             return fruit->isCollected();
         }), m_fruits.end());
 }
-//
-// void World::checkGameState() {
-//     // Check win condition (all coins collected)
-//     if (m_coins.empty()) {
-//         // Level completed
-//     }
-//
-//     // Check lose condition (no lives left)
-//     for (auto& pacman : m_pacman) {
-//         if (pacman->getLives() <= 0) {
-//             // Game over
-//         }
-//     }
-// }
-//
+
+// In World.cpp
+void World::handleResize(const sf::Vector2u& newSize) {
+    m_windowSize = newSize;
+    // Don't recreate entities, just update the window size for future calculations
+}
+
+//TODO implement checkgamestate
+void World::checkGameState() {
+    // Check win condition (all coins collected)
+    if (m_coins.empty()) {
+        // Level completed
+    }
+
+    // Check lose condition (no lives left)
+    for (auto& pacman : m_pacman) {
+        if (pacman->getLives() <= 0) {
+            // Game over
+        }
+    }
+}
+
