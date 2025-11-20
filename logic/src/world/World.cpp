@@ -1,6 +1,7 @@
 #include "world/World.h"
 #include "entities/WallModel.h"
 #include "entities/CoinModel.h"
+
 #include <iostream>
 
 World::World(const sf::Vector2u& windowSize, LogicFactory& factory)
@@ -13,6 +14,9 @@ void World::initialize() {
     if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
     }
+    // if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
+    //     createEntitiesFromMap();
+    // }
 }
 
 void World::createEntitiesFromMap() {
@@ -45,7 +49,7 @@ void World::createEntitiesFromMap() {
 
                 auto coin = m_factory->createCoin(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth , tileHeight ),
+                    sf::Vector2f(tileWidth * COIN_SIZE , tileHeight * COIN_SIZE ),
                     "Coin"
                 );
                 m_coins.push_back(std::move(coin));
@@ -56,7 +60,7 @@ void World::createEntitiesFromMap() {
 
                 auto pacman = m_factory->createPacman(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth, tileHeight ),
+                    sf::Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE ),
                     "Pacman");
 
                 m_pacman.push_back(std::move(pacman));
@@ -67,7 +71,7 @@ void World::createEntitiesFromMap() {
 
                 auto fruit = m_factory->createFruit(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth , tileHeight ),
+                    sf::Vector2f(tileWidth * FRUIT_SIZE , tileHeight * FRUIT_SIZE ),
                     "fruit");
 
                 m_fruits.push_back(std::move(fruit));
@@ -78,7 +82,7 @@ void World::createEntitiesFromMap() {
 
                 auto ghost = m_factory->createRedGhost(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth, tileHeight),
+                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "red_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
@@ -89,7 +93,7 @@ void World::createEntitiesFromMap() {
 
                 auto ghost = m_factory->createBlueGhost(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth, tileHeight),
+                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "blue_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
@@ -99,7 +103,7 @@ void World::createEntitiesFromMap() {
 
                 auto ghost = m_factory->createOrangeGhost(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth, tileHeight),
+                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "orange_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
@@ -109,7 +113,7 @@ void World::createEntitiesFromMap() {
 
                 auto ghost = m_factory->createPinkGhost(
                     sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth, tileHeight),
+                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "pink_ghost");
 
                 m_ghosts.push_back(std::move(ghost));

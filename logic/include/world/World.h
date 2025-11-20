@@ -59,6 +59,11 @@ private:
 
     sf::Vector2u m_windowSize;
 
+    float PACMAN_SIZE = 0.9;
+    float GHOST_SIZE = 0.9;
+    float COIN_SIZE = 0.125;
+    float FRUIT_SIZE = 0.4;
+
 };
 
 #endif

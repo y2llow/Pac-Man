@@ -9,8 +9,6 @@ CoinView::CoinView(CoinModel& coinModel, sf::RenderWindow& window, Camera& camer
 
     // Setup circle shape for coin
     m_circle.setFillColor(sf::Color(255, 184, 144));
-    m_circle.setRadius(PELLET_SIZE);
-    m_circle.setOrigin(PELLET_SIZE, PELLET_SIZE);
 
     updateShape();
     updateSprite();
@@ -51,16 +49,15 @@ void CoinView::updateShape() {
     sf::Vector2f logicSize = m_coinModel.getSize();
     sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Set position
-    m_circle.setPosition(pixelPos);
-
-    float newRadius = std::min(pixelSize.x, pixelSize.y) / (PELLET_SIZE * 2.0f);
+    // Fixed base radius
+    float newRadius = std::min(pixelSize.x, pixelSize.y);
     m_circle.setRadius(newRadius);
-    m_circle.setOrigin(newRadius, newRadius); // Origin opnieuw centreren
+    m_circle.setOrigin(newRadius, newRadius);
+    m_circle.setPosition(pixelPos); // Use world coordinates directly
 
-    // Scale based on converted size
-    float baseRadius = PELLET_SIZE;
-    float scaleX = pixelSize.x / (baseRadius * 2.0f);
-    float scaleY = pixelSize.y / (baseRadius * 2.0f);
+    // Scale transforms world coordinates to screen coordinates
+    // This will stretch the circle into an oval
+    float scaleX = pixelSize.x / (newRadius * 2.0f);
+    float scaleY = pixelSize.y / (newRadius * 2.0f);
     m_circle.setScale(scaleX, scaleY);
 }

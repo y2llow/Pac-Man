@@ -26,8 +26,6 @@ private:
     Camera& m_camera;
     sf::CircleShape m_circle;
 
-    static constexpr float PELLET_SIZE = 10.0f;
-
     void updateSprite();
     void updateShape();
 };

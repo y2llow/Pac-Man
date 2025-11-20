@@ -6,9 +6,6 @@
 PacmanView::PacmanView(PacmanModel& coinModel, sf::RenderWindow& window, Camera& camera)
      : m_pacmanmodel(coinModel), m_window(window), m_camera(camera) {
     m_circle.setFillColor(sf::Color(252, 252, 2));
-    m_circle.setRadius(PACMAN_SIZE);
-    m_circle.setOrigin(PACMAN_SIZE, PACMAN_SIZE);
-
     updateShape();
      }
 
@@ -21,8 +18,7 @@ void PacmanView::update(){
 }
 
 void PacmanView::draw(sf::RenderWindow& window) {
-
-    m_window.draw(m_circle);
+    window.draw(m_circle);
 }
 
 void PacmanView::updateShape() {
@@ -34,17 +30,16 @@ void PacmanView::updateShape() {
     sf::Vector2f logicSize = m_pacmanmodel.getSize();
     sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Set position
-    m_circle.setPosition(pixelPos);
-
-    float newRadius = std::min(pixelSize.x, pixelSize.y) / (PACMAN_SIZE * 2.0f);
+    // Fixed base radius
+    float newRadius = std::min(pixelSize.x, pixelSize.y);
     m_circle.setRadius(newRadius);
-    m_circle.setOrigin(newRadius, newRadius); // Origin opnieuw centreren
+    m_circle.setOrigin(newRadius, newRadius);
+    m_circle.setPosition(pixelPos); // Use world coordinates directly
 
-    // Scale based on converted size
-    float baseRadius = PACMAN_SIZE;
-    float scaleX = pixelSize.x / (baseRadius * 2.0f);
-    float scaleY = pixelSize.y / (baseRadius * 2.0f);
+    // Scale transforms world coordinates to screen coordinates
+    // This will stretch the circle into an oval
+    float scaleX = pixelSize.x / (newRadius * 2.0f);
+    float scaleY = pixelSize.y / (newRadius * 2.0f);
     m_circle.setScale(scaleX, scaleY);
 }
 

@@ -21,8 +21,6 @@ class PacmanView : public EntityView {
     sf::Sprite m_sprite;
     sf::CircleShape m_circle;
 
-    float PACMAN_SIZE = 5.0f;
-
     void updateShape();
 };
 
