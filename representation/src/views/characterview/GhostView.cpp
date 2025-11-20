@@ -2,8 +2,8 @@
 #include "Game.h"
 
 // Base GhostView implementation
-GhostView::GhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
-    : m_ghostmodel(ghostmodel), m_window(window), m_camera(camera) {
+GhostView::GhostView(GhostModel& ghostmodel,  Camera& camera)
+    : m_ghostmodel(ghostmodel),  m_camera(camera) {
     GhostView::setupShape();
     GhostView::updateShape();
 }
@@ -68,8 +68,8 @@ void GhostView::updateShape() {
 }
 
 // RedGhostView implementation
-RedGhostView::RedGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
-    : GhostView(ghostmodel, window, camera) {
+RedGhostView::RedGhostView(GhostModel& ghostmodel,  Camera& camera)
+    : GhostView(ghostmodel,camera) {
     RedGhostView::setupShape();
     GhostView::updateShape();
 }
@@ -88,8 +88,8 @@ void RedGhostView::draw(sf::RenderWindow& window) {
 }
 
 // BlueGhostView implementation
-BlueGhostView::BlueGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
-    : GhostView(ghostmodel, window, camera) {
+BlueGhostView::BlueGhostView(GhostModel& ghostmodel, Camera& camera)
+    : GhostView(ghostmodel,  camera) {
     BlueGhostView::setupShape();
     GhostView::updateShape();
 }
@@ -108,8 +108,8 @@ void BlueGhostView::draw(sf::RenderWindow& window) {
 }
 
 // OrangeGhostView implementation
-OrangeGhostView::OrangeGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
-    : GhostView(ghostmodel, window, camera) {
+OrangeGhostView::OrangeGhostView(GhostModel& ghostmodel,  Camera& camera)
+    : GhostView(ghostmodel,  camera) {
     OrangeGhostView::setupShape();
     GhostView::updateShape();
 }
@@ -128,8 +128,8 @@ void OrangeGhostView::draw(sf::RenderWindow& window) {
 }
 
 // PinkGhostView implementation
-PinkGhostView::PinkGhostView(GhostModel& ghostmodel, sf::RenderWindow& window, Camera& camera)
-    : GhostView(ghostmodel, window, camera) {
+PinkGhostView::PinkGhostView(GhostModel& ghostmodel,  Camera& camera)
+    : GhostView(ghostmodel, camera) {
     PinkGhostView::setupShape();
     GhostView::updateShape();
 }

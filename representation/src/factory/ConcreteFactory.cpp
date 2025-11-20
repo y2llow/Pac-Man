@@ -101,7 +101,7 @@ std::unique_ptr<RedGhostModel> SFMLFactory::createRedGhost(
     auto ghostModel = std::make_unique<RedGhostModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto ghostView = std::make_unique<RedGhostView>(*ghostModel, m_window, m_camera);
+    auto ghostView = std::make_unique<RedGhostView>(*ghostModel, m_camera);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     ghostModel->attachObserver([view = ghostView.get()]() {
@@ -126,7 +126,7 @@ std::unique_ptr<BlueGhostModel> SFMLFactory::createBlueGhost(
     auto ghostModel = std::make_unique<BlueGhostModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto ghostView = std::make_unique<BlueGhostView>(*ghostModel, m_window, m_camera);
+    auto ghostView = std::make_unique<BlueGhostView>(*ghostModel,  m_camera);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     ghostModel->attachObserver([view = ghostView.get()]() {
@@ -151,7 +151,7 @@ std::unique_ptr<OrangeGhostModel> SFMLFactory::createOrangeGhost(
     auto ghostModel = std::make_unique<OrangeGhostModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto ghostView = std::make_unique<OrangeGhostView>(*ghostModel, m_window, m_camera);
+    auto ghostView = std::make_unique<OrangeGhostView>(*ghostModel,  m_camera);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     ghostModel->attachObserver([view = ghostView.get()]() {
@@ -176,7 +176,7 @@ std::unique_ptr<PinkGhostModel> SFMLFactory::createPinkGhost(
     auto ghostModel = std::make_unique<PinkGhostModel>(position, size, textureId);
 
     // 2. Create the View (representation)
-    auto ghostView = std::make_unique<PinkGhostView>(*ghostModel, m_window, m_camera);
+    auto ghostView = std::make_unique<PinkGhostView>(*ghostModel,  m_camera);
 
     // 3. PDF: "attach the View observers to the Model subjects directly when they are created"
     ghostModel->attachObserver([view = ghostView.get()]() {
