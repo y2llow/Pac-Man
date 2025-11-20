@@ -276,7 +276,6 @@ void World::cleanupCollectedItems() {
         }), m_fruits.end());
 }
 
-// In World.cpp
 void World::handleResize(const sf::Vector2u& newSize) {
     m_windowSize = newSize;
     // Don't recreate entities, just update the window size for future calculations
