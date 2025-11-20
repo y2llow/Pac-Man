@@ -9,11 +9,11 @@ void Score::update() {
 }
 
 void Score::onCoinCollected() {
-    // Implementatie later toevoegen
+    m_currentScore = m_currentScore + 100;
 }
 
 void Score::onGhostEaten() {
-    // Implementatie later toevoegen
+    m_currentScore = m_currentScore + 500;
 }
 
 void Score::onPacManDied() {

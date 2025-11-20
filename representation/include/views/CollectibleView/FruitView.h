@@ -14,6 +14,8 @@ public:
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
+    bool shouldRender()const;
+
 private:
     FruitModel& m_fruitmodel;
     Camera& m_camera;

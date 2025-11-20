@@ -1,9 +1,10 @@
 #include "entities/PacmanModel.h"
 
 #include <SFML/Window/Keyboard.hpp>
+#include <utility>
 
-PacmanModel::PacmanModel(const sf::Vector2f& position, const sf::Vector2f& size, const std::string& textureId )
-    : m_position(position), m_textureId(textureId) { m_size = size; }
+PacmanModel::PacmanModel(const sf::Vector2f& position, const sf::Vector2f& size, std::string  textureId )
+    : m_position(position), m_textureId(std::move(textureId)), m_spawnpoint(position) { m_size = size; }
 
 void PacmanModel::update(float deltaTime) {
     if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
@@ -151,5 +152,10 @@ void PacmanModel::undoLastMove() {
     }
     }
 
+}
+
+void PacmanModel::loseLife() {
+    m_position = m_spawnpoint;
+    m_lives -= 1;
 }
 

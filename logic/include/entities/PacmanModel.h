@@ -6,7 +6,7 @@
 
 class PacmanModel : public EntityModel {
 public:
-     PacmanModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "") ;
+     PacmanModel(const sf::Vector2f& position, const sf::Vector2f& size,std::string  textureId = "") ;
 
     // overwritten functiosn from entityModel
      void update(float deltaTime) override ;
@@ -18,6 +18,8 @@ public:
     // Pacman specific funcitons
     sf::Vector2f CheckTunneling(sf::Vector2f position);
     void undoLastMove();
+    [[nodiscard]]unsigned int getLives() const {return m_lives;}
+    void loseLife();
 
 private:
     //default privates
@@ -26,9 +28,11 @@ private:
     sf::Vector2f m_size;
 
     //pacman specific privates
-    unsigned char direction;
+    unsigned char direction{};
     float PACMAN_SPEED = 0.3;
-    float m_lastMove;
+    float m_lastMove{};
+    unsigned int m_lives = 3;
+    sf::Vector2f m_spawnpoint;
 
 };
 

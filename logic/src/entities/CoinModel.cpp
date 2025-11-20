@@ -6,6 +6,7 @@ CoinModel::CoinModel(const sf::Vector2f& position, const sf::Vector2f& size, con
 }
 
 void CoinModel::update(float deltaTime) {
+
     notifyObservers();
     // Coins are static - no update logic needed unless animated
 }
@@ -18,6 +19,6 @@ void CoinModel::setPosition(const sf::Vector2f& position) {
 void CoinModel::collect() {
     if (!m_collected) {
         m_collected = true;
-        notifyObservers();  // Notify view that coin was collected!
+        notifyObservers();
     }
 }

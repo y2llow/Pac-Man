@@ -5,8 +5,8 @@ x.................x
 x.xx.x.xxxxx.x.xx.x
 x....x...x...x....x
 xxxx.xxx.x.xxx.xxxx
-xxxx.x...r...x.xxxx
-xxxx.x.xx xx.x.xxxx
+xxxx.x.......x.xxxx
+xxxx.x.xxrxx.x.xxxx
 .......xbpox.......
 xxxx.x.xxxxx.x.xxxx
 xxxx.x.......x.xxxx

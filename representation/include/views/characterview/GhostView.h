@@ -20,6 +20,8 @@ protected:
     Camera& m_camera;
     sf::CircleShape m_circle;
 
+    sf::Color m_normalColor;
+
     virtual void setupShape();
     virtual void updateShape();
 };

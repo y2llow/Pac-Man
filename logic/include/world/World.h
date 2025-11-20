@@ -30,7 +30,13 @@ public:
 
     void handleCollisions();
     bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
+
     void handlePacmanWallCollision(PacmanModel&pacman, const WallModel&wall);
+    void handlePacmanGhostCollision(PacmanModel&pacman, GhostModel&ghost);
+    void handlePacmanCoinCollision(CoinModel&coin);
+    void handlePacmanFruitCollision(FruitModel&fruit);
+
+    void cleanupCollectedItems();
 
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void createEntitiesFromMap();

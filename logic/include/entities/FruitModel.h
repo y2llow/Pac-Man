@@ -17,6 +17,11 @@ public:
     [[nodiscard]]  sf::Vector2f getSize() const override{return m_size;}
 
     // FruitModel specific funcitons
+    void collect();  // This will notify observers!
+
+    [[nodiscard]] bool isCollected() const { return m_collected; }
+    [[nodiscard]] const std::string& getTextureId() const { return m_textureId; }
+
 
 private:
     //default privates
@@ -25,5 +30,7 @@ private:
     sf::Vector2f m_size;
 
     //FruitModel specific privates
+    bool m_collected = false;  // Track collection state
+
 };
 #endif //FRUIT_H

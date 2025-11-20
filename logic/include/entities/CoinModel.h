@@ -25,6 +25,8 @@ private:
     sf::Vector2f m_position;
     std::string m_textureId;
     sf::Vector2f m_size;
+
+    // Coin Specific privates
     bool m_collected = false;  // Track collection state
 };
 

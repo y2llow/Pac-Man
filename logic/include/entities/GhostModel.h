@@ -15,6 +15,10 @@ public:
 
     //Ghost specific funcitons
     sf::Vector2f CheckTunneling(sf::Vector2f position);
+    [[nodiscard]] bool isScared() ;
+    void setScared();
+    void respawn();
+    [[nodiscard]]float getScaredTimer() const {return m_scaredTimer;}
 
 protected:
     //default privates
@@ -24,6 +28,9 @@ protected:
 
     //Ghost specific privates
     double GHOST_SPEED = 0.1;
+    float m_scaredTimer = 0 ;public:protected:
+    sf::Vector2f m_ghost_spawnpoint;
+    bool m_scared = false;
 
     };
 

@@ -2,12 +2,17 @@
 #include <utility>
 
 GhostModel::GhostModel(const sf::Vector2f& position, const sf::Vector2f& size, std::string textureId)
-    : m_position(position), m_textureId(std::move(textureId)), m_size(size) {
+    : m_position(position), m_textureId(std::move(textureId)), m_size(size), m_ghost_spawnpoint(position)  {
 }
 
 void GhostModel::update(float deltaTime) {
     // Base class handles ONLY tunneling and notification
     m_position = CheckTunneling(m_position);
+    if (isScared()) {
+        // Assuming m_scaredTimer is a member variable that tracks remaining scared time
+        m_scaredTimer -= deltaTime;
+        m_scaredTimer = std::max(m_scaredTimer, 0.0f);
+    }
     notifyObservers();
 }
 
@@ -16,6 +21,23 @@ void GhostModel::setPosition(const sf::Vector2f& position) {
     notifyObservers();
 }
 
+bool GhostModel::isScared()  {
+    if (m_scaredTimer > 0) {
+        m_scared = true;
+        return true;
+    }
+    m_scared = false;
+    return false;
+}
+void GhostModel::setScared() {
+    m_scaredTimer = 5.0f;
+}
+
+void GhostModel::respawn() {
+    m_position = m_ghost_spawnpoint;
+}
+
+//-----------------------------------------------------------------------------------------------------//
 // Each ghost handles its own movement, then calls base for tunneling + notification
 void RedGhostModel::update(float deltaTime) {
     m_position.x += GHOST_SPEED * deltaTime;  // Red moves right

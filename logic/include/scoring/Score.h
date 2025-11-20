@@ -20,7 +20,7 @@ public:
     void onGhostEaten();
     void onPacManDied();
 
-    int getCurrentScore() const { return m_currentScore; }
+    [[nodiscard]] int getCurrentScore() const { return m_currentScore; }
     void reset();
 
 private:

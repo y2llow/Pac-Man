@@ -13,3 +13,10 @@ void FruitModel::setPosition(const sf::Vector2f& position)  {
      m_position = position;
      notifyObservers();
  }
+
+void FruitModel::collect() {
+    if (!m_collected) {
+        m_collected = true;
+        notifyObservers();
+    }
+}

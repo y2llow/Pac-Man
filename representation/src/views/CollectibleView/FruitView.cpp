@@ -19,6 +19,10 @@ void FruitView::update() {
     // - Animation states
     // - Collection effects
     // - Visibility based on model state
+    // Handle collection state
+    if (m_fruitmodel.isCollected()) {
+        // Could trigger collection animation or effects here
+    }
 }
 
 void FruitView::draw(sf::RenderWindow& window) {
@@ -26,8 +30,14 @@ void FruitView::draw(sf::RenderWindow& window) {
     // if (!m_fruitmodel.isCollected()) {
     //     window.draw(m_circle);
     // }
-    window.draw(m_circle);
+    if (shouldRender()) {
+        window.draw(m_circle);
+    }
 }
+bool FruitView::shouldRender() const {
+    return !m_fruitmodel.isCollected();
+}
+
 
 void FruitView::updateShape() {
     // Convert normalized coordinates to pixel coordinates using camera
