@@ -34,8 +34,8 @@ private:
     std::vector<std::unique_ptr<EntityView>> m_views;
 
     // Template helper - return shared_ptr
-    template<typename ModelType, typename ViewType, typename... Args>
-    std::shared_ptr<ModelType> createEntity(const Vector2f& position, const Vector2f& size, const std::string& textureId, Args&&... args);
+    template<typename ModelType, typename ViewType>
+    std::shared_ptr<ModelType> createEntity(const Vector2f& position, const Vector2f& size, const std::string& textureId);
 };
 
 #endif

@@ -17,10 +17,10 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
 }
 
 // Template helper - return hetzelfde shared_ptr object
-template<typename ModelType, typename ViewType, typename... Args>
-std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, const Vector2f& size, const std::string& textureId, Args&&... args) {
+template<typename ModelType, typename ViewType>
+std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
     // 1. Create model with shared ownership
-    auto model = std::make_shared<ModelType>(position, size, textureId, std::forward<Args>(args)...);
+    auto model = std::make_shared<ModelType>(position, size, textureId);
 
     // 2. Create view with shared model reference
     auto view = std::make_unique<ViewType>(model, m_camera);
