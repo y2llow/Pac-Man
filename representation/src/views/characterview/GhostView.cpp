@@ -2,8 +2,8 @@
 #include "Game.h"
 
 // Base GhostView implementation
-GhostView::GhostView(GhostModel& ghostmodel,  Camera& camera)
-    : m_ghostmodel(ghostmodel),  m_camera(camera) {
+GhostView::GhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
+    : m_ghostmodel(std::move(ghostmodel)),  m_camera(camera) {
     GhostView::setupShape();
     GhostView::updateShape();
 }
@@ -17,8 +17,8 @@ void GhostView::setupShape() {
 void GhostView::update() {
     updateShape();
 
-    if (m_ghostmodel.isScared()) {
-        float scaredTimer = m_ghostmodel.getScaredTimer();
+    if (m_ghostmodel->isScared()) {
+        float scaredTimer = m_ghostmodel->getScaredTimer();
 
         // Blink between blue and white when timer is below 3 seconds
         if (scaredTimer <= 3.0f) {
@@ -49,10 +49,10 @@ void GhostView::draw(sf::RenderWindow& window) {
 }
 
 void GhostView::updateShape() {
-    Vector2f logicPos = m_ghostmodel.getPosition();
+    Vector2f logicPos = m_ghostmodel->getPosition();
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
-    Vector2f logicSize = m_ghostmodel.getSize();
+    Vector2f logicSize = m_ghostmodel->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius
@@ -68,7 +68,7 @@ void GhostView::updateShape() {
 }
 
 // RedGhostView implementation
-RedGhostView::RedGhostView(GhostModel& ghostmodel,  Camera& camera)
+RedGhostView::RedGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
     : GhostView(ghostmodel,camera) {
     RedGhostView::setupShape();
     GhostView::updateShape();
@@ -88,7 +88,7 @@ void RedGhostView::draw(sf::RenderWindow& window) {
 }
 
 // BlueGhostView implementation
-BlueGhostView::BlueGhostView(GhostModel& ghostmodel, Camera& camera)
+BlueGhostView::BlueGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     : GhostView(ghostmodel,  camera) {
     BlueGhostView::setupShape();
     GhostView::updateShape();
@@ -108,7 +108,7 @@ void BlueGhostView::draw(sf::RenderWindow& window) {
 }
 
 // OrangeGhostView implementation
-OrangeGhostView::OrangeGhostView(GhostModel& ghostmodel,  Camera& camera)
+OrangeGhostView::OrangeGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
     : GhostView(ghostmodel,  camera) {
     OrangeGhostView::setupShape();
     GhostView::updateShape();
@@ -128,7 +128,7 @@ void OrangeGhostView::draw(sf::RenderWindow& window) {
 }
 
 // PinkGhostView implementation
-PinkGhostView::PinkGhostView(GhostModel& ghostmodel,  Camera& camera)
+PinkGhostView::PinkGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
     : GhostView(ghostmodel, camera) {
     PinkGhostView::setupShape();
     GhostView::updateShape();

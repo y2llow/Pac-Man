@@ -8,14 +8,14 @@
 
 class GhostView : public EntityView {
 public:
-    GhostView(GhostModel& ghostmodel, Camera& camera);
+    GhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera);
     virtual ~GhostView() = default;
 
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
 protected:
-    GhostModel& m_ghostmodel;
+    std::shared_ptr<GhostModel> m_ghostmodel;
     Camera& m_camera;
     sf::CircleShape m_circle;
 
@@ -28,7 +28,7 @@ protected:
 // Red Ghost View
 class RedGhostView : public GhostView {
 public:
-    RedGhostView(GhostModel& ghostmodel, Camera& camera);
+    RedGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera);
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
@@ -39,7 +39,7 @@ protected:
 // Blue Ghost View
 class BlueGhostView : public GhostView {
 public:
-    BlueGhostView(GhostModel& ghostmodel,  Camera& camera);
+    BlueGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera);
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
@@ -50,7 +50,7 @@ protected:
 // Orange Ghost View
 class OrangeGhostView : public GhostView {
 public:
-    OrangeGhostView(GhostModel& ghostmodel,  Camera& camera);
+    OrangeGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera);
     void update() override;
     void draw(sf::RenderWindow& window) override;
 
@@ -61,7 +61,7 @@ protected:
 // Pink Ghost View
 class PinkGhostView : public GhostView {
 public:
-    PinkGhostView(GhostModel& ghostmodel,  Camera& camera);
+    PinkGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera);
     void update() override;
     void draw(sf::RenderWindow& window) override;
 

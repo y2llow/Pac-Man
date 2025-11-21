@@ -2,8 +2,8 @@
 #include "Game.h"
 #include "../../../logic/include/entities/WallModel.h"
 
-WallView::WallView(WallModel& model,  Camera& camera)
-    : m_model(model), m_camera(camera) {
+WallView::WallView(std::shared_ptr<WallModel> model,  Camera& camera)
+    : m_model(std::move(model)), m_camera(camera) {
     setupRectangle();
     updateShape();
 }
@@ -23,11 +23,11 @@ void WallView::draw(sf::RenderWindow& window) {
 
 void WallView::updateShape() {
     // Convert normalized coordinates [-1, 1] to pixel coordinates
-    Vector2f logicPos = m_model.getPosition();
+    Vector2f logicPos = m_model->getPosition();
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_model.getSize();
+    Vector2f logicSize = m_model->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // **CRUCIAAL: Gebruik de pixelSize direct als grootte**

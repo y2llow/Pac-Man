@@ -4,12 +4,11 @@
 #include "entities/CoinModel.h"
 #include "rendering/SpriteManager.h"
 
-CoinView::CoinView(CoinModel& coinModel, Camera& camera)
-    : m_coinModel(coinModel), m_camera(camera) {
+CoinView::CoinView(std::shared_ptr<CoinModel> coinModel, Camera& camera)
+    : m_coinModel(std::move(coinModel)), m_camera(camera) {
 
     // Setup circle shape for coin
     m_circle.setFillColor(sf::Color(255, 184, 144));
-
     updateShape();
     updateSprite();
 }
@@ -17,11 +16,6 @@ CoinView::CoinView(CoinModel& coinModel, Camera& camera)
 void CoinView::update() {
     // Update graphics based on model state changes
     updateSprite();
-
-    // Handle collection state
-    if (m_coinModel.isCollected()) {
-        // Could trigger collection animation or effects here
-    }
 }
 
 void CoinView::updateSprite() {
@@ -37,28 +31,31 @@ void CoinView::draw(sf::RenderWindow& window) {
 }
 
 bool CoinView::shouldRender() const {
-    return !m_coinModel.isCollected();
+    return m_coinModel && !m_coinModel->isCollected();
 }
 
 void CoinView::updateShape() {
+    if (!m_coinModel) return;
+
+    if (m_coinModel->isCollected()) {
+        return;
+    }
+
     // Convert normalized coordinates to pixel coordinates using camera
-    Vector2f logicPos = m_coinModel.getPosition();
+    Vector2f logicPos = m_coinModel->getPosition();
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_coinModel.getSize();
+    Vector2f logicSize = m_coinModel->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius
     float newRadius = std::min(pixelSize.x, pixelSize.y);
     m_circle.setRadius(newRadius);
     m_circle.setOrigin(newRadius, newRadius);
-    m_circle.setPosition(pixelPos.x , pixelPos.y); // Use world coordinates directly
+    m_circle.setPosition(pixelPos.x, pixelPos.y);
 
-    // Scale transforms world coordinates to screen coordinates
-    // This will stretch the circle into an oval
     float scaleX = pixelSize.x / (newRadius * 2.0f);
     float scaleY = pixelSize.y / (newRadius * 2.0f);
     m_circle.setScale(scaleX, scaleY);
-
 }

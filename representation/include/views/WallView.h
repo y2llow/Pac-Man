@@ -9,7 +9,7 @@ class WallModel;
 
 class WallView : public EntityView {
 public:
-    WallView(WallModel& model, Camera& camera);
+    explicit WallView(std::shared_ptr<WallModel> model, Camera& camera);
     ~WallView() override = default;
 
     // Observer interface
@@ -19,7 +19,7 @@ public:
     void draw(sf::RenderWindow& window) override;
 
 private:
-    WallModel& m_model;
+    std::shared_ptr<WallModel> m_model;
     Camera& m_camera;
     sf::RectangleShape m_shape;
 

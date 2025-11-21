@@ -3,8 +3,8 @@
 #include "Game.h"
 #include "entities/FruitModel.h"
 
-FruitView::FruitView(FruitModel& fruitmodel, Camera& camera)
-    : m_fruitmodel(fruitmodel), m_camera(camera) {
+FruitView::FruitView(std::shared_ptr<FruitModel> fruitmodel, Camera& camera)
+    : m_fruitmodel(std::move(fruitmodel)), m_camera(camera) {
 
     // Setup circle shape for fruit
     m_circle.setFillColor(sf::Color(0, 255, 0));
@@ -20,7 +20,7 @@ void FruitView::update() {
     // - Collection effects
     // - Visibility based on model state
     // Handle collection state
-    if (m_fruitmodel.isCollected()) {
+    if (m_fruitmodel->isCollected()) {
         // Could trigger collection animation or effects here
     }
 }
@@ -35,17 +35,17 @@ void FruitView::draw(sf::RenderWindow& window) {
     }
 }
 bool FruitView::shouldRender() const {
-    return !m_fruitmodel.isCollected();
+    return !m_fruitmodel->isCollected();
 }
 
 
 void FruitView::updateShape() {
     // Convert normalized coordinates to pixel coordinates using camera
-    Vector2f logicPos = m_fruitmodel.getPosition();
+    Vector2f logicPos = m_fruitmodel->getPosition();
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_fruitmodel.getSize();
+    Vector2f logicSize = m_fruitmodel->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius

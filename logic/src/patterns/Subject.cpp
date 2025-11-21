@@ -1,11 +1,14 @@
 #include "patterns/Subject.h"
-#include "patterns/Observer.h"  // Include in .cpp to avoid circular dependency
 #include <algorithm>
 
 void Subject::attachObserver(Callback callback) {
     if (callback) {
         m_observers.push_back(std::move(callback));
     }
+}
+
+void Subject::detachAllObservers() {
+    m_observers.clear();
 }
 
 void Subject::notifyObservers() {

@@ -10,7 +10,7 @@ class CoinModel;
 
 class CoinView : public EntityView {
 public:
-    CoinView(CoinModel& coinModel, Camera& camera);
+    explicit CoinView(std::shared_ptr<CoinModel> coinModel, Camera& camera);
     ~CoinView() override = default;
 
     // Observer interface
@@ -18,10 +18,10 @@ public:
 
     // Rendering
     void draw(sf::RenderWindow& window) override;
-    bool shouldRender() const;
+    bool shouldRender() const ;
 
 private:
-    CoinModel& m_coinModel;
+    std::shared_ptr<CoinModel> m_coinModel;
     Camera& m_camera;
     sf::CircleShape m_circle;
 

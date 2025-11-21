@@ -3,8 +3,8 @@
 #include "Game.h"
 #include "entities/PacmanModel.h"
 
-PacmanView::PacmanView(PacmanModel& coinModel,  Camera& camera)
-     : m_pacmanmodel(coinModel),  m_camera(camera) {
+PacmanView::PacmanView(std::shared_ptr<PacmanModel> pacmanModel,  Camera& camera)
+     : m_pacmanmodel(std::move(pacmanModel)),  m_camera(camera) {
     m_circle.setFillColor(sf::Color(252, 252, 2));
     updateShape();
      }
@@ -23,11 +23,11 @@ void PacmanView::draw(sf::RenderWindow& window) {
 
 void PacmanView::updateShape() {
     // Convert normalized coordinates to pixel coordinates using camera
-    Vector2f logicPos = m_pacmanmodel.getPosition();
+    Vector2f logicPos = m_pacmanmodel->getPosition();
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_pacmanmodel.getSize();
+    Vector2f logicSize = m_pacmanmodel->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius

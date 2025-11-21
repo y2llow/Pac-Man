@@ -8,7 +8,7 @@
 class FruitView : public EntityView {
 public:
 
-    FruitView(FruitModel& fruitmodel, Camera& camera);
+    FruitView(std::shared_ptr<FruitModel> fruitmodel, Camera& camera);
     ~FruitView()override  = default;
 
     void update() override;
@@ -17,7 +17,7 @@ public:
     bool shouldRender()const;
 
 private:
-    FruitModel& m_fruitmodel;
+    std::shared_ptr<FruitModel> m_fruitmodel;
     Camera& m_camera;
     sf::Sprite m_sprite;
     sf::CircleShape m_circle;

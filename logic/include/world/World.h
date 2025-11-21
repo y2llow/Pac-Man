@@ -22,44 +22,37 @@ public:
     void initialize();
     void update(float deltaTime);
 
-    void handleCollisions();
-    bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
+    Score& getScore() { return *m_score; }
+    void checkGameState();
+    void setFactory(LogicFactory& factory) { m_factory = &factory; }
+    void addEntity(std::unique_ptr<EntityModel> entity);
 
+    bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
+    void handleCollisions();
     void handlePacmanWallCollision(PacmanModel&pacman, const WallModel&wall);
     void handlePacmanGhostCollision(PacmanModel&pacman, GhostModel&ghost);
     void handlePacmanCoinCollision(CoinModel&coin);
     void handlePacmanFruitCollision(FruitModel&fruit);
-
     void cleanupCollectedItems();
-    void checkGameState();
-
-    void setFactory(LogicFactory& factory) { m_factory = &factory; }
-    void createEntitiesFromMap();
-    void addEntity(std::unique_ptr<EntityModel> entity);
-    // void handleResize(const Vector2f& newSize);
-
-
-
-    Score& getScore() { return *m_score; }
 
     // Add getters for LevelState to access entities for rendering
-    [[nodiscard]] const std::vector<std::unique_ptr<WallModel>>& getWalls() const { return m_walls; }
-    [[nodiscard]] const std::vector<std::unique_ptr<CoinModel>>& getCoins() const { return m_coins; }
-    [[nodiscard]] const std::vector<std::unique_ptr<PacmanModel>>& getPacman() const { return m_pacman; }
-    [[nodiscard]] const std::vector<std::unique_ptr<GhostModel>>& getGhosts() const { return m_ghosts; }
-    [[nodiscard]] const std::vector<std::unique_ptr<FruitModel>>& getFruit() const { return m_fruits; }
+    [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }
+    [[nodiscard]] const std::vector<std::shared_ptr<CoinModel>>& getCoins() const { return m_coins; }
+    [[nodiscard]] const std::vector<std::shared_ptr<PacmanModel>>& getPacman() const { return m_pacman; }
+    [[nodiscard]] const std::vector<std::shared_ptr<GhostModel>>& getGhosts() const { return m_ghosts; }
+    [[nodiscard]] const std::vector<std::shared_ptr<FruitModel>>& getFruit() const { return m_fruits; }
 
 private:
     MapModel m_mapModel;
     LogicFactory* m_factory;
     std::unique_ptr<Score> m_score;
 
-    // World stores all entities
-    std::vector<std::unique_ptr<WallModel>> m_walls;
-    std::vector<std::unique_ptr<CoinModel>> m_coins;
-    std::vector<std::unique_ptr<PacmanModel>> m_pacman;
-    std::vector<std::unique_ptr<GhostModel>> m_ghosts;
-    std::vector<std::unique_ptr<FruitModel>> m_fruits;
+    // Change ALL vectors to shared_ptr
+    std::vector<std::shared_ptr<WallModel>> m_walls;
+    std::vector<std::shared_ptr<CoinModel>> m_coins;
+    std::vector<std::shared_ptr<PacmanModel>> m_pacman;
+    std::vector<std::shared_ptr<GhostModel>> m_ghosts;
+    std::vector<std::shared_ptr<FruitModel>> m_fruits;
 
     Vector2f m_gridSize;
 
@@ -68,6 +61,7 @@ private:
     float COIN_SIZE = 0.125;
     float FRUIT_SIZE = 0.3;
 
+    void createEntitiesFromMap();
 };
 
 #endif

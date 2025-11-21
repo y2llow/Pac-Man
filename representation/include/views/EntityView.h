@@ -1,17 +1,24 @@
-#ifndef ENTITYVIEZ_H
-#define ENTITYVIEZ_H
-#include "patterns/Observer.h"
-#include <SFML/Graphics.hpp>
+#ifndef ENTITY_VIEW_H
+#define ENTITY_VIEW_H
 
-class EntityView : public Observer{
+#include <SFML/Graphics.hpp>
+#include <memory>
+
+class Camera;
+class EntityModel;
+
+class EntityView {
 public:
     virtual ~EntityView() = default;
 
-    virtual void update() {}
+    // Update view based on model state
+    virtual void update() = 0;
+
+    // Draw to window
     virtual void draw(sf::RenderWindow& window) = 0;
-    // virtual bool shouldRender();
 
 };
-#endif //ENTITYVIEZ_H
+
+#endif
 
 
