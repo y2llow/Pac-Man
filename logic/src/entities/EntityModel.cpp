@@ -1,6 +1,6 @@
 #include "entities/EntityModel.h"
 
-void EntityModel::setPosition(const sf::Vector2f& position) {
+void EntityModel::setPosition(const Vector2f& position) {
     // Only notify if position actually changed
     // if (position != m_position) {
     //     m_position = position;

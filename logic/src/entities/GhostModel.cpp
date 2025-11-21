@@ -1,7 +1,7 @@
 #include "entities/GhostModel.h"
 #include <utility>
 
-GhostModel::GhostModel(const sf::Vector2f& position, const sf::Vector2f& size, std::string textureId)
+GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::string textureId)
     : m_position(position), m_textureId(std::move(textureId)), m_size(size), m_ghost_spawnpoint(position)  {
 }
 
@@ -16,7 +16,7 @@ void GhostModel::update(float deltaTime) {
     notifyObservers();
 }
 
-void GhostModel::setPosition(const sf::Vector2f& position) {
+void GhostModel::setPosition(const Vector2f& position) {
     m_position = position;
     notifyObservers();
 }
@@ -59,7 +59,7 @@ void PinkGhostModel::update(float deltaTime) {
     GhostModel::update(deltaTime);     // Call base for tunneling + notification
 }
 
-sf::Vector2f GhostModel::CheckTunneling(sf::Vector2f position) {
+Vector2f GhostModel::CheckTunneling(Vector2f position) {
     float edge = 1 + m_size.x / 2;
     if (-edge >= position.x) {
         position.x = edge;

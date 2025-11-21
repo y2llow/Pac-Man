@@ -2,17 +2,27 @@
 #define ENTITY_H
 
 #include "patterns/Subject.h"
-#include <SFML/System/Vector2.hpp>
 #include <string>
+
+struct Vector2f {
+    float x, y;
+    Vector2f(float x = 0, float y = 0) : x(x), y(y) {}
+
+};
+
+struct Vector2u {
+    unsigned int x, y;
+    Vector2u(unsigned int x = 0, unsigned int y = 0) : x(x), y(y) {}
+};
 
 class EntityModel : public Subject {
 public:
     ~EntityModel() override = default;
 
     virtual void update(float deltaTime) = 0;
-    [[nodiscard]] virtual sf::Vector2f getPosition() const = 0;
-    virtual void setPosition(const sf::Vector2f& position) = 0;
-    [[nodiscard]] virtual sf::Vector2f getSize() const = 0;
+    [[nodiscard]] virtual Vector2f getPosition() const = 0;
+    virtual void setPosition(const Vector2f& position) = 0;
+    [[nodiscard]] virtual Vector2f getSize() const = 0;
 
     // Other common properties that might trigger notifications
     // virtual void setActive(bool active);

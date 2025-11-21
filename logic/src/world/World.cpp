@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-World::World(const sf::Vector2u& windowSize, LogicFactory& factory)
+World::World(const Vector2f& windowSize, LogicFactory& factory)
     : m_factory(&factory), m_windowSize(windowSize) {
     m_score = std::make_unique<Score>();
 }
@@ -21,11 +21,11 @@ void World::initialize() {
 
 void World::createEntitiesFromMap() {
     const auto& grid = m_mapModel.getGrid();
-    sf::Vector2u gridSize = m_mapModel.getGridSize();
+    Vector2f gridSize = m_mapModel.getGridSize();
 
     if (grid.empty()) return;
 
-    sf::Vector2u currentWindowSize = m_windowSize; // This should be updated on resize
+    Vector2f currentWindowSize = m_windowSize; // This should be updated on resize
 
     float tileWidth = 2.0f / gridSize.x;
     float tileHeight = 2.0f / gridSize.y;
@@ -37,8 +37,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto wall = m_factory->createWall(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
                     "wall_basic"
                 );
                 m_walls.push_back(std::move(wall));
@@ -48,8 +48,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto coin = m_factory->createCoin(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * COIN_SIZE , tileHeight * COIN_SIZE ),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * COIN_SIZE , tileHeight * COIN_SIZE ),
                     "Coin"
                 );
                 m_coins.push_back(std::move(coin));
@@ -59,8 +59,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto pacman = m_factory->createPacman(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE ),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE ),
                     "Pacman");
 
                 m_pacman.push_back(std::move(pacman));
@@ -70,8 +70,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto fruit = m_factory->createFruit(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * FRUIT_SIZE , tileHeight * FRUIT_SIZE ),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * FRUIT_SIZE , tileHeight * FRUIT_SIZE ),
                     "fruit");
 
                 m_fruits.push_back(std::move(fruit));
@@ -81,8 +81,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto ghost = m_factory->createRedGhost(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "red_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
@@ -92,8 +92,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto ghost = m_factory->createBlueGhost(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "blue_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
@@ -102,8 +102,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto ghost = m_factory->createOrangeGhost(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "orange_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
@@ -112,8 +112,8 @@ void World::createEntitiesFromMap() {
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
                 auto ghost = m_factory->createPinkGhost(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
                     "pink_ghost");
 
                 m_ghosts.push_back(std::move(ghost));
@@ -276,7 +276,7 @@ void World::cleanupCollectedItems() {
         }), m_fruits.end());
 }
 
-void World::handleResize(const sf::Vector2u& newSize) {
+void World::handleResize(const Vector2f& newSize) {
     m_windowSize = newSize;
     // Don't recreate entities, just update the window size for future calculations
 }

@@ -16,58 +16,58 @@ class SFMLFactory : public LogicFactory {
 public:
     explicit SFMLFactory(sf::RenderWindow& window, Camera& camera);
 
-    void handleResize(const sf::Vector2u& newSize) ;
 
     std::unique_ptr<WallModel> createWall(
-        const sf::Vector2f& position,
-        const sf::Vector2f& size,
+        const Vector2f& position,
+        const Vector2f& size,
         const std::string& textureId = std::string("")
-    ) override;
+    ) ;
 
     std::unique_ptr<CoinModel> createCoin(
-        const sf::Vector2f& position,
-        const sf::Vector2f& size,
+        const Vector2f& position,
+        const Vector2f& size,
         const std::string& textureId = std::string("")
-    ) override;
+    ) ;
 
     std::unique_ptr<PacmanModel>createPacman(
-        const sf::Vector2f&position,
-        const sf::Vector2f&size,
+        const Vector2f&position,
+        const Vector2f&size,
         const std::string&textureId= std::string("")
-        ) override;
+        ) ;
 
     std::unique_ptr<RedGhostModel> createRedGhost(
-        const sf::Vector2f& position,
-        const sf::Vector2f& size,
+        const Vector2f& position,
+        const Vector2f& size,
         const std::string& textureId = std::string("")
-        ) override ;
+        )  ;
 
     std::unique_ptr<BlueGhostModel> createBlueGhost(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId = std::string("")
-    ) override ;
+    )  ;
 
     std::unique_ptr<OrangeGhostModel> createOrangeGhost(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId = std::string("")
-    ) override ;
+    )  ;
 
     std::unique_ptr<PinkGhostModel> createPinkGhost(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId = std::string("")
-    ) override ;
+    )  ;
 
     std::unique_ptr<FruitModel> createFruit(
-        const sf::Vector2f& position,
-        const sf::Vector2f& size,
+        const Vector2f& position,
+        const Vector2f& size,
         const std::string& textureId = std::string("")
-        ) override ;
+        )  ;
 
     [[nodiscard]] const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
 
+    void handleResize(const Vector2f& position);
     void cleanupCollectedViews();
 
 private:

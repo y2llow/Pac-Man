@@ -3,18 +3,20 @@
 
 #include "EntityModel.h"
 
+#include <SFML/System/Vector2.hpp>
+
 class GhostModel : public EntityModel {
 public:
-    GhostModel(const sf::Vector2f& position, const sf::Vector2f& size,std::string  textureId = "") ;
+    GhostModel(const Vector2f& position, const Vector2f& size,std::string  textureId = "") ;
 
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
-    [[nodiscard]]  sf::Vector2f getPosition() const override {return m_position;}
-    void setPosition(const sf::Vector2f& position) override;
-    [[nodiscard]]  sf::Vector2f getSize() const override{return m_size;}
+    [[nodiscard]]  Vector2f getPosition() const override {return m_position;}
+    void setPosition(const Vector2f& position) override;
+    [[nodiscard]]  Vector2f getSize() const override{return m_size;}
 
     //Ghost specific funcitons
-    sf::Vector2f CheckTunneling(sf::Vector2f position);
+    Vector2f CheckTunneling(Vector2f position);
     [[nodiscard]] bool isScared() ;
     void setScared();
     void respawn();
@@ -22,21 +24,21 @@ public:
 
 protected:
     //default privates
-    sf::Vector2f m_position;
+    Vector2f m_position;
     std::string m_textureId;
-    sf::Vector2f m_size;
+    Vector2f m_size;
 
     //Ghost specific privates
     double GHOST_SPEED = 0.1;
     float m_scaredTimer = 0 ;public:protected:
-    sf::Vector2f m_ghost_spawnpoint;
+    Vector2f m_ghost_spawnpoint;
     bool m_scared = false;
 
     };
 
 class RedGhostModel : public GhostModel {
 public:
-    RedGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    RedGhostModel(const Vector2f& position, const Vector2f& size,const std::string& textureId = "")
     : GhostModel(position,size,textureId){}
 
     // overwritten functiosn from entityModel
@@ -51,7 +53,7 @@ private:
 
 class BlueGhostModel : public GhostModel {
 public:
-    BlueGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    BlueGhostModel(const Vector2f& position, const Vector2f& size,const std::string& textureId = "")
     : GhostModel(position,size,textureId){}
 
     // overwritten functiosn from entityModel
@@ -66,7 +68,7 @@ private:
 
 class OrangeGhostModel : public GhostModel {
 public:
-    OrangeGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    OrangeGhostModel(const Vector2f& position, const Vector2f& size,const std::string& textureId = "")
     : GhostModel(position,size,textureId){}
 
     // overwritten functiosn from entityModel
@@ -81,7 +83,7 @@ private:
 
 class PinkGhostModel : public GhostModel {
 public:
-    PinkGhostModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "")
+    PinkGhostModel(const Vector2f& position, const Vector2f& size,const std::string& textureId = "")
     : GhostModel(position,size,textureId){}
 
     // overwritten functiosn from entityModel

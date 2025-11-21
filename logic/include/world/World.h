@@ -5,7 +5,6 @@
 #include "core/Stopwatch.h"
 
 
-#include <SFML/System/Vector2.hpp>
 #include <memory>
 #include <vector>
 #include "patterns/AbstractFactory.h"
@@ -18,7 +17,7 @@
 
 class World {
 public:
-    World(const sf::Vector2u& windowSize, LogicFactory& factory);
+    World(const Vector2f& windowSize, LogicFactory& factory);
 
     void initialize();
     void update(float deltaTime);
@@ -37,7 +36,7 @@ public:
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void createEntitiesFromMap();
     void addEntity(std::unique_ptr<EntityModel> entity);
-    void handleResize(const sf::Vector2u& newSize);
+    void handleResize(const Vector2f& newSize);
 
 
 
@@ -62,7 +61,7 @@ private:
     std::vector<std::unique_ptr<GhostModel>> m_ghosts;
     std::vector<std::unique_ptr<FruitModel>> m_fruits;
 
-    sf::Vector2u m_windowSize;
+    Vector2f m_windowSize;
 
     float PACMAN_SIZE = 0.75;
     float GHOST_SIZE = 0.75;

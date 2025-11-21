@@ -23,18 +23,18 @@ void PacmanView::draw(sf::RenderWindow& window) {
 
 void PacmanView::updateShape() {
     // Convert normalized coordinates to pixel coordinates using camera
-    sf::Vector2f logicPos = m_pacmanmodel.getPosition();
-    sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
+    Vector2f logicPos = m_pacmanmodel.getPosition();
+    Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    sf::Vector2f logicSize = m_pacmanmodel.getSize();
-    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
+    Vector2f logicSize = m_pacmanmodel.getSize();
+    Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius
     float newRadius = std::min(pixelSize.x, pixelSize.y);
     m_circle.setRadius(newRadius);
     m_circle.setOrigin(newRadius, newRadius);
-    m_circle.setPosition(pixelPos); // Use world coordinates directly
+    m_circle.setPosition(pixelPos.x , pixelPos.y); // Use world coordinates directly
 
     // Scale transforms world coordinates to screen coordinates
     // This will stretch the circle into an oval

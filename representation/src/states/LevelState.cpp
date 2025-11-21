@@ -17,7 +17,9 @@ LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window, Cam
  */
 void LevelState::initialize() {
     // Reset the view to match current window size
-    sf::Vector2u windowSize = m_window.getSize();
+    Vector2f windowSize;
+     windowSize.x = m_window.getSize().x;
+     windowSize.y = m_window.getSize().y;
     sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);
     m_window.setView(sf::View(visibleArea));
 
@@ -25,7 +27,7 @@ void LevelState::initialize() {
     m_camera.updateWindowSize();
 
     // Initialize world
-    m_world = std::make_unique<World>(m_window.getSize(), *m_factory);
+    m_world = std::make_unique<World>(windowSize, *m_factory);
     m_world->initialize();
 
     // Update layout for proper positioning
@@ -37,10 +39,12 @@ void LevelState::initialize() {
  * Follows the same pattern as MenuState::updateLayout()
  */
 void LevelState::updateLayout() {
-    sf::Vector2u windowSize = m_window.getSize();
+    Vector2f windowSize;
+    windowSize.x = m_window.getSize().x ;
+    windowSize.y = m_window.getSize().y ;
 
     // Update camera with new window size
-    m_camera.updateWindowSize(sf::Vector2f(windowSize)); // Add this method to Camera if needed
+    m_camera.updateWindowSize(Vector2f(windowSize)); // Add this method to Camera if needed
 
     // Reset the view
     sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);

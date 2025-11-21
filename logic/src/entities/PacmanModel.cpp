@@ -3,7 +3,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <utility>
 
-PacmanModel::PacmanModel(const sf::Vector2f& position, const sf::Vector2f& size, std::string  textureId )
+PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size, std::string  textureId )
     : m_position(position), m_textureId(std::move(textureId)), m_spawnpoint(position) { m_size = size; }
 
 void PacmanModel::update(float deltaTime) {
@@ -112,7 +112,7 @@ void PacmanModel::update(float deltaTime) {
     notifyObservers();
 }
 
-sf::Vector2f PacmanModel::CheckTunneling(sf::Vector2f position) {
+Vector2f PacmanModel::CheckTunneling(Vector2f position) {
     float edge = 1 + m_size.x / 2;
     if (-edge >= position.x){
         position.x = edge ;
@@ -126,7 +126,7 @@ sf::Vector2f PacmanModel::CheckTunneling(sf::Vector2f position) {
 
 
 
-void PacmanModel::setPosition(const sf::Vector2f& position)  {
+void PacmanModel::setPosition(const Vector2f& position)  {
     m_position = position;
     notifyObservers();
 

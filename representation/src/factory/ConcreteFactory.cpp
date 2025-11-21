@@ -17,8 +17,8 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
 
 
  std::unique_ptr<WallModel> SFMLFactory::createWall(
-    const sf::Vector2f&position,
-    const sf::Vector2f&size,
+    const Vector2f&position,
+    const Vector2f&size,
     const std::string& textureId ) {
 
     // 1. Create the Model (logic)
@@ -40,8 +40,8 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
     return wallModel;
 }
 std::unique_ptr<CoinModel> SFMLFactory::createCoin(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId) {
 
     // 1. Create the Model (logic)
@@ -65,8 +65,8 @@ std::unique_ptr<CoinModel> SFMLFactory::createCoin(
 }
 
 std::unique_ptr<PacmanModel> SFMLFactory::createPacman(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId) {
 
     // 1. Create the Model (logic)
@@ -90,8 +90,8 @@ std::unique_ptr<PacmanModel> SFMLFactory::createPacman(
 }
 
 std::unique_ptr<RedGhostModel> SFMLFactory::createRedGhost(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId) {
 
     // Update camera in case window was resized
@@ -118,8 +118,8 @@ std::unique_ptr<RedGhostModel> SFMLFactory::createRedGhost(
 }
 
 std::unique_ptr<BlueGhostModel> SFMLFactory::createBlueGhost(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId) {
 
     // 1. Create the Model (logic)
@@ -143,8 +143,8 @@ std::unique_ptr<BlueGhostModel> SFMLFactory::createBlueGhost(
 }
 
 std::unique_ptr<OrangeGhostModel> SFMLFactory::createOrangeGhost(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId) {
 
     // 1. Create the Model (logic)
@@ -168,8 +168,8 @@ std::unique_ptr<OrangeGhostModel> SFMLFactory::createOrangeGhost(
 }
 
 std::unique_ptr<PinkGhostModel> SFMLFactory::createPinkGhost(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId) {
 
     // 1. Create the Model (logic)
@@ -193,8 +193,8 @@ std::unique_ptr<PinkGhostModel> SFMLFactory::createPinkGhost(
 }
 
 std::unique_ptr<FruitModel> SFMLFactory::createFruit(
-    const sf::Vector2f& position,
-    const sf::Vector2f& size,
+    const Vector2f& position,
+    const Vector2f& size,
     const std::string& textureId) {
 
     // 1. Create the Model (logic)
@@ -218,8 +218,8 @@ std::unique_ptr<FruitModel> SFMLFactory::createFruit(
 }
 
 // In ConcreteFactory.cpp
-void SFMLFactory::handleResize(const sf::Vector2u& newSize) {
-    m_camera.updateWindowSize(sf::Vector2f(newSize)); // Use the new method
+void SFMLFactory::handleResize(const Vector2f& newSize) {
+    m_camera.updateWindowSize(Vector2f(newSize)); // Use the new method
 }
 
 void SFMLFactory::cleanupCollectedViews() {

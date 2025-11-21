@@ -59,8 +59,8 @@ void MapModel::createWallsFromGrid() {
 
 
                 auto wall = std::make_unique<WallModel>(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
                     textureId
                 );
 
@@ -76,8 +76,8 @@ void MapModel::createWallsFromGrid() {
 
 
                 auto coin = std::make_unique<CoinModel>(
-                    sf::Vector2f(posX, posY),
-                    sf::Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
                     textureId
                 );
 

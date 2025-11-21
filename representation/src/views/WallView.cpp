@@ -23,19 +23,19 @@ void WallView::draw(sf::RenderWindow& window) {
 
 void WallView::updateShape() {
     // Convert normalized coordinates [-1, 1] to pixel coordinates
-    sf::Vector2f logicPos = m_model.getPosition();
-    sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
+    Vector2f logicPos = m_model.getPosition();
+    Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    sf::Vector2f logicSize = m_model.getSize();
-    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
+    Vector2f logicSize = m_model.getSize();
+    Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // **CRUCIAAL: Gebruik de pixelSize direct als grootte**
-    m_shape.setSize(pixelSize);
+    m_shape.setSize({pixelSize.x , pixelSize.y});
 
     // Center de origin op de werkelijke grootte
     m_shape.setOrigin(pixelSize.x / 2.0f, pixelSize.y / 2.0f);
 
     // Zet positie
-    m_shape.setPosition(pixelPos);
+    m_shape.setPosition(pixelPos.x, pixelPos.y);
 }

@@ -8,13 +8,13 @@
 
 class FruitModel : public EntityModel {
 public:
-    FruitModel(const sf::Vector2f& position, const sf::Vector2f& size,const std::string& textureId = "") ;
+    FruitModel(const Vector2f& position, const Vector2f& size,const std::string& textureId = "") ;
 
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
-    [[nodiscard]]  sf::Vector2f getPosition() const override {return m_position;}
-    void setPosition(const sf::Vector2f& position) override;
-    [[nodiscard]]  sf::Vector2f getSize() const override{return m_size;}
+    [[nodiscard]]  Vector2f getPosition() const override {return m_position;}
+    void setPosition(const Vector2f& position) override;
+    [[nodiscard]]  Vector2f getSize() const override{return m_size;}
 
     // FruitModel specific funcitons
     void collect();  // This will notify observers!
@@ -25,9 +25,9 @@ public:
 
 private:
     //default privates
-    sf::Vector2f m_position;
+    Vector2f m_position;
     std::string m_textureId;
-    sf::Vector2f m_size;
+    Vector2f m_size;
 
     //FruitModel specific privates
     bool m_collected = false;  // Track collection state

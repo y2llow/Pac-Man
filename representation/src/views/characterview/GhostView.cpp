@@ -49,17 +49,17 @@ void GhostView::draw(sf::RenderWindow& window) {
 }
 
 void GhostView::updateShape() {
-    sf::Vector2f logicPos = m_ghostmodel.getPosition();
-    sf::Vector2f pixelPos = m_camera.worldToPixel(logicPos);
+    Vector2f logicPos = m_ghostmodel.getPosition();
+    Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
-    sf::Vector2f logicSize = m_ghostmodel.getSize();
-    sf::Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
+    Vector2f logicSize = m_ghostmodel.getSize();
+    Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius
     float newRadius = std::min(pixelSize.x, pixelSize.y);
     m_circle.setRadius(newRadius);
     m_circle.setOrigin(newRadius, newRadius);
-    m_circle.setPosition(pixelPos);
+    m_circle.setPosition(pixelPos.x , pixelPos.y);
 
     // Scale transforms world coordinates to screen coordinates
     float scaleX = pixelSize.x / (newRadius * 2.0f);
