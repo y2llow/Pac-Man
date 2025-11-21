@@ -103,10 +103,10 @@ void World::createEntitiesFromMap() {
 
 
 void World::update(float deltaTime) {
-    // First: Update all entities (movement, animation, etc.)
-    for (auto& pacman : m_pacman) {
-        pacman->update(deltaTime);
-    }
+    // EERST: Predictive movement voor Pacman
+    handlePredictiveMovement(deltaTime);
+
+    // TWEEDE: Ghosts en andere entities (geen predictive nodig)
     for (auto& ghost : m_ghosts) {
         ghost->update(deltaTime);
     }
@@ -120,36 +120,87 @@ void World::update(float deltaTime) {
         fruit->update(deltaTime);
     }
 
-    // Second: Handle collisions after all positions are updated
-    handleCollisions();
+    // DERDE: Collectible collisions (na movement)
+    handleCollectibleCollisions();
 
-    // Third: Clean up collected items, check win/lose conditions
+    // VIERDE: Cleanup
     cleanupCollectedItems();
+
+    checkGameState();
 }
 
-void World::handleCollisions() {
-    // Pacman vs Walls
+void World::handlePredictiveMovement(float deltaTime) {
     for (auto& pacman : m_pacman) {
-        for (auto& wall : m_walls) {
-            if (checkCollision(*pacman, *wall)) {
-                handlePacmanWallCollision(*pacman, *wall);
+        // 1. Update input buffer
+        pacman->update(deltaTime);
+
+        // 2. Check of gebufferde richting mogelijk is
+        int bufferedDir = pacman->getBufferedDirection();
+        if (bufferedDir != -1) {
+            // Probeer gebufferde richting
+            Vector2f bufferedPosition = pacman->calculatePositionInDirection(
+                pacman->getPosition(), bufferedDir, deltaTime);
+
+            if (!wouldCollideWithWalls(*pacman, bufferedPosition)) {
+                // Gebufferde richting is mogelijk! Verander richting
+                pacman->setDirection(bufferedDir);
+                pacman->clearBufferedDirection();
             }
         }
-    }
 
-    // Pacman vs Coins
+        // 3. Beweeg in huidige richting (of nieuwe als buffer werkte)
+        Vector2f nextPosition = pacman->calculateNextPosition(deltaTime);
+
+        if (!wouldCollideWithWalls(*pacman, nextPosition)) {
+            pacman->applyMovement(nextPosition);
+        }
+        // ELSE: Pacman blijft staan maar buffer blijft actief
+
+        // 4. Notify observers
+        pacman->notifyObservers();
+    }
+}
+
+bool World::wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const {
+    // Maak tijdelijke pacman met nieuwe positie voor collision check
+    PacmanModel tempPacman = pacman;
+    tempPacman.setPosition(newPosition);
+
+    // Check collision met alle walls
+    for (const auto& wall : m_walls) {
+        if (checkCollision(tempPacman, *wall)) {
+            return true; // Zou colliden
+        }
+    }
+    return false; // Geen collision
+}
+
+void World::handleCollectibleCollisions() {
+    // Pacman vs Coins (na movement)
     for (auto& pacman : m_pacman) {
         for (auto it = m_coins.begin(); it != m_coins.end(); ) {
             if (checkCollision(*pacman, **it)) {
                 handlePacmanCoinCollision(**it);
-                it = m_coins.erase(it); // Remove collected coin
+                it = m_coins.erase(it);
             } else {
                 ++it;
             }
         }
     }
 
-    // Pacman vs Ghosts
+    // Pacman vs Fruits (na movement)
+    for (auto& pacman : m_pacman) {
+        for (auto it = m_fruits.begin(); it != m_fruits.end(); ) {
+            if (checkCollision(*pacman, **it)) {
+                handlePacmanFruitCollision(**it);
+                it = m_fruits.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    // Pacman vs Ghosts (na movement)
     for (auto& pacman : m_pacman) {
         for (auto& ghost : m_ghosts) {
             if (checkCollision(*pacman, *ghost)) {
@@ -157,19 +208,9 @@ void World::handleCollisions() {
             }
         }
     }
-
-    // Pacman vs Fruits
-    for (auto& pacman : m_pacman) {
-        for (auto it = m_fruits.begin(); it != m_fruits.end(); ) {
-            if (checkCollision(*pacman, **it)) {
-                handlePacmanFruitCollision(**it);
-                it = m_fruits.erase(it); // Remove collected fruit
-            } else {
-                ++it;
-            }
-        }
-    }
 }
+
+
 
 bool World::checkCollision(const PacmanModel& pacman, const EntityModel& entity2) {
     // Get bounds for pacman (assuming center-based coordinates)
@@ -195,9 +236,7 @@ bool World::checkCollision(const PacmanModel& pacman, const EntityModel& entity2
     return false;  // No collision
 }
 
-void World::handlePacmanWallCollision(PacmanModel& pacman, const WallModel& wall) {
-    pacman.undoLastMove();
-}
+
 
 void World::handlePacmanCoinCollision(CoinModel& coin) {
     m_score->onCoinCollected();
@@ -241,13 +280,12 @@ void World::cleanupCollectedItems() {
 void World::checkGameState() {
     // Check win condition (all coins collected)
     if (m_coins.empty()) {
-        // Level completed
+        m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
     }
-
     // Check lose condition (no lives left)
     for (auto& pacman : m_pacman) {
         if (pacman->getLives() <= 0) {
-            // Game over
+            m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
         }
     }
 }

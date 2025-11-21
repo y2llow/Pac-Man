@@ -2,7 +2,9 @@
 #define PACMAN_H
 
 #include "EntityModel.h"
+#include "world/World.h"
 
+class World;
 
 class PacmanModel : public EntityModel {
 public:
@@ -16,10 +18,23 @@ public:
 
 
     // Pacman specific funcitons
-    Vector2f CheckTunneling(Vector2f position);
-    void undoLastMove();
+    Vector2f CheckTunneling(Vector2f position) const;
     [[nodiscard]]unsigned int getLives() const {return m_lives;}
     void loseLife();
+
+    [[nodiscard]] Vector2f calculateNextPosition(float deltaTime) const;
+    void setDirection(int newDirection);
+    void applyMovement(const Vector2f& newPosition);
+    int getDirection() const { return m_direction; }
+
+    // Input buffering methodes
+    void bufferDirection(int newDirection);
+    void clearBufferedDirection();
+    [[nodiscard]] int getBufferedDirection() const { return m_bufferedDirection; }
+
+    // Nieuwe methodes voor movement logic
+    [[nodiscard]] bool canMoveInDirection(int direction, const World& world) const;
+    [[nodiscard]] Vector2f calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
 
 private:
     //default privates
@@ -28,7 +43,8 @@ private:
     Vector2f m_size;
 
     //pacman specific privates
-    unsigned char direction{};
+    int m_direction = 3;        // Huidige bewegingrichting
+    int m_bufferedDirection = -1; // -1 = geen buffer, 0-3 = gebufferde richting
     float PACMAN_SPEED = 0.3;
     float m_lastMove{};
     unsigned int m_lives = 3;

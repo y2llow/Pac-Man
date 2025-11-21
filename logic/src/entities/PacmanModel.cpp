@@ -6,113 +6,46 @@
 PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size, std::string  textureId )
     : m_position(position), m_textureId(std::move(textureId)), m_spawnpoint(position) { m_size = size; }
 
-void PacmanModel::update(float deltaTime) {
-    if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-        direction = 0;
-    } if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){
-        direction = 1;
-    }if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-        direction = 2;
-    }if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-        direction = 3;
+Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
+    Vector2f newPosition = m_position;
+    float moveAmount = PACMAN_SPEED * deltaTime;
+
+    switch (m_direction) {
+    case 0: newPosition.x -= moveAmount; break; // Left
+    case 1: newPosition.y += moveAmount; break; // Down
+    case 2: newPosition.x += moveAmount; break; // Right
+    case 3: newPosition.y -= moveAmount; break; // Up
     }
 
-    m_lastMove = PACMAN_SPEED*deltaTime;
-
-    switch (direction){
-    case 0 :{
-        m_position.x -= PACMAN_SPEED*deltaTime;
-        break;
-        }
-    case 1:{
-        m_position.y += PACMAN_SPEED*deltaTime;
-        break;
-    }
-    case 2:{
-        m_position.x += PACMAN_SPEED*deltaTime;
-        break;
-        }
-    case 3:{
-        m_position.y -= PACMAN_SPEED*deltaTime;
-        }
-    }
-
-
-    //
-    //     // Check if the new position collides with any walls
-    //     sf::CircleShape tempPlayer = player;
-    //     tempPlayer.move(movement);
-    //
-    //     if (!checkCollision(tempPlayer, walls)) {
-    //         player.move(movement); // Apply movement if no collision
-    //     }
-    //
-    // 	if (0 == walls[0]) //You can't turn in this direction if there's a wall there.
-    // 	{
-    // 		direction = 0;
-    // 	}
-    // }
-    //
-    // if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-    // {
-    // 	if (0 == walls[1])
-    // 	{
-    // 		direction = 1;
-    // 	}
-    // }
-    //
-    // if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-    // {
-    // 	if (0 == walls[2])
-    // 	{
-    // 		direction = 2;
-    // 	}
-    // }
-    //
-    // if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-    // {
-    // 	if (0 == walls[3])
-    // 	{
-    // 		direction = 3;
-    // 	}
-    // }
-
-    // if (0 == walls[direction])
-    // {
-    // 	switch (direction)
-    // 	{
-    // 		case 0:
-    // 		{
-    // 			position.x += PACMAN_SPEED;
-    //
-    // 			break;
-    // 		}
-    // 		case 1:
-    // 		{
-    // 			position.y -= PACMAN_SPEED;
-    //
-    // 			break;
-    // 		}
-    // 		case 2:
-    // 		{
-    // 			position.x -= PACMAN_SPEED;
-    //
-    // 			break;
-    // 		}
-    // 		case 3:
-    // 		{
-    // 			position.y += PACMAN_SPEED;
-    // 		}
-    // 	}
-    // }
-    //
-
-    // tunneling
-    m_position = CheckTunneling(m_position);
-    notifyObservers();
+    return CheckTunneling(newPosition);
 }
 
-Vector2f PacmanModel::CheckTunneling(Vector2f position) {
+void PacmanModel::setDirection(int newDirection) {
+    m_direction = newDirection;
+}
+
+void PacmanModel::applyMovement(const Vector2f& newPosition) {
+    m_position = newPosition;
+    // De observer wordt aangeroepen door World
+}
+
+void PacmanModel::update(float deltaTime) {
+    // Input handling - sla ALLE input op in buffer
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        bufferDirection(0);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        bufferDirection(1);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        bufferDirection(2);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        bufferDirection(3);
+    }
+}
+
+Vector2f PacmanModel::CheckTunneling(Vector2f position) const {
     float edge = 1 + m_size.x / 2;
     if (-edge >= position.x){
         position.x = edge ;
@@ -132,30 +65,38 @@ void PacmanModel::setPosition(const Vector2f& position)  {
 
 }
 
-void PacmanModel::undoLastMove() {
-
-    switch (direction){
-    case 0 :{
-        m_position.x += m_lastMove;
-        break;
-    }
-    case 1:{
-        m_position.y -=m_lastMove;
-        break;
-    }
-    case 2:{
-        m_position.x -= m_lastMove;
-        break;
-    }
-    case 3:{
-        m_position.y += m_lastMove;
-    }
-    }
-
-}
 
 void PacmanModel::loseLife() {
     m_position = m_spawnpoint;
     m_lives -= 1;
 }
+
+
+void PacmanModel::bufferDirection(int newDirection) {
+    m_bufferedDirection = newDirection;
+}
+
+void PacmanModel::clearBufferedDirection() {
+    m_bufferedDirection = -1;
+}
+
+bool PacmanModel::canMoveInDirection(int direction, const World& world) const {
+    Vector2f testPosition = calculatePositionInDirection(m_position, direction, 0.016f); // 60fps
+    return !world.wouldCollideWithWalls(*this, testPosition);
+}
+
+Vector2f PacmanModel::calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const {
+    Vector2f newPosition = startPos;
+    float moveAmount = PACMAN_SPEED * deltaTime;
+
+    switch (direction) {
+    case 0: newPosition.x -= moveAmount; break; // Left
+    case 1: newPosition.y += moveAmount; break; // Down
+    case 2: newPosition.x += moveAmount; break; // Right
+    case 3: newPosition.y -= moveAmount; break; // Up
+    }
+
+    return CheckTunneling(newPosition);
+}
+
 

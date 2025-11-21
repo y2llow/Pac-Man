@@ -17,7 +17,7 @@
 
 class World {
 public:
-    World(LogicFactory& factory);
+    explicit World(LogicFactory& factory);
 
     void initialize();
     void update(float deltaTime);
@@ -27,13 +27,17 @@ public:
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void addEntity(std::unique_ptr<EntityModel> entity);
 
-    bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
-    void handleCollisions();
+    static bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
     void handlePacmanWallCollision(PacmanModel&pacman, const WallModel&wall);
     void handlePacmanGhostCollision(PacmanModel&pacman, GhostModel&ghost);
     void handlePacmanCoinCollision(CoinModel&coin);
     void handlePacmanFruitCollision(FruitModel&fruit);
     void cleanupCollectedItems();
+
+    // Nieuwe predictive collision methodes
+    bool wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
+    void handlePredictiveMovement(float deltaTime);
+    void handleCollectibleCollisions();
 
     // Add getters for LevelState to access entities for rendering
     [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }
@@ -56,8 +60,8 @@ private:
 
     Vector2f m_gridSize;
 
-    float PACMAN_SIZE = 0.75;
-    float GHOST_SIZE = 0.75;
+    float PACMAN_SIZE = 1;
+    float GHOST_SIZE = 1;
     float COIN_SIZE = 0.125;
     float FRUIT_SIZE = 0.3;
 
