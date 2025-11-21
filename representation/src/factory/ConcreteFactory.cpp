@@ -222,9 +222,17 @@ void SFMLFactory::handleResize(const sf::Vector2u& newSize) {
     m_camera.updateWindowSize(sf::Vector2f(newSize)); // Use the new method
 }
 
-// void SFMLFactory::cleanupCollectedViews() {
-//     m_views.erase(std::remove_if(m_views.begin(), m_views.end(),
-//         [](const std::unique_ptr<EntityView>& view) {
-//             return !view->shouldRender();
-//         }), m_views.end());
-// }
+void SFMLFactory::cleanupCollectedViews() {
+    m_views.erase(std::remove_if(m_views.begin(), m_views.end(),
+        [](const std::unique_ptr<EntityView>& view) {
+            // Cast to check if it's a collectible view
+            if (auto* coinView = dynamic_cast<CoinView*>(view.get())) {
+                return !coinView->shouldRender();
+            }
+            if (auto* fruitView = dynamic_cast<FruitView*>(view.get())) {
+                return !fruitView->shouldRender();
+            }
+            // Keep walls, ghosts, pacman - they're never "collected"
+            return false;
+        }), m_views.end());
+}

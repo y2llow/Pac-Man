@@ -60,6 +60,11 @@ void LevelState::update(float deltaTime) {
     if (m_world) {
         m_world->update(deltaTime);
     }
+
+    // Add this line - clean up collected views after world update
+    if (m_factory) {
+        m_factory->cleanupCollectedViews();
+    }
 }
 
 void LevelState::render() {
