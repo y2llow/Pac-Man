@@ -19,7 +19,7 @@ class World {
 public:
     World(LogicFactory& factory);
 
-    void initialize(const Vector2f& gridSize);
+    void initialize();
     void update(float deltaTime);
 
     void handleCollisions();

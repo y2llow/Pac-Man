@@ -24,12 +24,9 @@ void LevelState::initialize() {
     // Update camera with current window size
     m_camera.updateWindowSize();
 
-    // Initialize world with grid size, not window size
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
-        Vector2f gridSize = m_mapModel.getGridSize();
-        m_world = std::make_unique<World>(*m_factory);
-        m_world->initialize(gridSize);
-    }
+    // Initialize world without window size
+    m_world = std::make_unique<World>(*m_factory);
+    m_world->initialize();
 
     updateLayout();
 }

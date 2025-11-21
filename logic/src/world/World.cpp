@@ -9,11 +9,10 @@ World::World(LogicFactory& factory)
     m_score = std::make_unique<Score>();
 }
 
-void World::initialize(const Vector2f& gridSize) {
-    m_gridSize = gridSize;
+void World::initialize() {
 
     // Load map and create entities
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
         createEntitiesFromMap();
     }
 }
