@@ -4,6 +4,11 @@ Stopwatch::Stopwatch() {
     start();
 }
 
+Stopwatch& Stopwatch::getInstance() {
+    static Stopwatch instance; // Meyer's singleton - thread-safe in C++11+
+    return instance;
+}
+
 void Stopwatch::start() {
     m_startTime = Clock::now();
     m_lastTickTime = m_startTime;
@@ -36,4 +41,3 @@ float Stopwatch::peek() const {
     );
     return duration.count() / 1000000.0f; // Convert to seconds
 }
-

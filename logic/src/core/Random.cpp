@@ -1,16 +1,12 @@
-//
-// Created by s0243673@ad.ua.ac.be on 11/6/25.
-//
+#include "core/Random.h"
 
-#ifndef RANDOM_H
-#define RANDOM_H
+Random& Random::getInstance() {
+    static Random instance;
+    return instance;
+}
 
+Random::Random() {
+    // Initialize random seed
+}
 
-
-class Random {
-
-};
-
-
-
-#endif //RANDOM_H
+// ... rest of Random implementation

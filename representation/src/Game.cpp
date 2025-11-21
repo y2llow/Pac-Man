@@ -18,7 +18,8 @@ Game::Game()
  * Main game loop. Starts with Pushing the MenuState, Loops thru (processes events, updates (logic), renders update (representation)).
  */
 void Game::run() {
-    Stopwatch stopwatch;
+    // Get the singleton instance and start it
+    Stopwatch& stopwatch = Stopwatch::getInstance();
     stopwatch.start();
 
     // Push MenuState so Menu can be shown on screen
