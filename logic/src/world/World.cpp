@@ -249,6 +249,9 @@ void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
         ghost.respawn();
     } else {
         pacman.loseLife();
+        for (auto g : m_ghosts) {
+            g->respawn();
+        }
         if (pacman.getLives() <= 0) {
             pacman.setPosition({0.5,0.5});
         }
