@@ -58,10 +58,10 @@ private:
 
     Vector2f m_gridSize;
 
-    float PACMAN_SIZE = 1;
-    float GHOST_SIZE = 1;
-    float COIN_SIZE = 0.125;
-    float FRUIT_SIZE = 0.3;
+    float PACMAN_SIZE = 0.9;
+    float GHOST_SIZE = 0.9;
+    float COIN_SIZE = 0.005;
+    float FRUIT_SIZE = 0.005;
 
     void createEntitiesFromMap();
     void checkGameState();

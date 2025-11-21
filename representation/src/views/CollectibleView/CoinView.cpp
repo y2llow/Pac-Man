@@ -46,7 +46,7 @@ void CoinView::updateShape() {
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_coinModel->getSize();
+    Vector2f logicSize = {m_coinModel->getSize().x * 25, m_coinModel->getSize().y * 25};
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius

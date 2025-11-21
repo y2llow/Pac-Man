@@ -45,7 +45,7 @@ void FruitView::updateShape() {
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_fruitmodel->getSize();
+    Vector2f logicSize = {m_fruitmodel->getSize().x *60 , m_fruitmodel->getSize().y *60};
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius

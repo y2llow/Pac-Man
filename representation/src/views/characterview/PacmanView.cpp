@@ -27,7 +27,7 @@ void PacmanView::updateShape() {
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_pacmanmodel->getSize();
+    Vector2f logicSize = {m_pacmanmodel->getSize().x, m_pacmanmodel->getSize().y};
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // Fixed base radius

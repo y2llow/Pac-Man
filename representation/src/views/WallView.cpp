@@ -27,7 +27,7 @@ void WallView::updateShape() {
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = m_model->getSize();
+    Vector2f logicSize = {m_model->getSize().x * 0.9, m_model->getSize().y * 0.9};
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
     // **CRUCIAAL: Gebruik de pixelSize direct als grootte**

@@ -34,7 +34,7 @@ void World::createEntitiesFromMap() {
             if (grid[y][x] == 'x') {
                 auto wall = m_factory->createWall(
                     Vector2f(posX, posY),
-                    Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
+                    Vector2f(tileWidth , tileHeight),
                     "wall_basic"
                 );
                 m_walls.push_back(wall);
