@@ -1,8 +1,9 @@
 #include "states/LevelState.h"
 #include "StateManger.h"
+#include "states/GameOverState.h"
 #include "states/PausedState.h"
-#include <fstream>
-#include <iostream>
+#include "states/VictoryState.h"
+
 #include <memory>
 
 

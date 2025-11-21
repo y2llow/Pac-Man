@@ -279,13 +279,13 @@ void World::cleanupCollectedItems() {
 //TODO IMPLEMNT THISS
 void World::checkGameState() {
     // Check win condition (all coins collected)
-    if (m_coins.empty()) {
-        m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
-    }
-    // Check lose condition (no lives left)
-    for (auto& pacman : m_pacman) {
-        if (pacman->getLives() <= 0) {
-            m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
-        }
-    }
+    // if (m_coins.empty()) {
+    //     m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
+    // }
+    // // Check lose condition (no lives left)
+    // for (auto& pacman : m_pacman) {
+    //     if (pacman->getLives() <= 0) {
+    //         m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
+    //     }
+    // }
 }

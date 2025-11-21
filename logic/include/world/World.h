@@ -4,7 +4,6 @@
 #include "MapModel.h"
 #include "core/Stopwatch.h"
 
-
 #include <memory>
 #include <vector>
 #include "patterns/AbstractFactory.h"
@@ -23,7 +22,6 @@ public:
     void update(float deltaTime);
 
     Score& getScore() { return *m_score; }
-    void checkGameState();
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void addEntity(std::unique_ptr<EntityModel> entity);
 
@@ -66,6 +64,8 @@ private:
     float FRUIT_SIZE = 0.3;
 
     void createEntitiesFromMap();
+    void checkGameState();
+
 };
 
 #endif
