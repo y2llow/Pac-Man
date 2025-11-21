@@ -17,9 +17,9 @@
 
 class World {
 public:
-    World(const Vector2f& windowSize, LogicFactory& factory);
+    World(LogicFactory& factory);
 
-    void initialize();
+    void initialize(const Vector2f& gridSize);
     void update(float deltaTime);
 
     void handleCollisions();
@@ -36,7 +36,7 @@ public:
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
     void createEntitiesFromMap();
     void addEntity(std::unique_ptr<EntityModel> entity);
-    void handleResize(const Vector2f& newSize);
+    // void handleResize(const Vector2f& newSize);
 
 
 
@@ -61,7 +61,7 @@ private:
     std::vector<std::unique_ptr<GhostModel>> m_ghosts;
     std::vector<std::unique_ptr<FruitModel>> m_fruits;
 
-    Vector2f m_windowSize;
+    Vector2f m_gridSize;
 
     float PACMAN_SIZE = 0.75;
     float GHOST_SIZE = 0.75;

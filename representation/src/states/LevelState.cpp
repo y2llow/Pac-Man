@@ -17,20 +17,20 @@ LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window, Cam
  */
 void LevelState::initialize() {
     // Reset the view to match current window size
-    Vector2f windowSize;
-     windowSize.x = m_window.getSize().x;
-     windowSize.y = m_window.getSize().y;
+    sf::Vector2u windowSize = m_window.getSize();
     sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);
     m_window.setView(sf::View(visibleArea));
 
     // Update camera with current window size
     m_camera.updateWindowSize();
 
-    // Initialize world
-    m_world = std::make_unique<World>(windowSize, *m_factory);
-    m_world->initialize();
+    // Initialize world with grid size, not window size
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+        Vector2f gridSize = m_mapModel.getGridSize();
+        m_world = std::make_unique<World>(*m_factory);
+        m_world->initialize(gridSize);
+    }
 
-    // Update layout for proper positioning
     updateLayout();
 }
 
@@ -50,10 +50,10 @@ void LevelState::updateLayout() {
     sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);
     m_window.setView(sf::View(visibleArea));
 
-    // Update world and factory
-    if (m_world) {
-        m_world->handleResize(windowSize);
-    }
+    // // Update world and factory
+    // if (m_world) {
+    //     m_world->handleResize(windowSize);
+    // }
 
     if (m_factory) {
         m_factory->handleResize(windowSize); // Remove camera parameter

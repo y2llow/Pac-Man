@@ -4,19 +4,18 @@
 
 #include <iostream>
 
-World::World(const Vector2f& windowSize, LogicFactory& factory)
-    : m_factory(&factory), m_windowSize(windowSize) {
+World::World(LogicFactory& factory)
+    : m_factory(&factory) {
     m_score = std::make_unique<Score>();
 }
 
-void World::initialize() {
+void World::initialize(const Vector2f& gridSize) {
+    m_gridSize = gridSize;
+
     // Load map and create entities
     if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
     }
-    // if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
-    //     createEntitiesFromMap();
-    // }
 }
 
 void World::createEntitiesFromMap() {
@@ -25,17 +24,17 @@ void World::createEntitiesFromMap() {
 
     if (grid.empty()) return;
 
-    Vector2f currentWindowSize = m_windowSize; // This should be updated on resize
-
+    // Calculate tile sizes in normalized coordinates [-1, 1]
     float tileWidth = 2.0f / gridSize.x;
     float tileHeight = 2.0f / gridSize.y;
 
     for (unsigned int y = 0; y < gridSize.y; ++y) {
         for (unsigned int x = 0; x < gridSize.x; ++x) {
-            if (grid[y][x] == 'x') {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+            // Calculate center of each tile in normalized coordinates
+            float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
+            float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
+            if (grid[y][x] == 'x') {
                 auto wall = m_factory->createWall(
                     Vector2f(posX, posY),
                     Vector2f(tileWidth * 0.9f, tileHeight * 0.9f),
@@ -44,87 +43,63 @@ void World::createEntitiesFromMap() {
                 m_walls.push_back(std::move(wall));
             }
             else if (grid[y][x] == '.') {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
                 auto coin = m_factory->createCoin(
                     Vector2f(posX, posY),
-                    Vector2f(tileWidth * COIN_SIZE , tileHeight * COIN_SIZE ),
+                    Vector2f(tileWidth * COIN_SIZE, tileHeight * COIN_SIZE),
                     "Coin"
                 );
                 m_coins.push_back(std::move(coin));
             }
             else if (grid[y][x] == 'P') {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f) ;
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
                 auto pacman = m_factory->createPacman(
                     Vector2f(posX, posY),
-                    Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE ),
-                    "Pacman");
-
+                    Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE),
+                    "Pacman"
+                );
                 m_pacman.push_back(std::move(pacman));
             }
-            else if (grid[y][x] == 'f' ){
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
+            else if (grid[y][x] == 'f') {
                 auto fruit = m_factory->createFruit(
                     Vector2f(posX, posY),
-                    Vector2f(tileWidth * FRUIT_SIZE , tileHeight * FRUIT_SIZE ),
-                    "fruit");
-
+                    Vector2f(tileWidth * FRUIT_SIZE, tileHeight * FRUIT_SIZE),
+                    "fruit"
+                );
                 m_fruits.push_back(std::move(fruit));
             }
             else if (grid[y][x] == 'r') {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
                 auto ghost = m_factory->createRedGhost(
                     Vector2f(posX, posY),
                     Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "red_ghost");
-
+                    "red_ghost"
+                );
                 m_ghosts.push_back(std::move(ghost));
             }
             else if (grid[y][x] == 'b') {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
                 auto ghost = m_factory->createBlueGhost(
                     Vector2f(posX, posY),
                     Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "blue_ghost");
-
+                    "blue_ghost"
+                );
                 m_ghosts.push_back(std::move(ghost));
-            }            else if (grid[y][x] == 'o') {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
+            }
+            else if (grid[y][x] == 'o') {
                 auto ghost = m_factory->createOrangeGhost(
                     Vector2f(posX, posY),
                     Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "orange_ghost");
-
+                    "orange_ghost"
+                );
                 m_ghosts.push_back(std::move(ghost));
-            }            else if (grid[y][x] == 'p') {
-                float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
-                float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
-
+            }
+            else if (grid[y][x] == 'p') {
                 auto ghost = m_factory->createPinkGhost(
                     Vector2f(posX, posY),
                     Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "pink_ghost");
-
+                    "pink_ghost"
+                );
                 m_ghosts.push_back(std::move(ghost));
             }
-            // r = red
-            // b = blue
-            // p = pink
-            // o = orange
         }
     }
-    //TODO remove
     std::cout << "World: Created " << m_walls.size() << " walls and " << m_coins.size() << " coins" << std::endl;
 }
 
@@ -203,32 +178,29 @@ void World::handleCollisions() {
 }
 
 bool World::checkCollision(const PacmanModel& pacman, const EntityModel& entity2) {
-    // Get bounds for pacman (assuming center-based coordinates)
-    float pacman_left = pacman.getPosition().x - (pacman.getSize().x / 2);
-    float pacman_right = pacman.getPosition().x + (pacman.getSize().x / 2);
-    float pacman_bottom = pacman.getPosition().y - (pacman.getSize().y / 2);
-    float pacman_top = pacman.getPosition().y + (pacman.getSize().y / 2);
+    // All coordinates are normalized [-1, 1], so collision works the same
 
-    // Get bounds for entity2
-    float e2_left = entity2.getPosition().x - (entity2.getSize().x / 2);
-    float e2_right = entity2.getPosition().x + (entity2.getSize().x / 2);
-    float e2_bottom = entity2.getPosition().y - (entity2.getSize().y / 2);
-    float e2_top = entity2.getPosition().y + (entity2.getSize().y / 2);
+    const Vector2f& pacmanPos = pacman.getPosition();
+    const Vector2f& pacmanSize = pacman.getSize();
+    const Vector2f& entity2Pos = entity2.getPosition();
+    const Vector2f& entity2Size = entity2.getSize();
 
-    // Correct AABB collision detection
-    // Two rectangles collide if:
-    // - pacman's right edge is to the right of entity's left edge AND
-    // - pacman's left edge is to the left of entity's right edge AND
-    // - pacman's top edge is below entity's bottom edge AND
-    // - pacman's bottom edge is above entity's top edge
-    if (pacman_right > e2_left &&
-        pacman_left < e2_right &&
-        pacman_top > e2_bottom &&
-        pacman_bottom < e2_top) {
-        return true;  // Collision detected
-        }
+    // Calculate bounds in normalized coordinates
+    float pacmanLeft = pacmanPos.x - (pacmanSize.x / 2);
+    float pacmanRight = pacmanPos.x + (pacmanSize.x / 2);
+    float pacmanBottom = pacmanPos.y - (pacmanSize.y / 2);
+    float pacmanTop = pacmanPos.y + (pacmanSize.y / 2);
 
-    return false;  // No collision
+    float entity2Left = entity2Pos.x - (entity2Size.x / 2);
+    float entity2Right = entity2Pos.x + (entity2Size.x / 2);
+    float entity2Bottom = entity2Pos.y - (entity2Size.y / 2);
+    float entity2Top = entity2Pos.y + (entity2Size.y / 2);
+
+    // AABB collision in normalized space
+    return (pacmanRight > entity2Left &&
+            pacmanLeft < entity2Right &&
+            pacmanTop > entity2Bottom &&
+            pacmanBottom < entity2Top);
 }
 
 void World::handlePacmanWallCollision(PacmanModel& pacman, const WallModel& wall) {// Push pacman back to previous position
@@ -276,10 +248,10 @@ void World::cleanupCollectedItems() {
         }), m_fruits.end());
 }
 
-void World::handleResize(const Vector2f& newSize) {
-    m_windowSize = newSize;
-    // Don't recreate entities, just update the window size for future calculations
-}
+// void World::handleResize(const Vector2f& newSize) {
+//     m_windowSize = newSize;
+//     // Don't recreate entities, just update the window size for future calculations
+// }
 
 //TODO implement checkgamestate
 void World::checkGameState() {

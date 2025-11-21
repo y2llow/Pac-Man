@@ -25,6 +25,8 @@ private:
     std::unique_ptr<World> m_world;          // World to manage entities
     Camera& m_camera;                         // For coordinate conversion
     std::vector<std::unique_ptr<Observer>> m_entityViews;
+    MapModel m_mapModel;
+
 
     bool loadFromFile(const std::string& filename);
     void createWallsFromGrid(std::vector<std::string> m_grid, sf::Vector2u m_gridSize);
