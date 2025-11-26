@@ -53,7 +53,7 @@ void World::createEntitiesFromMap() {
                     Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE),
                     "Pacman"
                 );
-                m_pacman.push_back(pacman);
+                m_pacman = pacman;
             }
             else if (grid[y][x] == 'f') {
                 auto fruit = m_factory->createFruit(
@@ -130,35 +130,34 @@ void World::update(float deltaTime) {
 }
 
 void World::handlePredictiveMovement(float deltaTime) {
-    for (auto& pacman : m_pacman) {
         // 1. Update input buffer
-        pacman->update(deltaTime);
+        m_pacman->update(deltaTime);
 
         // 2. Check of gebufferde richting mogelijk is
-        int bufferedDir = pacman->getBufferedDirection();
+        int bufferedDir = m_pacman->getBufferedDirection();
         if (bufferedDir != -1) {
             // Probeer gebufferde richting
-            Vector2f bufferedPosition = pacman->calculatePositionInDirection(
-                pacman->getPosition(), bufferedDir, deltaTime);
+            Vector2f bufferedPosition = m_pacman->calculatePositionInDirection(
+                m_pacman->getPosition(), bufferedDir, deltaTime);
 
-            if (!wouldCollideWithWalls(*pacman, bufferedPosition)) {
+            if (!wouldCollideWithWalls(*m_pacman, bufferedPosition)) {
                 // Gebufferde richting is mogelijk! Verander richting
-                pacman->setDirection(bufferedDir);
-                pacman->clearBufferedDirection();
+                m_pacman->setDirection(bufferedDir);
+                m_pacman->clearBufferedDirection();
             }
         }
 
         // 3. Beweeg in huidige richting (of nieuwe als buffer werkte)
-        Vector2f nextPosition = pacman->calculateNextPosition(deltaTime);
+        Vector2f nextPosition = m_pacman->calculateNextPosition(deltaTime);
 
-        if (!wouldCollideWithWalls(*pacman, nextPosition)) {
-            pacman->applyMovement(nextPosition);
+        if (!wouldCollideWithWalls(*m_pacman, nextPosition)) {
+            m_pacman->applyMovement(nextPosition);
         }
-        // ELSE: Pacman blijft staan maar buffer blijft actief
+        // ELSE: m_pacman blijft staan maar buffer blijft actief
 
         // 4. Notify observers
-        pacman->notifyObservers();
-    }
+        m_pacman->notifyObservers();
+
 }
 
 bool World::wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const {
@@ -177,37 +176,32 @@ bool World::wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& new
 
 void World::handleCollectibleCollisions() {
     // Pacman vs Coins (na movement)
-    for (auto& pacman : m_pacman) {
-        for (auto it = m_coins.begin(); it != m_coins.end(); ) {
-            if (checkCollision(*pacman, **it)) {
-                handlePacmanCoinCollision(**it);
-                it = m_coins.erase(it);
-            } else {
-                ++it;
-            }
+    for (auto it = m_coins.begin(); it != m_coins.end(); ) {
+        if (checkCollision(*m_pacman, **it)) {
+            handlePacmanCoinCollision(**it);
+            it = m_coins.erase(it);
+        } else {
+            ++it;
         }
     }
 
-    // Pacman vs Fruits (na movement)
-    for (auto& pacman : m_pacman) {
-        for (auto it = m_fruits.begin(); it != m_fruits.end(); ) {
-            if (checkCollision(*pacman, **it)) {
-                handlePacmanFruitCollision(**it);
-                it = m_fruits.erase(it);
-            } else {
-                ++it;
-            }
+// Pacman vs Fruits (na movement)
+    for (auto it = m_fruits.begin(); it != m_fruits.end(); ) {
+        if (checkCollision(*m_pacman, **it)) {
+            handlePacmanFruitCollision(**it);
+            it = m_fruits.erase(it);
+        } else {
+            ++it;
         }
     }
 
-    // Pacman vs Ghosts (na movement)
-    for (auto& pacman : m_pacman) {
-        for (auto& ghost : m_ghosts) {
-            if (checkCollision(*pacman, *ghost)) {
-                handlePacmanGhostCollision(*pacman, *ghost);
-            }
+// Pacman vs Ghosts (na movement)
+    for (auto& ghost : m_ghosts) {
+        if (checkCollision(*m_pacman, *ghost)) {
+            handlePacmanGhostCollision(*m_pacman, *ghost);
         }
     }
+
 }
 
 

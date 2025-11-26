@@ -59,6 +59,8 @@ void LevelState::updateLayout() {
 }
 
 void LevelState::update(float deltaTime) {
+    handleInput();
+
     if (m_world) {
         m_world->update(deltaTime);
     }
@@ -80,6 +82,30 @@ void LevelState::render() {
 
     m_window.display();
 }
+
+void LevelState::handleInput() {
+    if (!m_world) return;
+
+    // Get Pacman from World (je moet hiervoor een method toevoegen aan World)
+    auto pacman = m_world->getPacman(); // Je moet deze method implementeren
+
+    if (!pacman) return;
+
+    // Check keyboard input en update Pacman's buffer
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        pacman->bufferDirection(0);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        pacman->bufferDirection(1);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        pacman->bufferDirection(2);
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        pacman->bufferDirection(3);
+    }
+}
+
 
 /**
  * stateManager -> PausedState when esc is pressed

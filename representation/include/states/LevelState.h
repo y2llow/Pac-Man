@@ -6,6 +6,7 @@
 #include "factory/ConcreteFactory.h"
 #include "world/World.h"
 
+#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics.hpp>
 
 class LevelState : public State {
@@ -15,7 +16,9 @@ public:
     void initialize() override;
     void update(float deltaTime) override;
     void render() override;
+
     void handleEvent(const sf::Event& event) override;
+    void handleInput();
     void updateLayout();
 
 

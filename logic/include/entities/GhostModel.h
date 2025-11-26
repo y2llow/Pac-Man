@@ -3,8 +3,6 @@
 
 #include "EntityModel.h"
 
-#include <SFML/System/Vector2.hpp>
-
 class GhostModel : public EntityModel {
 public:
     GhostModel(const Vector2f& position, const Vector2f& size,std::string  textureId = "") ;

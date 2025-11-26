@@ -1,6 +1,5 @@
 #include "entities/PacmanModel.h"
 
-#include <SFML/Window/Keyboard.hpp>
 #include <utility>
 
 PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size, std::string  textureId )
@@ -30,19 +29,7 @@ void PacmanModel::applyMovement(const Vector2f& newPosition) {
 }
 
 void PacmanModel::update(float deltaTime) {
-    // Input handling - sla ALLE input op in buffer
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        bufferDirection(0);
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        bufferDirection(1);
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        bufferDirection(2);
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        bufferDirection(3);
-    }
+
 }
 
 Vector2f PacmanModel::CheckTunneling(Vector2f position) const {

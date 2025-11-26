@@ -2,7 +2,6 @@
 #define WALL_MODEL_H
 
 #include "entities/EntityModel.h"
-#include <SFML/System/Vector2.hpp>
 #include <string>
 
 class WallModel : public EntityModel {
