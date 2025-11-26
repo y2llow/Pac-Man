@@ -70,6 +70,9 @@ private:
                                int currentDir,
                                int bufferedDir,
                                float deltaTime) const;
+    [[nodiscard]] Vector2f findClosestPositionToWall(const Vector2f& currentPos,
+                                   int direction,
+                                   float deltaTime) const;
 
 };
 

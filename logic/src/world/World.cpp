@@ -14,7 +14,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -147,7 +147,7 @@ void World::handlePredictiveMovement(float deltaTime) {
             m_pacman->setDirection(bufferedDir);
             m_pacman->clearBufferedDirection();
         } else {
-            // NEW: Try position correction to allow the turn
+            // Try position correction to allow the turn
             Vector2f correctedPos = tryPositionCorrection(
                 m_pacman->getPosition(),
                 m_pacman->getDirection(),
@@ -161,7 +161,7 @@ void World::handlePredictiveMovement(float deltaTime) {
                 m_pacman->setPosition(correctedPos);
                 m_pacman->setDirection(bufferedDir);
                 m_pacman->clearBufferedDirection();
-                }
+            }
         }
     }
 
@@ -170,10 +170,81 @@ void World::handlePredictiveMovement(float deltaTime) {
 
     if (!wouldCollideWithWalls(*m_pacman, nextPosition)) {
         m_pacman->applyMovement(nextPosition);
+    } else {
+        // NEW: Can't move forward - find closest valid position to the wall
+        Vector2f closestPos = findClosestPositionToWall(
+            m_pacman->getPosition(),
+            m_pacman->getDirection(),
+            deltaTime
+        );
+
+        if (closestPos.x != m_pacman->getPosition().x ||
+            closestPos.y != m_pacman->getPosition().y) {
+            m_pacman->setPosition(closestPos);
+        }
     }
 
     // 4. Notify observers
     m_pacman->notifyObservers();
+}
+
+Vector2f World::findClosestPositionToWall(const Vector2f& currentPos,
+                                          int direction,
+                                          float deltaTime) const {
+    // Binary search to find the closest position we can move to without colliding
+    float moveAmount = m_pacman->getSpeed() * deltaTime;
+    float minDistance = 0.0f;
+    float maxDistance = moveAmount;
+    float bestDistance = 0.0f;
+
+    const int iterations = 10; // Precision of binary search
+
+    for (int i = 0; i < iterations; ++i) {
+        float testDistance = (minDistance + maxDistance) / 2.0f;
+        Vector2f testPos = currentPos;
+
+        // Apply movement in current direction
+        switch (direction) {
+            case 0: testPos.x -= testDistance; break; // Left
+            case 1: testPos.y += testDistance; break; // Down
+            case 2: testPos.x += testDistance; break; // Right
+            case 3: testPos.y -= testDistance; break; // Up
+        }
+
+        testPos = m_pacman->CheckTunneling(testPos);
+
+        // Check if this position would collide
+        PacmanModel tempPacman = *m_pacman;
+        tempPacman.setPosition(testPos);
+
+        bool collides = false;
+        for (const auto& wall : m_walls) {
+            if (checkCollision(tempPacman, *wall)) {
+                collides = true;
+                break;
+            }
+        }
+
+        if (collides) {
+            // Too far, search closer
+            maxDistance = testDistance;
+        } else {
+            // Valid position, try to get even closer
+            bestDistance = testDistance;
+            minDistance = testDistance;
+        }
+    }
+
+    // Apply the best distance found
+    Vector2f closestPos = currentPos;
+    switch (direction) {
+        case 0: closestPos.x -= bestDistance; break; // Left
+        case 1: closestPos.y += bestDistance; break; // Down
+        case 2: closestPos.x += bestDistance; break; // Right
+        case 3: closestPos.y -= bestDistance; break; // Up
+    }
+
+    return m_pacman->CheckTunneling(closestPos);
 }
 
 Vector2f World::tryPositionCorrection(const Vector2f& currentPos,
