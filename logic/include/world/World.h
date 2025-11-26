@@ -59,13 +59,17 @@ private:
 
     Vector2f m_gridSize;
 
-    float PACMAN_SIZE = 0.9;
-    float GHOST_SIZE = 0.9;
+    float PACMAN_SIZE = 0.99;
+    float GHOST_SIZE = 0.90;
     float COIN_SIZE = 0.005;
     float FRUIT_SIZE = 0.005;
 
     void createEntitiesFromMap();
     void checkGameState();
+    [[nodiscard]] Vector2f tryPositionCorrection(const Vector2f& currentPos,
+                               int currentDir,
+                               int bufferedDir,
+                               float deltaTime) const;
 
 };
 

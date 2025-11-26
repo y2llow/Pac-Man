@@ -35,6 +35,7 @@ public:
     // Nieuwe methodes voor movement logic
     [[nodiscard]] bool canMoveInDirection(int direction, const World& world) const;
     [[nodiscard]] Vector2f calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
+    [[nodiscard]] float getSpeed() const { return PACMAN_SPEED; }
 
 private:
     //default privates
@@ -49,6 +50,7 @@ private:
     float m_lastMove{};
     unsigned int m_lives = 3;
     Vector2f m_spawnpoint;
+
 
 };
 

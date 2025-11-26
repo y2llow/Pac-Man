@@ -4,6 +4,8 @@
 #include "entities/PacmanModel.h"
 #include "entities/GhostModel.h"
 #include "entities/FruitModel.h"
+
+#include <cmath>
 #include <iostream>
 
 World::World(LogicFactory& factory)
@@ -12,7 +14,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -130,34 +132,86 @@ void World::update(float deltaTime) {
 }
 
 void World::handlePredictiveMovement(float deltaTime) {
-        // 1. Update input buffer
-        m_pacman->update(deltaTime);
+    // 1. Update input buffer
+    m_pacman->update(deltaTime);
 
-        // 2. Check of gebufferde richting mogelijk is
-        int bufferedDir = m_pacman->getBufferedDirection();
-        if (bufferedDir != -1) {
-            // Probeer gebufferde richting
-            Vector2f bufferedPosition = m_pacman->calculatePositionInDirection(
-                m_pacman->getPosition(), bufferedDir, deltaTime);
+    // 2. Check if buffered direction is possible
+    int bufferedDir = m_pacman->getBufferedDirection();
+    if (bufferedDir != -1) {
+        // Try buffered direction
+        Vector2f bufferedPosition = m_pacman->calculatePositionInDirection(
+            m_pacman->getPosition(), bufferedDir, deltaTime);
 
-            if (!wouldCollideWithWalls(*m_pacman, bufferedPosition)) {
-                // Gebufferde richting is mogelijk! Verander richting
+        if (!wouldCollideWithWalls(*m_pacman, bufferedPosition)) {
+            // Buffered direction is possible! Change direction
+            m_pacman->setDirection(bufferedDir);
+            m_pacman->clearBufferedDirection();
+        } else {
+            // NEW: Try position correction to allow the turn
+            Vector2f correctedPos = tryPositionCorrection(
+                m_pacman->getPosition(),
+                m_pacman->getDirection(),
+                bufferedDir,
+                deltaTime
+            );
+
+            if (correctedPos.x != m_pacman->getPosition().x ||
+                correctedPos.y != m_pacman->getPosition().y) {
+                // Correction was successful! Apply it and change direction
+                m_pacman->setPosition(correctedPos);
                 m_pacman->setDirection(bufferedDir);
                 m_pacman->clearBufferedDirection();
-            }
+                }
+        }
+    }
+
+    // 3. Move in current direction (or new if buffer worked)
+    Vector2f nextPosition = m_pacman->calculateNextPosition(deltaTime);
+
+    if (!wouldCollideWithWalls(*m_pacman, nextPosition)) {
+        m_pacman->applyMovement(nextPosition);
+    }
+
+    // 4. Notify observers
+    m_pacman->notifyObservers();
+}
+
+Vector2f World::tryPositionCorrection(const Vector2f& currentPos,
+                                      int currentDir,
+                                      int bufferedDir,
+                                      float deltaTime) const {
+    // Only allow correction when turning perpendicular
+    bool isPerpendicular = (currentDir == 0 || currentDir == 2) &&(bufferedDir == 1 || bufferedDir == 3) ||(currentDir == 1 || currentDir == 3) &&(bufferedDir == 0 || bufferedDir == 2);
+
+    if (!isPerpendicular) {
+        return currentPos; // No correction for non-perpendicular turns
+    }
+
+    // Maximum correction distance (one movement step)
+    float maxCorrection = m_pacman->getSpeed() * deltaTime;
+
+    // Try small corrections in the current direction
+    for (float correction = 0.0f; correction <= maxCorrection; correction += maxCorrection / 10.0f) {
+        Vector2f testPos = currentPos;
+
+        // Apply correction in current direction
+        switch (currentDir) {
+        case 0: testPos.x -= correction; break; // Left
+        case 1: testPos.y += correction; break; // Down
+        case 2: testPos.x += correction; break; // Right
+        case 3: testPos.y -= correction; break; // Up
         }
 
-        // 3. Beweeg in huidige richting (of nieuwe als buffer werkte)
-        Vector2f nextPosition = m_pacman->calculateNextPosition(deltaTime);
+        // Test if buffered direction would work from this corrected position
+        Vector2f bufferedTestPos = m_pacman->calculatePositionInDirection(
+            testPos, bufferedDir, deltaTime);
 
-        if (!wouldCollideWithWalls(*m_pacman, nextPosition)) {
-            m_pacman->applyMovement(nextPosition);
+        if (!wouldCollideWithWalls(*m_pacman, bufferedTestPos)) {
+            return testPos; // This correction allows the turn!
         }
-        // ELSE: m_pacman blijft staan maar buffer blijft actief
+    }
 
-        // 4. Notify observers
-        m_pacman->notifyObservers();
-
+    return currentPos; // No correction found
 }
 
 bool World::wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const {
