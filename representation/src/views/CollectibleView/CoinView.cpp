@@ -1,32 +1,31 @@
 #include "views/CollectibleView/CoinView.h"
-
 #include "Game.h"
 #include "entities/CoinModel.h"
-#include "rendering/SpriteManager.h"
+#include "rendering/SpriteSheet.h"  // NIEUW: voor sprite support
 
 CoinView::CoinView(std::shared_ptr<CoinModel> coinModel, Camera& camera)
     : m_coinModel(std::move(coinModel)), m_camera(camera) {
 
-    // Setup circle shape for coin
-    m_circle.setFillColor(sf::Color(255, 184, 144));
+    // Setup sprite met texture van sprite sheet
+    auto& spriteSheet = SpriteSheet::getInstance();
+    m_sprite.setTexture(spriteSheet.getTexture());
+
     updateShape();
     updateSprite();
 }
 
-void CoinView::update() {
-    // Update graphics based on model state changes
+void CoinView::update(float deltaTime) {
     updateSprite();
 }
 
 void CoinView::updateSprite() {
     // Sync visual representation with model state
-    // Update position, visibility, etc.
     updateShape();
 }
 
 void CoinView::draw(sf::RenderWindow& window) {
     if (shouldRender()) {
-        window.draw(m_circle);
+        window.draw(m_sprite);
     }
 }
 
@@ -41,21 +40,27 @@ void CoinView::updateShape() {
         return;
     }
 
+    // Set the coin sprite
+    auto& spriteSheet = SpriteSheet::getInstance();
+    m_sprite.setTextureRect(spriteSheet.getSpriteRect("coin"));
+
     // Convert normalized coordinates to pixel coordinates using camera
     Vector2f logicPos = m_coinModel->getPosition();
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     // Convert normalized size to pixel size
-    Vector2f logicSize = {m_coinModel->getSize().x * 25, m_coinModel->getSize().y * 25};
+    Vector2f logicSize = m_coinModel->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Fixed base radius
-    float newRadius = std::min(pixelSize.x, pixelSize.y);
-    m_circle.setRadius(newRadius);
-    m_circle.setOrigin(newRadius, newRadius);
-    m_circle.setPosition(pixelPos.x, pixelPos.y);
+    // Set sprite scale om de juiste grootte te krijgen
+    sf::IntRect textureRect = m_sprite.getTextureRect();
+    float scaleX = pixelSize.x / textureRect.width;
+    float scaleY = pixelSize.y / textureRect.height;
+    m_sprite.setScale(scaleX, scaleY);
 
-    float scaleX = pixelSize.x / (newRadius * 2.0f);
-    float scaleY = pixelSize.y / (newRadius * 2.0f);
-    m_circle.setScale(scaleX, scaleY);
+    // Set origin to center
+    m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
+
+    // Set position
+    m_sprite.setPosition(pixelPos.x, pixelPos.y);
 }

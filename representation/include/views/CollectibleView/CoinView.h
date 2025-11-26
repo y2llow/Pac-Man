@@ -13,17 +13,16 @@ public:
     explicit CoinView(std::shared_ptr<CoinModel> coinModel, Camera& camera);
     ~CoinView() override = default;
 
-    // Observer interface
-    void update() override;
-
-    // Rendering
+    // EntityView interface
+    void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
-    bool shouldRender() const ;
+
+    bool shouldRender() const;
 
 private:
     std::shared_ptr<CoinModel> m_coinModel;
     Camera& m_camera;
-    sf::CircleShape m_circle;
+    sf::Sprite m_sprite;  // CHANGED: gebruik sprite ipv circle
 
     void updateSprite();
     void updateShape();

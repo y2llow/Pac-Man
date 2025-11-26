@@ -14,7 +14,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -108,8 +108,8 @@ void World::update(float deltaTime) {
     // EERST: Predictive movement voor Pacman
     handlePredictiveMovement(deltaTime);
 
-    // TWEEDE: Ghosts en andere entities (geen predictive nodig)
     for (auto& ghost : m_ghosts) {
+        ghost->updateMovement(deltaTime);  // Eenvoudige beweging zonder AI
         ghost->update(deltaTime);
     }
     for (auto& wall : m_walls) {
@@ -381,7 +381,7 @@ void World::handlePacmanFruitCollision(FruitModel& fruit) {
     m_score->onCoinCollected();
     fruit.collect();
     for (auto& ghost : m_ghosts) {
-        ghost->setScared();
+        ghost->setScared(true);
     }
 }
 

@@ -11,14 +11,14 @@ class PacmanView : public EntityView {
     PacmanView(std::shared_ptr<PacmanModel>  coinModel,  Camera& camera);
     ~PacmanView()override  = default;
 
-    void update() override;
+    void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
 
     private:
     std::shared_ptr<PacmanModel>  m_pacmanmodel;
     Camera& m_camera;
     sf::Sprite m_sprite;
-    sf::CircleShape m_circle;
+    float m_animationTimer;
 
     void updateShape();
 };

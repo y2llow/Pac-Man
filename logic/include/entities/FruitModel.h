@@ -20,13 +20,11 @@ public:
     void collect();  // This will notify observers!
 
     [[nodiscard]] bool isCollected() const { return m_collected; }
-    [[nodiscard]] const std::string& getTextureId() const { return m_textureId; }
 
 
 private:
     //default privates
     Vector2f m_position;
-    std::string m_textureId;
     Vector2f m_size;
 
     //FruitModel specific privates

@@ -2,17 +2,20 @@
 #include <utility>
 
 GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::string textureId)
-    : m_position(position), m_textureId(std::move(textureId)), m_size(size), m_ghost_spawnpoint(position)  {
+    : m_position(position), m_textureId(std::move(textureId)), m_size(size), m_spawnPoint(position) {
 }
 
 void GhostModel::update(float deltaTime) {
-    // Base class handles ONLY tunneling and notification
-    m_position = CheckTunneling(m_position);
-    if (isScared()) {
-        // Assuming m_scaredTimer is a member variable that tracks remaining scared time
+    // Update scared timer
+    if (m_scared) {
         m_scaredTimer -= deltaTime;
-        m_scaredTimer = std::max(m_scaredTimer, 0.0f);
+        if (m_scaredTimer <= 0) {
+            m_scared = false;
+            m_scaredTimer = 0.0f;
+        }
     }
+
+    m_position = checkTunneling(m_position);
     notifyObservers();
 }
 
@@ -21,53 +24,367 @@ void GhostModel::setPosition(const Vector2f& position) {
     notifyObservers();
 }
 
-bool GhostModel::isScared()  {
-    if (m_scaredTimer > 0) {
-        m_scared = true;
-        return true;
+void GhostModel::setScared(bool scared) {
+    if (scared && !m_scared) {
+        // Just became scared - reverse direction
+        reverseDirection();
     }
-    m_scared = false;
-    return false;
-}
-void GhostModel::setScared() {
-    m_scaredTimer = 5.0f;
+    m_scared = scared;
+    if (scared) {
+        m_scaredTimer = 10.0f; // 10 seconds scared time
+    }
 }
 
 void GhostModel::respawn() {
-    m_position = m_ghost_spawnpoint;
+    m_position = m_spawnPoint;
+    m_scared = false;
+    m_scaredTimer = 0.0f;
+    m_canMove = true;
 }
 
-//-----------------------------------------------------------------------------------------------------//
-// Each ghost handles its own movement, then calls base for tunneling + notification
-void RedGhostModel::update(float deltaTime) {
-    m_position.x += GHOST_SPEED * deltaTime;  // Red moves right
-    GhostModel::update(deltaTime);     // Call base for tunneling + notification
-}
+void GhostModel::updateMovement(float deltaTime) {
+    if (!m_canMove) return;
 
-void BlueGhostModel::update(float deltaTime) {
-    m_position.x -= GHOST_SPEED * deltaTime;   // Blue moves left
-    GhostModel::update(deltaTime);     // Call base for tunneling + notification
-}
+    // Move in the chosen direction
+    float currentSpeed = m_scared ? m_scaredSpeed : m_speed;
 
-void OrangeGhostModel::update(float deltaTime) {
-    m_position.y += GHOST_SPEED * deltaTime;   // Orange moves down
-    GhostModel::update(deltaTime);     // Call base for tunneling + notification
-}
-
-void PinkGhostModel::update(float deltaTime) {
-    m_position.y -= GHOST_SPEED * deltaTime;   // Pink moves up
-    GhostModel::update(deltaTime);     // Call base for tunneling + notification
-}
-
-Vector2f GhostModel::CheckTunneling(Vector2f position) {
-    float edge = 1 + m_size.x / 2;
-    if (-edge >= position.x) {
-        position.x = edge;
-        return position;
+    switch (m_direction) {
+        case 0: m_position.x -= currentSpeed * deltaTime; break; // left
+        case 1: m_position.y += currentSpeed * deltaTime; break; // down
+        case 2: m_position.x += currentSpeed * deltaTime; break; // right
+        case 3: m_position.y -= currentSpeed * deltaTime; break; // up
     }
-    if (edge <= position.x) {
+}
+
+void GhostModel::reverseDirection() {
+    // Reverse current direction
+    switch (m_direction) {
+        case 0: m_direction = 2; break; // left -> right
+        case 1: m_direction = 3; break; // down -> up
+        case 2: m_direction = 0; break; // right -> left
+        case 3: m_direction = 1; break; // up -> down
+    }
+}
+
+Vector2f GhostModel::checkTunneling(Vector2f position) {
+    float edge = 1.0f + m_size.x / 2.0f;
+    if (position.x < -edge) {
+        position.x = edge;
+    } else if (position.x > edge) {
         position.x = -edge;
-        return position;
     }
     return position;
 }
+
+// Red Ghost Implementation - Moves left
+void RedGhostModel::updateMovement(float deltaTime) {
+    GhostModel::updateMovement(deltaTime);
+}
+
+// Blue Ghost Implementation - Moves right
+void BlueGhostModel::updateMovement(float deltaTime) {
+    GhostModel::updateMovement(deltaTime);
+}
+
+// Orange Ghost Implementation - Moves down
+void OrangeGhostModel::updateMovement(float deltaTime) {
+    GhostModel::updateMovement(deltaTime);
+}
+
+// Pink Ghost Implementation - Moves up
+void PinkGhostModel::updateMovement(float deltaTime) {
+    GhostModel::updateMovement(deltaTime);
+}
+
+// #include "entities/GhostModel.h"
+// #include "entities/PacmanModel.h"
+// #include "world/World.h"
+// #include <utility>
+// #include <random>
+//
+// GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::string textureId)
+//     : m_position(position), m_textureId(std::move(textureId)), m_size(size), m_spawnPoint(position) {
+// }
+//
+// void GhostModel::update(float deltaTime) {
+//     // Handle spawn delay
+//     // if (m_spawnDelay > 0) {
+//     //     m_spawnDelay -= deltaTime;
+//     //     m_canMove = (m_spawnDelay <= 0);
+//     //     m_inCenter = (m_spawnDelay > 0);
+//     // }
+//
+//     // Update scared timer
+//     if (m_scared) {
+//         m_scaredTimer -= deltaTime;
+//         if (m_scaredTimer <= 0) {
+//             m_scared = false;
+//             m_scaredTimer = 0.0f;
+//         }
+//     }
+//
+//     m_position = checkTunneling(m_position);
+//     notifyObservers();
+// }
+//
+// void GhostModel::setPosition(const Vector2f& position) {
+//     m_position = position;
+//     notifyObservers();
+// }
+//
+// void GhostModel::setScared(bool scared) {
+//     if (scared && !m_scared) {
+//         // Just became scared - reverse direction
+//         reverseDirection();
+//     }
+//     m_scared = scared;
+//     if (scared) {
+//         m_scaredTimer = 10.0f; // 10 seconds scared time
+//     }
+// }
+//
+// void GhostModel::respawn() {
+//     m_position = m_spawnPoint;
+//     m_scared = false;
+//     m_scaredTimer = 0.0f;
+//     m_inCenter = true;
+//     m_canMove = false;
+// }
+//
+// void GhostModel::updateMovement(float deltaTime, std::shared_ptr<PacmanModel> pacman, const World& world) {
+//     if (!m_canMove) return;
+//
+//     Vector2f targetDirection = calculateChaseDirection(world, pacman);
+//
+//     // Move in the chosen direction
+//     float currentSpeed = m_scared ? m_scaredSpeed : m_speed;
+//     Vector2f newPosition = m_position;
+//
+//     switch (m_direction) {
+//         case 0: newPosition.x -= currentSpeed * deltaTime; break; // left
+//         case 1: newPosition.y += currentSpeed * deltaTime; break; // down
+//         case 2: newPosition.x += currentSpeed * deltaTime; break; // right
+//         case 3: newPosition.y -= currentSpeed * deltaTime; break; // up
+//     }
+//
+//     // Check collision with walls
+//     if (isValidMove(newPosition, world)) {
+//         m_position = newPosition;
+//     } else {
+//         // Hit a wall - choose new direction
+//         auto possibleDirs = getPossibleDirections(world);
+//         if (!possibleDirs.empty()) {
+//             // Simple random direction change when hitting wall
+//             static std::random_device rd;
+//             static std::mt19937 gen(rd());
+//             std::uniform_int_distribution<> dis(0, possibleDirs.size() - 1);
+//             m_direction = possibleDirs[dis(gen)];
+//         }
+//     }
+// }
+//
+// void GhostModel::reverseDirection() {
+//     // Reverse current direction
+//     switch (m_direction) {
+//         case 0: m_direction = 2; break; // left -> right
+//         case 1: m_direction = 3; break; // down -> up
+//         case 2: m_direction = 0; break; // right -> left
+//         case 3: m_direction = 1; break; // up -> down
+//     }
+// }
+//
+// Vector2f GhostModel::checkTunneling(Vector2f position) {
+//     float edge = 1.0f + m_size.x / 2.0f;
+//     if (position.x < -edge) {
+//         position.x = edge;
+//     } else if (position.x > edge) {
+//         position.x = -edge;
+//     }
+//     return position;
+// }
+//
+// std::vector<int> GhostModel::getPossibleDirections(const World& world) const {
+//     std::vector<int> possibleDirs;
+//
+//     // Test all 4 directions
+//     for (int dir = 0; dir < 4; dir++) {
+//         Vector2f testPos = m_position;
+//         switch (dir) {
+//             case 0: testPos.x -= 0.1f; break; // left
+//             case 1: testPos.y += 0.1f; break; // down
+//             case 2: testPos.x += 0.1f; break; // right
+//             case 3: testPos.y -= 0.1f; break; // up
+//         }
+//
+//         if (isValidMove(testPos, world)) {
+//             possibleDirs.push_back(dir);
+//         }
+//     }
+//
+//     return possibleDirs;
+// }
+//
+// bool GhostModel::isValidMove(const Vector2f& newPos, const World& world) const {
+//     // This should check collision with walls in the world
+//     // For now, return true (you'll need to implement proper collision detection)
+//     return true;
+// }
+//
+// // Red Ghost Implementation - Fixed direction with random changes
+// void RedGhostModel::updateMovement(float deltaTime, std::shared_ptr<PacmanModel> pacman, const World& world) {
+//     if (!m_canMove) return;
+//
+//     m_directionChangeTimer += deltaTime;
+//
+//     // Change locked direction randomly every 2 seconds
+//     if (m_directionChangeTimer >= 0.1f) {
+//         auto possibleDirs = getPossibleDirections(world);
+//         if (!possibleDirs.empty()) {
+//             static std::random_device rd;
+//             static std::mt19937 gen(rd());
+//             std::uniform_int_distribution<> dis(0, possibleDirs.size() - 1);
+//             m_lockedDirection = possibleDirs[dis(gen)];
+//         }
+//         m_directionChangeTimer = 0.0f;
+//     }
+//
+//     // Use locked direction if set, otherwise use normal AI
+//     if (m_lockedDirection != -1) {
+//         m_direction = m_lockedDirection;
+//     }
+//
+//     GhostModel::updateMovement(deltaTime, pacman, world);
+// }
+//
+// Vector2f RedGhostModel::calculateChaseDirection(const World& world, std::shared_ptr<PacmanModel> pacman) {
+//     // Fixed direction ghost - direction is handled in updateMovement
+//     return Vector2f(0, 0);
+// }
+//
+// // Blue Ghost Implementation - Chase Pac-Man's facing direction
+// void BlueGhostModel::updateMovement(float deltaTime, std::shared_ptr<PacmanModel> pacman, const World& world) {
+//     GhostModel::updateMovement(deltaTime, pacman, world);
+// }
+//
+// Vector2f BlueGhostModel::calculateChaseDirection(const World& world, std::shared_ptr<PacmanModel> pacman) {
+//     if (!pacman) return Vector2f(0, 0);
+//
+//     // Get position in front of Pac-Man based on his direction
+//     Vector2f targetPos = pacman->getPosition();
+//     int pacmanDir = pacman->getDirection();
+//
+//     switch (pacmanDir) {
+//         case 0: targetPos.x -= 0.3f; break; // left
+//         case 1: targetPos.y += 0.3f; break; // down
+//         case 2: targetPos.x += 0.3f; break; // right
+//         case 3: targetPos.y -= 0.3f; break; // up
+//     }
+//
+//     // Find direction that minimizes Manhattan distance to target
+//     auto possibleDirs = getPossibleDirections(world);
+//     if (possibleDirs.empty()) return Vector2f(0, 0);
+//
+//     int bestDir = possibleDirs[0];
+//     float bestDistance = std::numeric_limits<float>::max();
+//
+//     for (int dir : possibleDirs) {
+//         Vector2f testPos = m_position;
+//         switch (dir) {
+//             case 0: testPos.x -= 0.1f; break;
+//             case 1: testPos.y += 0.1f; break;
+//             case 2: testPos.x += 0.1f; break;
+//             case 3: testPos.y -= 0.1f; break;
+//         }
+//
+//         float distance = std::abs(testPos.x - targetPos.x) + std::abs(testPos.y - targetPos.y);
+//         if (distance < bestDistance) {
+//             bestDistance = distance;
+//             bestDir = dir;
+//         }
+//     }
+//
+//     m_direction = bestDir;
+//     return Vector2f(0, 0);
+// }
+//
+// Vector2f OrangeGhostModel::calculateChaseDirection(const World& world, std::shared_ptr<PacmanModel> pacman) {
+//     if (!pacman) return Vector2f(0, 0);
+//
+//     // Get position in front of Pac-Man based on his direction
+//     Vector2f targetPos = pacman->getPosition();
+//     int pacmanDir = pacman->getDirection();
+//
+//     switch (pacmanDir) {
+//     case 0: targetPos.x -= 0.3f; break; // left
+//     case 1: targetPos.y += 0.3f; break; // down
+//     case 2: targetPos.x += 0.3f; break; // right
+//     case 3: targetPos.y -= 0.3f; break; // up
+//     }
+//
+//     // Find direction that minimizes Manhattan distance to target
+//     auto possibleDirs = getPossibleDirections(world);
+//     if (possibleDirs.empty()) return Vector2f(0, 0);
+//
+//     int bestDir = possibleDirs[0];
+//     float bestDistance = std::numeric_limits<float>::max();
+//
+//     for (int dir : possibleDirs) {
+//         Vector2f testPos = m_position;
+//         switch (dir) {
+//         case 0: testPos.x -= 0.1f; break;
+//         case 1: testPos.y += 0.1f; break;
+//         case 2: testPos.x += 0.1f; break;
+//         case 3: testPos.y -= 0.1f; break;
+//         }
+//
+//         float distance = std::abs(testPos.x - targetPos.x) + std::abs(testPos.y - targetPos.y);
+//         if (distance < bestDistance) {
+//             bestDistance = distance;
+//             bestDir = dir;
+//         }
+//     }
+//
+//     m_direction = bestDir;
+//     return Vector2f(0, 0);
+// }
+//
+// void OrangeGhostModel::updateMovement(float deltaTime, std::shared_ptr<PacmanModel> pacman, const World& world) {
+//     GhostModel::updateMovement(deltaTime, pacman, world);
+// }
+//
+// // Pink Ghost - Directly chase Pac-Man
+// Vector2f PinkGhostModel::calculateChaseDirection(const World& world, std::shared_ptr<PacmanModel> pacman) {
+//     if (!pacman) return Vector2f(0, 0);
+//
+//     Vector2f targetPos = pacman->getPosition();
+//
+//     // Find direction that minimizes Manhattan distance directly to Pac-Man
+//     auto possibleDirs = getPossibleDirections(world);
+//     if (possibleDirs.empty()) return Vector2f(0, 0);
+//
+//     int bestDir = possibleDirs[0];
+//     float bestDistance = std::numeric_limits<float>::max();
+//
+//     for (int dir : possibleDirs) {
+//         Vector2f testPos = m_position;
+//         switch (dir) {
+//             case 0: testPos.x -= 0.1f; break;
+//             case 1: testPos.y += 0.1f; break;
+//             case 2: testPos.x += 0.1f; break;
+//             case 3: testPos.y -= 0.1f; break;
+//         }
+//
+//         float distance = std::abs(testPos.x - targetPos.x) + std::abs(testPos.y - targetPos.y);
+//         if (distance < bestDistance) {
+//             bestDistance = distance;
+//             bestDir = dir;
+//         }
+//     }
+//
+//     m_direction = bestDir;
+//     return Vector2f(0, 0);
+// }
+//
+// void PinkGhostModel::updateMovement(float deltaTime, std::shared_ptr<PacmanModel> pacman, const World& world) {
+//     GhostModel::updateMovement(deltaTime, pacman, world);
+// }

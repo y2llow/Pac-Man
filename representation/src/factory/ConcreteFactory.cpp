@@ -16,7 +16,6 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
     : m_window(window), m_camera(camera) {
 }
 
-// Template helper - return hetzelfde shared_ptr object
 template<typename ModelType, typename ViewType>
 std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
     // 1. Create model with shared ownership
@@ -25,20 +24,9 @@ std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, c
     // 2. Create view with shared model reference
     auto view = std::make_unique<ViewType>(model, m_camera);
 
-    // 3. Safe observer attachment using weak_ptr
-    std::weak_ptr<ModelType> weakModel = model;
-    model->attachObserver([weakModel, viewPtr = view.get()]() {
-        if (auto sharedModel = weakModel.lock()) {
-            if (viewPtr) {
-                viewPtr->update();
-            }
-        }
-    });
-
-    // 4. Store view in factory
+    // 3. Store view in factory
     m_views.push_back(std::move(view));
 
-    // 5. Return the SAME shared_ptr - no copy!
     return model;
 }
 

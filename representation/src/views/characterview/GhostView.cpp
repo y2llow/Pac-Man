@@ -1,86 +1,110 @@
 #include "views/characterview/GhostView.h"
+
+#include <utility>
 #include "Game.h"
+#include "rendering/SpriteSheet.h"
 
 // Base GhostView implementation
-GhostView::GhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
-    : m_ghostmodel(std::move(ghostmodel)),  m_camera(camera) {
-    GhostView::setupShape();
-    GhostView::updateShape();
+GhostView::GhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
+    : m_ghostmodel(std::move(ghostmodel)), m_camera(camera), m_animationTimer(0.0f) {
+
+    auto& spriteSheet = SpriteSheet::getInstance();
+    m_sprite.setTexture(spriteSheet.getTexture());
+
+    // GhostView::setupSprite();
+    GhostView::updateSprite();
 }
 
-void GhostView::setupShape() {
-    // Default ghost shape - will be set by derived classes
-    m_circle.setFillColor(sf::Color(255, 255, 255));
-    m_normalColor = sf::Color(255, 255, 255); // Store normal color
+void GhostView::setupSprite() {
+    // Default - will be overridden by derived classes
+    m_normalColor = sf::Color(255, 255, 255);
 }
 
-void GhostView::update() {
-    updateShape();
+void GhostView::update(float deltaTime) {
+    m_animationTimer += deltaTime;
+    updateSprite();
+}
+
+void GhostView::draw(sf::RenderWindow& window) {
+    window.draw(m_sprite);
+}
+
+void GhostView::updateSprite() {
+    auto& spriteSheet = SpriteSheet::getInstance();
+
+    std::string spriteId;
 
     if (m_ghostmodel->isScared()) {
         float scaredTimer = m_ghostmodel->getScaredTimer();
 
         // Blink between blue and white when timer is below 3 seconds
         if (scaredTimer <= 3.0f) {
-            // Accelerating blink speed as timer approaches 0
-            // Start slow (0.5s per phase) and speed up to very fast (0.1s per phase)
-            float timeRemaining = scaredTimer; // 3.0 to 0.0
-            float blinkSpeed = 0.1f + (timeRemaining / 3.0f) * 0.4f; // 0.1s to 0.5s
-
-            // Calculate blink phase with accelerating speed
-            float blinkTime = 3.0f - timeRemaining; // Time since blinking started (0.0 to 3.0)
+            float timeRemaining = scaredTimer;
+            float blinkSpeed = 0.1f + (timeRemaining / 3.0f) * 0.4f;
+            float blinkTime = 3.0f - timeRemaining;
             int blinkPhase = static_cast<int>(blinkTime / blinkSpeed) % 2;
 
-            if (blinkPhase == 0) {
-                m_circle.setFillColor(sf::Color(0, 0, 255)); // Blue
-            } else {
-                m_circle.setFillColor(sf::Color(255, 255, 255)); // White
-            }
+            spriteId = blinkPhase == 0 ? "ghost_scared_1" : "ghost_scared_2";
         } else {
-            m_circle.setFillColor(sf::Color(0, 0, 255)); // Solid blue
+            // Normal scared animation
+            spriteId = "ghost_scared_1";
         }
     } else {
-        m_circle.setFillColor(m_normalColor); // Revert to normal color
+        // Normal ghost - select sprite based on direction
+        int direction = m_ghostmodel->getDirection();
+        int frameIndex = static_cast<int>(m_animationTimer / 0.2f) % 2; // 0.2 seconds per frame
+
+        std::string directionStr;
+        switch (direction) {
+            case 0: directionStr = "left"; break;
+            case 1: directionStr = "down"; break;
+            case 2: directionStr = "right"; break;
+            case 3: directionStr = "up"; break;
+            default: directionStr = "right"; break;
+        }
+
+        std::string ghostColor = getGhostColor();
+        spriteId = "ghost_" + ghostColor + "_" + directionStr + "_" + std::to_string(frameIndex + 1);
     }
-}
 
-void GhostView::draw(sf::RenderWindow& window) {
-    window.draw(m_circle);
-}
+    m_sprite.setTextureRect(spriteSheet.getSpriteRect(spriteId));
 
-void GhostView::updateShape() {
+    // Position and scale
     Vector2f logicPos = m_ghostmodel->getPosition();
     Vector2f pixelPos = m_camera.worldToPixel(logicPos);
 
     Vector2f logicSize = m_ghostmodel->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Fixed base radius
-    float newRadius = std::min(pixelSize.x, pixelSize.y);
-    m_circle.setRadius(newRadius);
-    m_circle.setOrigin(newRadius, newRadius);
-    m_circle.setPosition(pixelPos.x , pixelPos.y);
+    sf::IntRect textureRect = m_sprite.getTextureRect();
+    float scaleX = pixelSize.x / textureRect.width;
+    float scaleY = pixelSize.y / textureRect.height;
+    m_sprite.setScale(scaleX, scaleY);
 
-    // Scale transforms world coordinates to screen coordinates
-    float scaleX = pixelSize.x / (newRadius * 2.0f);
-    float scaleY = pixelSize.y / (newRadius * 2.0f);
-    m_circle.setScale(scaleX, scaleY);
+    m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
+    m_sprite.setPosition(pixelPos.x, pixelPos.y);
+}
+
+std::string GhostView::getGhostColor() const {
+    return "red"; // Default, wordt overridden door derived classes
 }
 
 // RedGhostView implementation
-RedGhostView::RedGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
-    : GhostView(ghostmodel,camera) {
-    RedGhostView::setupShape();
-    GhostView::updateShape();
+RedGhostView::RedGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
+    : GhostView(std::move(ghostmodel), camera) {
+    // RedGhostView::setupSprite();
 }
 
-void RedGhostView::setupShape() {
+void RedGhostView::setupSprite() {
     m_normalColor = sf::Color(233, 3, 8);
-    m_circle.setFillColor(m_normalColor);
 }
 
-void RedGhostView::update() {
-    GhostView::update();
+std::string RedGhostView::getGhostColor() const {
+    return "red";
+}
+
+void RedGhostView::update(float deltaTime) {
+    GhostView::update(deltaTime);
 }
 
 void RedGhostView::draw(sf::RenderWindow& window) {
@@ -89,18 +113,20 @@ void RedGhostView::draw(sf::RenderWindow& window) {
 
 // BlueGhostView implementation
 BlueGhostView::BlueGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
-    : GhostView(ghostmodel,  camera) {
-    BlueGhostView::setupShape();
-    GhostView::updateShape();
+    : GhostView(std::move(ghostmodel), camera) {
+    // BlueGhostView::setupSprite();
 }
 
-void BlueGhostView::setupShape() {
+void BlueGhostView::setupSprite() {
     m_normalColor = sf::Color(6, 176, 232);
-    m_circle.setFillColor(m_normalColor);
 }
 
-void BlueGhostView::update() {
-    GhostView::update();
+std::string BlueGhostView::getGhostColor() const {
+    return "blue";
+}
+
+void BlueGhostView::update(float deltaTime) {
+    GhostView::update(deltaTime);
 }
 
 void BlueGhostView::draw(sf::RenderWindow& window) {
@@ -108,19 +134,21 @@ void BlueGhostView::draw(sf::RenderWindow& window) {
 }
 
 // OrangeGhostView implementation
-OrangeGhostView::OrangeGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
-    : GhostView(ghostmodel,  camera) {
-    OrangeGhostView::setupShape();
-    GhostView::updateShape();
+OrangeGhostView::OrangeGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
+    : GhostView(std::move(ghostmodel), camera) {
+    // OrangeGhostView::setupSprite();
 }
 
-void OrangeGhostView::setupShape() {
+void OrangeGhostView::setupSprite() {
     m_normalColor = sf::Color(234, 133, 12);
-    m_circle.setFillColor(m_normalColor);
 }
 
-void OrangeGhostView::update() {
-    GhostView::update();
+std::string OrangeGhostView::getGhostColor() const {
+    return "orange";
+}
+
+void OrangeGhostView::update(float deltaTime) {
+    GhostView::update(deltaTime);
 }
 
 void OrangeGhostView::draw(sf::RenderWindow& window) {
@@ -128,19 +156,21 @@ void OrangeGhostView::draw(sf::RenderWindow& window) {
 }
 
 // PinkGhostView implementation
-PinkGhostView::PinkGhostView(std::shared_ptr<GhostModel> ghostmodel,  Camera& camera)
-    : GhostView(ghostmodel, camera) {
-    PinkGhostView::setupShape();
-    GhostView::updateShape();
+PinkGhostView::PinkGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
+    : GhostView(std::move(ghostmodel), camera) {
+    // PinkGhostView::setupSprite();
 }
 
-void PinkGhostView::setupShape() {
+void PinkGhostView::setupSprite() {
     m_normalColor = sf::Color(240, 157, 178);
-    m_circle.setFillColor(m_normalColor);
 }
 
-void PinkGhostView::update() {
-    GhostView::update();
+std::string PinkGhostView::getGhostColor() const {
+    return "pink";
+}
+
+void PinkGhostView::update(float deltaTime) {
+    GhostView::update(deltaTime);
 }
 
 void PinkGhostView::draw(sf::RenderWindow& window) {

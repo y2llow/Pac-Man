@@ -1,7 +1,7 @@
 #include "entities/FruitModel.h"
 
 FruitModel::FruitModel(const Vector2f& position, const Vector2f& size, const std::string& textureId){
-m_position = position, m_textureId = textureId;{m_size = size;}
+m_position = position;{m_size = size;}
 }
 
 void FruitModel::update(float deltaTime)  {

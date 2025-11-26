@@ -12,7 +12,7 @@ public:
     virtual ~EntityView() = default;
 
     // Update view based on model state
-    virtual void update() = 0;
+    virtual void update(float deltaTime) = 0;
 
     // Draw to window
     virtual void draw(sf::RenderWindow& window) = 0;

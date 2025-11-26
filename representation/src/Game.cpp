@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "rendering/SpriteSheet.h"
 #include "core/Stopwatch.h"
 
 namespace pacman::representation {
@@ -12,6 +12,11 @@ Game::Game()
     , m_camera(Camera(*m_window)), m_stateManager(*m_window) {
 
     m_window->setFramerateLimit(FPS_LIMIT);
+
+    auto& spriteSheet = SpriteSheet::getInstance();
+    if (!spriteSheet.loadSpriteSheet("assets/textures/pacman_sprites.png")) {
+        throw std::runtime_error("Failed to load sprite sheet!");
+    }
 }
 
 /**

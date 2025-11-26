@@ -2,9 +2,10 @@
 #define WALL_VIEW_H
 
 #include "Camera.h"
-#include "EntityView.h"
+#include "views/EntityView.h"
 #include <SFML/Graphics.hpp>
 
+// Forward declaration
 class WallModel;
 
 class WallView : public EntityView {
@@ -12,10 +13,8 @@ public:
     explicit WallView(std::shared_ptr<WallModel> model, Camera& camera);
     ~WallView() override = default;
 
-    // Observer interface
-    void update() override;
-
-    // Rendering
+    // EntityView interface
+    void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
 
 private:
@@ -28,4 +27,3 @@ private:
 };
 
 #endif // WALL_VIEW_H
-
