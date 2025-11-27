@@ -23,20 +23,20 @@ public:
 
     Score& getScore() { return *m_score; }
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
-    void addEntity(std::unique_ptr<EntityModel> entity);
+    // void addEntity(std::unique_ptr<EntityModel> entity);
 
     static bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
-    void handlePacmanWallCollision(PacmanModel&pacman, const WallModel&wall);
+    // void handlePacmanWallCollision(PacmanModel&pacman, const WallModel&wall);
     void handlePacmanGhostCollision(PacmanModel&pacman, GhostModel&ghost);
     void handlePacmanCoinCollision(CoinModel&coin);
     void handlePacmanFruitCollision(FruitModel&fruit);
     void cleanupCollectedItems();
 
     // Nieuwe predictive collision methodes
-    bool wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
+    [[nodiscard]] bool wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
     void handlePredictiveMovement(float deltaTime);
     void handleCollectibleCollisions();
-    bool areAllCoinsCollected() const { return m_coins.empty() && m_fruits.empty(); }
+    [[nodiscard]] bool areAllCoinsCollected() const { return m_coins.empty() && m_fruits.empty(); }
     void advanceToNextLevel();
 
     // Add getters for LevelState to access entities for rendering
