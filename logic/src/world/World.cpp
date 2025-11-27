@@ -402,12 +402,6 @@ void World::checkDeathAnimationState() {
         for (auto& ghost : m_ghosts) {
             ghost->respawn();
         }
-
-        // Check if game over
-        if (m_pacman->getLives() <= 0) {
-            // Handle game over state
-            // You'll need to implement this according to your State pattern
-        }
     }
 }
 
