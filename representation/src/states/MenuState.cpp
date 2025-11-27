@@ -220,7 +220,6 @@ void MenuState::handleEvent(const sf::Event& event) {
         // Update the view to match new window size
         sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
         m_window.setView(sf::View(visibleArea));
-
         // Recalculate all positions
         updateLayout();
     }

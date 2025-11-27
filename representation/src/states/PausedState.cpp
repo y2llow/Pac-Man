@@ -121,6 +121,8 @@ void PausedState::handleEvent(const sf::Event& event) {
     // Handle window resize
     if (event.type == sf::Event::Resized) {
         // Update camera with new window size
+        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+        m_window.setView(sf::View(visibleArea));
         m_camera.updateWindowSize();
 
         // Recalculate all UI positions
