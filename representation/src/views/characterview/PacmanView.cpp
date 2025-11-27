@@ -36,7 +36,8 @@ void PacmanView::updateShape() {
         spriteId = getDeathAnimationSprite();
     } else {
         // Normal movement animation
-        int frameIndex = static_cast<int>(m_animationTimer / 0.1f) % 3;
+        int frameIndex = (m_animationTimer / 0.1f) ;
+        frameIndex = frameIndex % 3 ;
         int direction = m_pacmanmodel->getDirection();
 
         switch (direction) {
