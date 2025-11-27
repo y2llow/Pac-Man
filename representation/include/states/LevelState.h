@@ -21,23 +21,25 @@ public:
     void handleInput();
     void updateLayout();
 
-
 private:
     sf::RenderWindow& m_window;
-    std::unique_ptr<SFMLFactory> m_factory;  // Factory for creating entities
-    std::unique_ptr<World> m_world;          // World to manage entities
-    Camera& m_camera;                         // For coordinate conversion
+    std::unique_ptr<SFMLFactory> m_factory;
+    std::unique_ptr<World> m_world;
+    Camera& m_camera;
     std::vector<std::unique_ptr<Observer>> m_entityViews;
     MapModel m_mapModel;
 
-    // text elements
+    // UI text elements
     sf::Font m_font;
     sf::Text m_scoreText;
     sf::Text m_livesText;
-    sf::Text m_menuText;
-    sf::RectangleShape m_overlay;
-    sf::RectangleShape m_backgroundPanel;
 
+    // Game Over overlay
+    bool m_isGameOver = false;
+    float m_gameOverTimer = 0.0f;
+    static constexpr float GAME_OVER_DISPLAY_TIME = 3.0f;
+    sf::Text m_gameOverText;
+    sf::RectangleShape m_gameOverOverlay;
 };
 
 #endif

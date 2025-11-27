@@ -54,7 +54,7 @@ private:
     int m_bufferedDirection = -1; // -1 = geen buffer, 0-3 = gebufferde richting
     float PACMAN_SPEED = 0.5;
     float m_lastMove{};
-    unsigned int m_lives = 3;
+    unsigned int m_lives = 1;
     Vector2f m_spawnpoint;
 
     // Death animation state

@@ -69,7 +69,6 @@ private:
     float FRUIT_SIZE = 0.65;
 
     void createEntitiesFromMap();
-    void checkGameState();
     [[nodiscard]] Vector2f tryPositionCorrection(const Vector2f& currentPos,
                                int currentDir,
                                int bufferedDir,

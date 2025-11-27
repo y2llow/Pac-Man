@@ -148,7 +148,6 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 
-    checkGameState();
 }
 
 void World::handlePredictiveMovement(float deltaTime) {
@@ -449,16 +448,3 @@ void World::advanceToNextLevel() {
     m_score->resetCoinChain(); // Reset coin chain for new level
 }
 
-//TODO IMPLEMNT THISS
-// Update checkGameState to handle game over with high scores
-void World::checkGameState() {
-    if (m_pacman->getLives() <= 0) {
-        // Game over - save high scores
-        m_score->saveHighScores();
-        std::cout << "Game Over! Final Score: " << m_score->getCurrentScore() << std::endl;
-        // You'll need to implement state transition to game over screen
-
-        //game over text for 3 seconds qnd tehn switch back to menustate
-        // m_stateManager.switchToState(std::make_unique<GameOverState>(...));
-    }
-}

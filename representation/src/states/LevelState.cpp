@@ -1,6 +1,7 @@
 #include "states/LevelState.h"
 #include "StateManger.h"
 #include "states/GameOverState.h"
+#include "states/MenuState.h"
 #include "states/PausedState.h"
 #include "states/VictoryState.h"
 
@@ -40,6 +41,14 @@ void LevelState::initialize() {
 
         m_livesText.setFillColor(sf::Color::Yellow);
         m_livesText.setStyle(sf::Text::Bold);
+
+        m_gameOverText.setFont(m_font);
+        m_gameOverText.setString("GAME OVER");
+        m_gameOverText.setFillColor(sf::Color::Red);
+        m_gameOverText.setStyle(sf::Text::Bold);
+
+        // Setup overlay
+        m_gameOverOverlay.setFillColor(sf::Color(0, 0, 0, 180));
     }
 
     updateLayout();
@@ -85,9 +94,42 @@ void LevelState::updateLayout() {
     // Position lives text at top-right with padding
     sf::FloatRect livesBounds = m_livesText.getLocalBounds();
     m_livesText.setPosition(windowSize.x - livesBounds.width - padding, 0);
-}
 
+    unsigned int gameOverCharSize = static_cast<unsigned int>(windowSize.y * 0.12f);
+    m_gameOverText.setCharacterSize(gameOverCharSize);
+
+    sf::FloatRect gameOverBounds = m_gameOverText.getLocalBounds();
+    m_gameOverText.setOrigin(gameOverBounds.width / 2, gameOverBounds.height / 2);
+    m_gameOverText.setPosition(windowSize.x / 2, windowSize.y / 2);
+
+    // Setup overlay size
+    m_gameOverOverlay.setSize(sf::Vector2f(windowSize.x, windowSize.y));
+}
+//TODO make functions of these long
 void LevelState::update(float deltaTime) {
+    // Check for game over first
+    if (m_world && m_world->getPacman()->getLives() <= 0 && !m_isGameOver) {
+        // Trigger game over
+        m_isGameOver = true;
+        m_gameOverTimer = 0.0f;
+        m_world->Getscore()->saveHighScores();
+    }
+
+    // Handle game over timer
+    if (m_isGameOver) {
+        m_gameOverTimer += deltaTime;
+
+        if (m_gameOverTimer >= GAME_OVER_DISPLAY_TIME) {
+            // Time's up - go back to menu
+            m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
+            return;
+        }
+
+        // Don't update anything else during game over
+        return;
+    }
+
+    // Normal game updates (only when not game over)
     handleInput();
 
     if (m_world) {
@@ -103,7 +145,7 @@ void LevelState::update(float deltaTime) {
         m_factory->cleanupCollectedViews();
     }
 
-    // Update text content (the actual values change during gameplay)
+    // Update text content
     if (m_world) {
         int scoreValue = m_world->Getscore()->getCurrentScore();
         int livesValue = m_world->getPacman()->getLives();
@@ -111,25 +153,32 @@ void LevelState::update(float deltaTime) {
         m_scoreText.setString("SCORE: " + std::to_string(scoreValue));
         m_livesText.setString("Lives: " + std::to_string(livesValue));
 
-        // Reposition lives text since width might change
         sf::FloatRect livesBounds = m_livesText.getLocalBounds();
         float padding = m_window.getSize().x * 0.005f;
         m_livesText.setPosition(m_window.getSize().x - livesBounds.width - padding, padding);
     }
 }
 
+
 void LevelState::render() {
     m_window.clear(sf::Color(5, 5, 20));
 
+    // Draw game entities
     for (const auto& view : m_factory->getViews()) {
         if (view) {
             view->draw(m_window);
         }
     }
 
-    // Draw text elements
+    // Draw UI text
     m_window.draw(m_scoreText);
     m_window.draw(m_livesText);
+
+    // Draw Game Over overlay if needed
+    if (m_isGameOver) {
+        m_window.draw(m_gameOverOverlay);
+        m_window.draw(m_gameOverText);
+    }
 }
 
 void LevelState::handleInput() {
