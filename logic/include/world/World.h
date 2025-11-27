@@ -68,6 +68,8 @@ private:
     float COIN_SIZE = 0.15;
     float FRUIT_SIZE = 0.65;
 
+    int LEVEL = 1;
+
     void createEntitiesFromMap();
     [[nodiscard]] Vector2f tryPositionCorrection(const Vector2f& currentPos,
                                int currentDir,

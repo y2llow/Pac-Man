@@ -14,7 +14,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map3.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -437,6 +437,13 @@ void World::advanceToNextLevel() {
 
     // For now, just reset the current level
     // In a complete implementation, you would:
+    if (LEVEL < 3) { LEVEL++; }
+    for (auto ghost : m_ghosts) {
+        ghost->SetScaredSpeed(0.5 * LEVEL);
+        ghost->SetScaredTimerInc(LEVEL);
+        ghost->SetSpeed(0.3 * LEVEL);;
+
+    }
     // 1. Increment level counter
     // 2. Increase ghost speed (difficulty scaling)
     // 3. Shorten fear mode duration

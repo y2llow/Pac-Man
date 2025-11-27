@@ -1,4 +1,6 @@
-xxxxxxx
-xr  ..x
-x  P  x
-xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xb                                         x
+#                                          #
+x P.                                       x
+x  f                                       x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

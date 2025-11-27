@@ -35,15 +35,19 @@ public:
     // Setters for external control
     void setCanMove(bool canMove) { m_canMove = canMove; }
 
+    void SetSpeed(float _m_speed) { m_speed = _m_speed;}
+    void SetScaredSpeed(float m_scared_speed) {m_scaredSpeed = m_scared_speed;}
+    void SetScaredTimerInc(float m_scared_timerInc) {m_scaredTimerInc = m_scared_timerInc;}
+
 protected:
     Vector2f m_position;
     std::string m_textureId;
     Vector2f m_size;
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
-
     // Ghost specific
     float m_speed = 0.3f ;
     float m_scaredSpeed = 0.5f;
+    int m_scaredTimerInc = 0;
     float m_scaredTimer = 0.0f;
     Vector2f m_spawnPoint;
     bool m_scared = false;
