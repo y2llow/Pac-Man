@@ -29,6 +29,41 @@ void LevelState::initialize() {
     m_world = std::make_unique<World>(*m_factory);
     m_world->initialize();
 
+    if (m_font.loadFromFile("assets/fonts/arial.ttf")) {
+        // Use camera to get current window size
+        const float windowWidth = windowSize.x; const float windowHeight = windowSize.y;
+
+        // Create the overlay
+        m_overlay.setSize(sf::Vector2f(windowWidth, windowHeight));
+        m_overlay.setFillColor(sf::Color(0, 0, 0, 180));
+
+        // Initialize text objects with the font
+        m_scoreText.setFont(m_font);
+        m_livesText.setFont(m_font);
+        m_menuText.setFont(m_font);
+
+        // int ScoreString = m_world->Getscore()->getCurrentScore();
+        //
+        // // Convert the integer to a string
+        // std::string scoreText = "SCORE: " + std::to_string(ScoreString);
+        //
+        // // Set the string for the SFML text object
+        // m_scoreText.setString(scoreText);
+        m_scoreText.setCharacterSize(60);
+        m_scoreText.setFillColor(sf::Color::Yellow);
+        m_scoreText.setStyle(sf::Text::Bold);
+
+        // int LivesString = m_world->getPacman()->getLives();
+        //
+        // std::string livesText = "Lives: " + std::to_string(LivesString);
+        //
+        // m_livesText.setString(livesText);
+        // m_livesText.setPosition(windowWidth - 500,0);
+        m_livesText.setCharacterSize(60);
+        m_livesText.setFillColor(sf::Color::Yellow);
+        m_livesText.setStyle(sf::Text::Bold);
+    }
+
     updateLayout();
 }
 
@@ -38,8 +73,7 @@ void LevelState::initialize() {
  */
 void LevelState::updateLayout() {
     Vector2f windowSize;
-    windowSize.x = m_window.getSize().x ;
-    windowSize.y = m_window.getSize().y ;
+    windowSize.x = m_window.getSize().x ; windowSize.y = m_window.getSize().y ;
 
     // Update camera with new window size
     m_camera.updateWindowSize(Vector2f(windowSize)); // Add this method to Camera if needed
@@ -47,11 +81,6 @@ void LevelState::updateLayout() {
     // Reset the view
     sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);
     m_window.setView(sf::View(visibleArea));
-
-    // // Update world and factory
-    // if (m_world) {
-    //     m_world->handleResize(windowSize);
-    // }
 
     if (m_factory) {
         m_factory->handleResize(windowSize); // Remove camera parameter
@@ -84,7 +113,19 @@ void LevelState::render() {
         }
     }
 
-    m_window.display();
+    //dynamische score
+    int ScoreString = m_world->Getscore()->getCurrentScore();
+    std::string scoreText = "SCORE: " + std::to_string(ScoreString);
+    m_scoreText.setString(scoreText);
+
+    //dynamische lives
+    int LivesString = m_world->getPacman()->getLives();
+    std::string livesText = "Lives: " + std::to_string(LivesString);
+    m_livesText.setString(livesText);
+    m_livesText.setPosition(m_window.getSize().x - 220,0);
+
+            m_window.draw(m_scoreText);
+            m_window.draw(m_livesText);
 }
 
 void LevelState::handleInput() {

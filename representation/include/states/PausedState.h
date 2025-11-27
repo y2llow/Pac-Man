@@ -24,9 +24,9 @@ private:
     sf::Font m_font;
     sf::Text m_pauseText;
     sf::Text m_continueText;
-    sf::Text m_menuText;           // NEW - separate text for menu option
-    sf::RectangleShape m_overlay;  // NEW - semi-transparent overlay
-    sf::RectangleShape m_backgroundPanel; // NEW - background panel
+    sf::Text m_menuText;
+    sf::RectangleShape m_overlay;
+    sf::RectangleShape m_backgroundPanel;
 };
 
 #endif

@@ -50,67 +50,67 @@ void SpriteSheet::defineAllSprites() {
     defineSpriteRect("pacman_up_open", sf::IntRect(853, 554, 33, 33));
 
     // ===== PACMAN DEATH ANIMATION =====
-    defineSpriteRect("pacman_death_0", sf::IntRect(353, 9, 33, 23));
-    defineSpriteRect("pacman_death_1", sf::IntRect(351, 62, 37, 20));
-    defineSpriteRect("pacman_death_2", sf::IntRect(351, 117, 37, 15));
-    defineSpriteRect("pacman_death_3", sf::IntRect(351, 170, 37, 12));
-    defineSpriteRect("pacman_death_4", sf::IntRect(351, 222, 37, 13));
-    defineSpriteRect("pacman_death_5", sf::IntRect(351, 272, 37, 15));
-    defineSpriteRect("pacman_death_6", sf::IntRect(353, 322, 33, 18));
-    defineSpriteRect("pacman_death_7", sf::IntRect(358, 372, 23, 18));
-    defineSpriteRect("pacman_death_8", sf::IntRect(363, 422, 13, 18));
-    defineSpriteRect("pacman_death_9", sf::IntRect(368, 472, 3, 15));
-    defineSpriteRect("pacman_death_10", sf::IntRect(356, 517, 27, 25));
+    defineSpriteRect("pacman_death_0", sf::IntRect(351, 7, 33, 33));
+    defineSpriteRect("pacman_death_1", sf::IntRect(351, 57, 33, 33));
+    defineSpriteRect("pacman_death_2", sf::IntRect(351, 107, 33, 33));
+    defineSpriteRect("pacman_death_3", sf::IntRect(351, 157, 33, 33));
+    defineSpriteRect("pacman_death_4", sf::IntRect(351, 207, 33, 33));
+    defineSpriteRect("pacman_death_5", sf::IntRect(351, 257, 33, 33));
+    defineSpriteRect("pacman_death_6", sf::IntRect(351, 307, 33, 33));
+    defineSpriteRect("pacman_death_7", sf::IntRect(351, 357, 33, 33));
+    defineSpriteRect("pacman_death_8", sf::IntRect(351, 407, 33, 33));
+    defineSpriteRect("pacman_death_9", sf::IntRect(351, 457, 33, 33));
+    defineSpriteRect("pacman_death_10", sf::IntRect(351, 517, 33, 33));
 
     // ===== GHOST RED =====
     defineSpriteRect("ghost_red_right_1", sf::IntRect(1, 4, 35, 35));
-    defineSpriteRect("ghost_red_right_2", sf::IntRect(1, 4, 35, 35));
+    defineSpriteRect("ghost_red_right_2", sf::IntRect(1, 54, 35, 35));
     defineSpriteRect("ghost_red_down_1", sf::IntRect(1, 104, 35, 35));
-    defineSpriteRect("ghost_red_down_2", sf::IntRect(1, 104, 35, 35));
+    defineSpriteRect("ghost_red_down_2", sf::IntRect(1, 154, 35, 35));
     defineSpriteRect("ghost_red_left_1", sf::IntRect(1, 204, 35, 35));
-    defineSpriteRect("ghost_red_left_2", sf::IntRect(1, 204, 35, 35));
+    defineSpriteRect("ghost_red_left_2", sf::IntRect(1, 254, 35, 35));
     defineSpriteRect("ghost_red_up_1", sf::IntRect(1, 304, 35, 35));
-    defineSpriteRect("ghost_red_up_2", sf::IntRect(1, 304, 35, 35));
+    defineSpriteRect("ghost_red_up_2", sf::IntRect(1, 354, 35, 35));
 
     // ===== GHOST PINK =====
     defineSpriteRect("ghost_pink_right_1", sf::IntRect(51, 4, 35, 35));
-    defineSpriteRect("ghost_pink_right_2", sf::IntRect(51, 4, 35, 35));
+    defineSpriteRect("ghost_pink_right_2", sf::IntRect(51, 54, 35, 35));
     defineSpriteRect("ghost_pink_down_1", sf::IntRect(51, 104, 35, 35));
-    defineSpriteRect("ghost_pink_down_2", sf::IntRect(51, 104, 35, 35));
+    defineSpriteRect("ghost_pink_down_2", sf::IntRect(51, 154, 35, 35));
     defineSpriteRect("ghost_pink_left_1", sf::IntRect(51, 204, 35, 35));
-    defineSpriteRect("ghost_pink_left_2", sf::IntRect(51, 204, 35, 35));
+    defineSpriteRect("ghost_pink_left_2", sf::IntRect(51, 254, 35, 35));
     defineSpriteRect("ghost_pink_up_1", sf::IntRect(51, 304, 35, 35));
-    defineSpriteRect("ghost_pink_up_2", sf::IntRect(51, 304, 35, 35));
+    defineSpriteRect("ghost_pink_up_2", sf::IntRect(51, 354, 35, 35));
 
     // ===== GHOST CYAN (BLUE) =====
     defineSpriteRect("ghost_blue_right_1", sf::IntRect(101, 4, 35, 35));
-    defineSpriteRect("ghost_blue_right_2", sf::IntRect(101, 4, 35, 35));
+    defineSpriteRect("ghost_blue_right_2", sf::IntRect(101, 54, 35, 35));
     defineSpriteRect("ghost_blue_down_1", sf::IntRect(101, 104, 35, 35));
-    defineSpriteRect("ghost_blue_down_2", sf::IntRect(101, 104, 35, 35));
+    defineSpriteRect("ghost_blue_down_2", sf::IntRect(101, 154, 35, 35));
     defineSpriteRect("ghost_blue_left_1", sf::IntRect(101, 204, 35, 35));
-    defineSpriteRect("ghost_blue_left_2", sf::IntRect(101, 204, 35, 35));
+    defineSpriteRect("ghost_blue_left_2", sf::IntRect(101, 254, 35, 35));
     defineSpriteRect("ghost_blue_up_1", sf::IntRect(101, 304, 35, 35));
-    defineSpriteRect("ghost_blue_up_2", sf::IntRect(101, 304, 35, 35));
+    defineSpriteRect("ghost_blue_up_2", sf::IntRect(101, 354, 35, 35));
 
     // ===== GHOST ORANGE =====
     defineSpriteRect("ghost_orange_right_1", sf::IntRect(151, 4, 35, 35));
-    defineSpriteRect("ghost_orange_right_2", sf::IntRect(151, 4, 35, 35));
+    defineSpriteRect("ghost_orange_right_2", sf::IntRect(151, 54, 35, 35));
     defineSpriteRect("ghost_orange_down_1", sf::IntRect(151, 104, 35, 35));
-    defineSpriteRect("ghost_orange_down_2", sf::IntRect(151, 104, 35, 35));
+    defineSpriteRect("ghost_orange_down_2", sf::IntRect(151, 154, 35, 35));
     defineSpriteRect("ghost_orange_left_1", sf::IntRect(151, 204, 35, 35));
-    defineSpriteRect("ghost_orange_left_2", sf::IntRect(151, 204, 35, 35));
+    defineSpriteRect("ghost_orange_left_2", sf::IntRect(151, 254, 35, 35));
     defineSpriteRect("ghost_orange_up_1", sf::IntRect(151, 304, 35, 35));
-    defineSpriteRect("ghost_orange_up_2", sf::IntRect(151, 304, 35, 35));
+    defineSpriteRect("ghost_orange_up_2", sf::IntRect(151, 354, 35, 35));
 
     // ===== GHOST GREEN =====
     defineSpriteRect("ghost_green_right_1", sf::IntRect(201, 4, 35, 35));
-    defineSpriteRect("ghost_green_right_2", sf::IntRect(201, 4, 35, 35));
+    defineSpriteRect("ghost_green_right_2", sf::IntRect(201, 45, 35, 35));
     defineSpriteRect("ghost_green_down_1", sf::IntRect(201, 104, 35, 35));
-    defineSpriteRect("ghost_green_down_2", sf::IntRect(201, 104, 35, 35));
+    defineSpriteRect("ghost_green_down_2", sf::IntRect(201, 154, 35, 35));
     defineSpriteRect("ghost_green_left_1", sf::IntRect(201, 204, 35, 35));
-    defineSpriteRect("ghost_green_left_2", sf::IntRect(201, 204, 35, 35));
+    defineSpriteRect("ghost_green_left_2", sf::IntRect(201, 254, 35, 35));
     defineSpriteRect("ghost_green_up_1", sf::IntRect(201, 304, 35, 35));
-    defineSpriteRect("ghost_green_up_2", sf::IntRect(201, 304, 35, 35));
+    defineSpriteRect("ghost_green_up_2", sf::IntRect(201, 354, 35, 35));
 
     // ===== GHOST PURPLE =====
     defineSpriteRect("ghost_purple_right_1", sf::IntRect(251, 4, 35, 35));

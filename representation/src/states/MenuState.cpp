@@ -114,14 +114,23 @@ void MenuState::updateLayout() {
 
 void MenuState::loadHighScores() {
     std::ifstream file("assets/highscores/highscore.txt");
-    m_highScores.clear();
 
     if (file.is_open()) {
         int score;
         while (file >> score && m_highScores.size() < 5) {
             m_highScores.push_back(score);
         }
+                    for (int i = 0; m_highScores.size() < 5;  i++) {
+            if (m_highScores[i] <= score) {
+                int temp = m_highScores[i];
+                m_highScores[i] = score ;
+                score = temp;
+            }
+        }
+
         file.close();
+
+
     }
 
     // Fill with default scores if file doesn't exist or has too few scores

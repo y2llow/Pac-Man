@@ -30,10 +30,14 @@ private:
     std::vector<std::unique_ptr<Observer>> m_entityViews;
     MapModel m_mapModel;
 
+    // text elements
+    sf::Font m_font;
+    sf::Text m_scoreText;
+    sf::Text m_livesText;
+    sf::Text m_menuText;
+    sf::RectangleShape m_overlay;
+    sf::RectangleShape m_backgroundPanel;
 
-    bool loadFromFile(const std::string& filename);
-    void createWallsFromGrid(std::vector<std::string> m_grid, sf::Vector2u m_gridSize);
-    void addEntityWithView(std::unique_ptr<EntityModel> entity, std::unique_ptr<Observer> view) ;
 };
 
 #endif

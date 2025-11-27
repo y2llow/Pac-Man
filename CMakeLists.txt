@@ -36,3 +36,11 @@ target_link_libraries(Pac-Man
 set_target_properties(Pac-Man PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
+
+# Copy the resources folder (which includes your .txt files) to the build directory
+add_custom_command(TARGET Pac-Man POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        ${CMAKE_BINARY_DIR}/assets
+        COMMENT "Copying resources to build directory"
+)

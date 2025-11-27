@@ -36,6 +36,8 @@ public:
     bool wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
     void handlePredictiveMovement(float deltaTime);
     void handleCollectibleCollisions();
+    bool areAllCoinsCollected() const { return m_coins.empty() && m_fruits.empty(); }
+    void advanceToNextLevel();
 
     // Add getters for LevelState to access entities for rendering
     [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }
@@ -43,11 +45,13 @@ public:
     [[nodiscard]] const std::vector<std::shared_ptr<GhostModel>>& getGhosts() const { return m_ghosts; }
     [[nodiscard]] const std::vector<std::shared_ptr<FruitModel>>& getFruit() const { return m_fruits; }
     [[nodiscard]] const std::shared_ptr<PacmanModel>& getPacman() const { return m_pacman; }
+    [[nodiscard]] std::shared_ptr<Score> Getscore() const {return m_score;}
+
 
 private:
     MapModel m_mapModel;
     LogicFactory* m_factory;
-    std::unique_ptr<Score> m_score;
+    std::shared_ptr<Score> m_score;
 
     // Change ALL vectors to shared_ptr
     std::vector<std::shared_ptr<WallModel>> m_walls;
@@ -73,7 +77,7 @@ private:
     [[nodiscard]] Vector2f findClosestPositionToWall(const Vector2f& currentPos,
                                    int direction,
                                    float deltaTime) const;
-
+    void checkDeathAnimationState();
 };
 
 #endif
