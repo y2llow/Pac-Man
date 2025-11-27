@@ -9,7 +9,7 @@
 
 LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
     : State(stateManager), m_window(window),
-      m_factory(std::make_unique<SFMLFactory>(window, camera)), // Pass reference
+      m_factory(std::make_unique<SFMLFactory>(window, camera)),
       m_camera(camera) {
 }
 
@@ -30,36 +30,14 @@ void LevelState::initialize() {
     m_world->initialize();
 
     if (m_font.loadFromFile("assets/fonts/arial.ttf")) {
-        // Use camera to get current window size
-        const float windowWidth = windowSize.x; const float windowHeight = windowSize.y;
-
-        // Create the overlay
-        m_overlay.setSize(sf::Vector2f(windowWidth, windowHeight));
-        m_overlay.setFillColor(sf::Color(0, 0, 0, 180));
-
         // Initialize text objects with the font
         m_scoreText.setFont(m_font);
         m_livesText.setFont(m_font);
-        m_menuText.setFont(m_font);
 
-        // int ScoreString = m_world->Getscore()->getCurrentScore();
-        //
-        // // Convert the integer to a string
-        // std::string scoreText = "SCORE: " + std::to_string(ScoreString);
-        //
-        // // Set the string for the SFML text object
-        // m_scoreText.setString(scoreText);
-        m_scoreText.setCharacterSize(60);
+        // Set colors and styles (these don't change with resize)
         m_scoreText.setFillColor(sf::Color::Yellow);
         m_scoreText.setStyle(sf::Text::Bold);
 
-        // int LivesString = m_world->getPacman()->getLives();
-        //
-        // std::string livesText = "Lives: " + std::to_string(LivesString);
-        //
-        // m_livesText.setString(livesText);
-        // m_livesText.setPosition(windowWidth - 500,0);
-        m_livesText.setCharacterSize(60);
         m_livesText.setFillColor(sf::Color::Yellow);
         m_livesText.setStyle(sf::Text::Bold);
     }
@@ -73,18 +51,40 @@ void LevelState::initialize() {
  */
 void LevelState::updateLayout() {
     Vector2f windowSize;
-    windowSize.x = m_window.getSize().x ; windowSize.y = m_window.getSize().y ;
+    windowSize.x = m_window.getSize().x;
+    windowSize.y = m_window.getSize().y;
 
     // Update camera with new window size
-    m_camera.updateWindowSize(Vector2f(windowSize)); // Add this method to Camera if needed
+    m_camera.updateWindowSize(Vector2f(windowSize));
 
     // Reset the view
     sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);
     m_window.setView(sf::View(visibleArea));
 
     if (m_factory) {
-        m_factory->handleResize(windowSize); // Remove camera parameter
+        m_factory->handleResize(windowSize);
     }
+
+    // Scale text based on window size
+    // Character size scales with window height (e.g., 7% of window height)
+    unsigned int scaledCharSize = static_cast<unsigned int>(windowSize.y * 0.07f);
+    m_scoreText.setCharacterSize(scaledCharSize);
+    m_livesText.setCharacterSize(scaledCharSize);
+
+    // Update text content to get proper bounds
+    int currentScore = m_world ? m_world->Getscore()->getCurrentScore() : 0;
+    int currentLives = m_world ? m_world->getPacman()->getLives() : 3;
+
+    m_scoreText.setString("SCORE: " + std::to_string(currentScore));
+    m_livesText.setString("Lives: " + std::to_string(currentLives));
+
+    // Position score text at top-left with padding
+    float padding = windowSize.x * 0.005f; // 2% padding
+    m_scoreText.setPosition(padding, padding);
+
+    // Position lives text at top-right with padding
+    sf::FloatRect livesBounds = m_livesText.getLocalBounds();
+    m_livesText.setPosition(windowSize.x - livesBounds.width - padding, 0);
 }
 
 void LevelState::update(float deltaTime) {
@@ -102,6 +102,20 @@ void LevelState::update(float deltaTime) {
         }
         m_factory->cleanupCollectedViews();
     }
+
+    // Update text content (the actual values change during gameplay)
+    if (m_world) {
+        int scoreValue = m_world->Getscore()->getCurrentScore();
+        int livesValue = m_world->getPacman()->getLives();
+
+        m_scoreText.setString("SCORE: " + std::to_string(scoreValue));
+        m_livesText.setString("Lives: " + std::to_string(livesValue));
+
+        // Reposition lives text since width might change
+        sf::FloatRect livesBounds = m_livesText.getLocalBounds();
+        float padding = m_window.getSize().x * 0.005f;
+        m_livesText.setPosition(m_window.getSize().x - livesBounds.width - padding, padding);
+    }
 }
 
 void LevelState::render() {
@@ -113,30 +127,18 @@ void LevelState::render() {
         }
     }
 
-    //dynamische score
-    int ScoreString = m_world->Getscore()->getCurrentScore();
-    std::string scoreText = "SCORE: " + std::to_string(ScoreString);
-    m_scoreText.setString(scoreText);
-
-    //dynamische lives
-    int LivesString = m_world->getPacman()->getLives();
-    std::string livesText = "Lives: " + std::to_string(LivesString);
-    m_livesText.setString(livesText);
-    m_livesText.setPosition(m_window.getSize().x - 220,0);
-
-            m_window.draw(m_scoreText);
-            m_window.draw(m_livesText);
+    // Draw text elements
+    m_window.draw(m_scoreText);
+    m_window.draw(m_livesText);
 }
 
 void LevelState::handleInput() {
     if (!m_world) return;
 
-    // Get Pacman from World (je moet hiervoor een method toevoegen aan World)
-    auto pacman = m_world->getPacman(); // Je moet deze method implementeren
-
+    auto pacman = m_world->getPacman();
     if (!pacman) return;
 
-    // Check keyboard input en update Pacman's buffer
+    // Check keyboard input and update Pacman's buffer
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         pacman->bufferDirection(0);
     }
@@ -151,7 +153,6 @@ void LevelState::handleInput() {
     }
 }
 
-
 /**
  * stateManager -> PausedState when esc is pressed
  * @param event current SFML event
@@ -162,7 +163,7 @@ void LevelState::handleEvent(const sf::Event& event) {
         sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
         m_window.setView(sf::View(visibleArea));
         updateLayout();
-        return; // Important: return after handling resize
+        return;
     }
 
     if (event.type == sf::Event::KeyPressed) {
@@ -175,4 +176,3 @@ void LevelState::handleEvent(const sf::Event& event) {
         }
     }
 }
-
