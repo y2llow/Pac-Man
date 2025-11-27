@@ -52,7 +52,7 @@ private:
     //pacman specific privates
     int m_direction = 3;        // Huidige bewegingrichting
     int m_bufferedDirection = -1; // -1 = geen buffer, 0-3 = gebufferde richting
-    float PACMAN_SPEED = 0.3;
+    float PACMAN_SPEED = 0.5;
     float m_lastMove{};
     unsigned int m_lives = 3;
     Vector2f m_spawnpoint;

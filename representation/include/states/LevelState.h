@@ -30,6 +30,14 @@ private:
     std::vector<std::unique_ptr<Observer>> m_entityViews;
     MapModel m_mapModel;
 
+    // text elements
+    sf::Font m_font;
+    sf::Text m_scoreText;
+    sf::Text m_livesText;
+    sf::Text m_menuText;
+    sf::RectangleShape m_overlay;
+    sf::RectangleShape m_backgroundPanel;
+
 };
 
 #endif

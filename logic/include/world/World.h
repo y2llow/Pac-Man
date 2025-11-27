@@ -43,12 +43,13 @@ public:
     [[nodiscard]] const std::vector<std::shared_ptr<GhostModel>>& getGhosts() const { return m_ghosts; }
     [[nodiscard]] const std::vector<std::shared_ptr<FruitModel>>& getFruit() const { return m_fruits; }
     [[nodiscard]] const std::shared_ptr<PacmanModel>& getPacman() const { return m_pacman; }
+    [[nodiscard]] std::shared_ptr<Score> Getscore() const {return m_score;}
 
 
 private:
     MapModel m_mapModel;
     LogicFactory* m_factory;
-    std::unique_ptr<Score> m_score;
+    std::shared_ptr<Score> m_score;
 
     // Change ALL vectors to shared_ptr
     std::vector<std::shared_ptr<WallModel>> m_walls;
