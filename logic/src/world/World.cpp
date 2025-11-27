@@ -14,7 +14,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map3.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -128,6 +128,7 @@ void World::update(float deltaTime) {
         if (areAllCoinsCollected()) {
             m_score->onLevelCleared();
             advanceToNextLevel();
+
         }
     } else {
         // Only update Pac-Man during death animation (for animation timing)
@@ -431,30 +432,34 @@ void World::cleanupCollectedItems() {
 }
 
 void World::advanceToNextLevel() {
-    // Reset coins and fruits for next level
-    // You'll need to implement this based on your level loading system
     std::cout << "Advancing to next level!" << std::endl;
 
-    // For now, just reset the current level
-    // In a complete implementation, you would:
-    if (LEVEL < 3) { LEVEL++; }
-    for (auto ghost : m_ghosts) {
-        ghost->SetScaredSpeed(0.5 * LEVEL);
-        ghost->SetScaredTimerInc(LEVEL);
-        ghost->SetSpeed(0.3 * LEVEL);;
-
+    // Increment level
+    if (LEVEL < 3) {
+        LEVEL++;
     }
-    // 1. Increment level counter
-    // 2. Increase ghost speed (difficulty scaling)
-    // 3. Shorten fear mode duration
-    // 4. Reload the maze with new coins/fruits
-    // 5. Reset ghost positions
 
-    // ResetLevel();
-    // UpdateDifficulty();
+    // Clear all entities EXCEPT Pacman
+    m_walls.clear();
+    m_coins.clear();
+    m_fruits.clear();
+    m_ghosts.clear();
+    m_pacman.reset();
 
-    // Example implementation:
-    initialize(); // Reload current level for now
-    m_score->resetCoinChain(); // Reset coin chain for new level
+    // Clear all views EXCEPT PacmanView using polymorphism
+    // No cast needed - just call through the abstract interface!
+    m_factory->clearNonPacmanViews();
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+        createEntitiesFromMap();
+    }
+    for (auto ghost: m_ghosts) {
+        ghost->SetScaredSpeed(0.5f * LEVEL);
+        ghost->SetSpeed(0.3 * LEVEL);
+        ghost->SetScaredTimerInc(LEVEL);
+    }
+
+
+    // Reset score chain for new level
+    m_score->resetCoinChain();
 }
 

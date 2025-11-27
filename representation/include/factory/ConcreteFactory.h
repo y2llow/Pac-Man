@@ -27,6 +27,8 @@ public:
     const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
     void handleResize(const Vector2f& newSize);
     void cleanupCollectedViews();
+    void clearNonPacmanViews() override;
+
 
 private:
     sf::RenderWindow& m_window;

@@ -81,3 +81,8 @@ void SFMLFactory::cleanupCollectedViews() {
             return false;
         }), m_views.end());
 }
+
+void SFMLFactory::clearNonPacmanViews() {
+    // Remove all views except PacmanView
+    m_views.clear();
+}

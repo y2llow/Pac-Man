@@ -29,6 +29,8 @@ public:
     virtual std::shared_ptr<OrangeGhostModel> createOrangeGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
     virtual std::shared_ptr<PinkGhostModel> createPinkGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
     virtual std::shared_ptr<FruitModel> createFruit(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
+    virtual void clearNonPacmanViews() = 0;
+
 };
 
 #endif
