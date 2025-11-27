@@ -443,6 +443,9 @@ void World::advanceToNextLevel() {
     // 4. Reload the maze with new coins/fruits
     // 5. Reset ghost positions
 
+    // ResetLevel();
+    // UpdateDifficulty();
+
     // Example implementation:
     initialize(); // Reload current level for now
     m_score->resetCoinChain(); // Reset coin chain for new level
