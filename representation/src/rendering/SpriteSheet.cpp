@@ -50,17 +50,17 @@ void SpriteSheet::defineAllSprites() {
     defineSpriteRect("pacman_up_open", sf::IntRect(853, 554, 33, 33));
 
     // ===== PACMAN DEATH ANIMATION =====
-    defineSpriteRect("pacman_death_0", sf::IntRect(353, 9, 33, 23));
-    defineSpriteRect("pacman_death_1", sf::IntRect(351, 62, 37, 20));
-    defineSpriteRect("pacman_death_2", sf::IntRect(351, 117, 37, 15));
-    defineSpriteRect("pacman_death_3", sf::IntRect(351, 170, 37, 12));
-    defineSpriteRect("pacman_death_4", sf::IntRect(351, 222, 37, 13));
-    defineSpriteRect("pacman_death_5", sf::IntRect(351, 272, 37, 15));
-    defineSpriteRect("pacman_death_6", sf::IntRect(353, 322, 33, 18));
-    defineSpriteRect("pacman_death_7", sf::IntRect(358, 372, 23, 18));
-    defineSpriteRect("pacman_death_8", sf::IntRect(363, 422, 13, 18));
-    defineSpriteRect("pacman_death_9", sf::IntRect(368, 472, 3, 15));
-    defineSpriteRect("pacman_death_10", sf::IntRect(356, 517, 27, 25));
+    defineSpriteRect("pacman_death_0", sf::IntRect(351, 7, 33, 33));
+    defineSpriteRect("pacman_death_1", sf::IntRect(351, 57, 33, 33));
+    defineSpriteRect("pacman_death_2", sf::IntRect(351, 107, 33, 33));
+    defineSpriteRect("pacman_death_3", sf::IntRect(351, 157, 33, 33));
+    defineSpriteRect("pacman_death_4", sf::IntRect(351, 207, 33, 33));
+    defineSpriteRect("pacman_death_5", sf::IntRect(351, 257, 33, 33));
+    defineSpriteRect("pacman_death_6", sf::IntRect(351, 307, 33, 33));
+    defineSpriteRect("pacman_death_7", sf::IntRect(351, 357, 33, 33));
+    defineSpriteRect("pacman_death_8", sf::IntRect(351, 407, 33, 33));
+    defineSpriteRect("pacman_death_9", sf::IntRect(351, 457, 33, 33));
+    defineSpriteRect("pacman_death_10", sf::IntRect(351, 517, 33, 33));
 
     // ===== GHOST RED =====
     defineSpriteRect("ghost_red_right_1", sf::IntRect(1, 4, 35, 35));

@@ -6,6 +6,8 @@ PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size, std::st
     : m_position(position), m_textureId(std::move(textureId)), m_spawnpoint(position) { m_size = size; }
 
 Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
+    if (m_isDying) return m_position; // Don't move during death animation
+
     Vector2f newPosition = m_position;
     float moveAmount = PACMAN_SPEED * deltaTime;
 
@@ -29,7 +31,34 @@ void PacmanModel::applyMovement(const Vector2f& newPosition) {
 }
 
 void PacmanModel::update(float deltaTime) {
+    if (m_isDying && !m_deathAnimationComplete) {
+        m_deathAnimationTimer += deltaTime;
 
+        if (m_deathAnimationTimer >= DEATH_ANIMATION_DURATION) {
+            m_deathAnimationComplete = true;
+        }
+    }
+}
+
+void PacmanModel::startDeathAnimation() {
+    m_isDying = true;
+    m_deathAnimationTimer = 0.0f;
+    m_deathAnimationComplete = false;
+    notifyObservers(); // Notify view about state change
+}
+
+void PacmanModel::resetDeathAnimation() {
+    m_isDying = false;
+    m_deathAnimationComplete = false;
+    m_deathAnimationTimer = 0.0f;
+    notifyObservers();
+}
+
+void PacmanModel::loseLife() {
+    if (m_lives > 0) {
+        m_lives -= 1;
+        startDeathAnimation(); // Start death animation instead of immediate reset
+    }
 }
 
 Vector2f PacmanModel::CheckTunneling(Vector2f position) const {
@@ -51,13 +80,6 @@ void PacmanModel::setPosition(const Vector2f& position)  {
     notifyObservers();
 
 }
-
-
-void PacmanModel::loseLife() {
-    m_position = m_spawnpoint;
-    m_lives -= 1;
-}
-
 
 void PacmanModel::bufferDirection(int newDirection) {
     m_bufferedDirection = newDirection;

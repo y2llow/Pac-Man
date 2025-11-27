@@ -44,6 +44,7 @@ public:
     [[nodiscard]] const std::vector<std::shared_ptr<FruitModel>>& getFruit() const { return m_fruits; }
     [[nodiscard]] const std::shared_ptr<PacmanModel>& getPacman() const { return m_pacman; }
 
+
 private:
     MapModel m_mapModel;
     LogicFactory* m_factory;
@@ -73,7 +74,7 @@ private:
     [[nodiscard]] Vector2f findClosestPositionToWall(const Vector2f& currentPos,
                                    int direction,
                                    float deltaTime) const;
-
+    void checkDeathAnimationState();
 };
 
 #endif

@@ -8,7 +8,7 @@
 class PacmanView : public EntityView {
     public:
 
-    PacmanView(std::shared_ptr<PacmanModel>  coinModel,  Camera& camera);
+    PacmanView(std::shared_ptr<PacmanModel>  pacmanModel,  Camera& camera);
     ~PacmanView()override  = default;
 
     void update(float deltaTime) override;
@@ -18,9 +18,11 @@ class PacmanView : public EntityView {
     std::shared_ptr<PacmanModel>  m_pacmanmodel;
     Camera& m_camera;
     sf::Sprite m_sprite;
-    float m_animationTimer;
+    float m_animationTimer = 0.0f;
+    float m_deathAnimationTimer = 0.0f;
 
     void updateShape();
+    std::string getDeathAnimationSprite() const;
 };
 
 

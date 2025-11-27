@@ -30,10 +30,6 @@ private:
     std::vector<std::unique_ptr<Observer>> m_entityViews;
     MapModel m_mapModel;
 
-
-    bool loadFromFile(const std::string& filename);
-    void createWallsFromGrid(std::vector<std::string> m_grid, sf::Vector2u m_gridSize);
-    void addEntityWithView(std::unique_ptr<EntityModel> entity, std::unique_ptr<Observer> view) ;
 };
 
 #endif

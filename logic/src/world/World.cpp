@@ -103,15 +103,29 @@ void World::createEntitiesFromMap() {
 }
 
 
-
+// Update your World::update method
 void World::update(float deltaTime) {
-    // EERST: Predictive movement voor Pacman
-    handlePredictiveMovement(deltaTime);
+    // Check if we need to handle death animation completion
+    checkDeathAnimationState();
 
-    for (auto& ghost : m_ghosts) {
-        ghost->updateMovement(deltaTime);  // Eenvoudige beweging zonder AI
-        ghost->update(deltaTime);
+    // If Pac-Man is dying, skip normal movement updates
+    if (!m_pacman->isDying()) {
+        // EERST: Predictive movement voor Pacman
+        handlePredictiveMovement(deltaTime);
+
+        for (auto& ghost : m_ghosts) {
+            ghost->updateMovement(deltaTime);
+            ghost->update(deltaTime);
+        }
+
+        // DERDE: Collectible collisions (na movement)
+        handleCollectibleCollisions();
+    } else {
+        // Only update Pac-Man during death animation (for animation timing)
+        m_pacman->update(deltaTime);
     }
+
+    // Always update these (they might have their own animations)
     for (auto& wall : m_walls) {
         wall->update(deltaTime);
     }
@@ -121,9 +135,6 @@ void World::update(float deltaTime) {
     for (auto& fruit : m_fruits) {
         fruit->update(deltaTime);
     }
-
-    // DERDE: Collectible collisions (na movement)
-    handleCollectibleCollisions();
 
     // VIERDE: Cleanup
     cleanupCollectedItems();
@@ -367,12 +378,29 @@ void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
         m_score->onGhostEaten();
         ghost.respawn();
     } else {
-        pacman.loseLife();
-        for (auto g : m_ghosts) {
-            g->respawn();
+        // Start death animation instead of immediate reset
+        pacman.loseLife(); // This now starts the death animation
+
+        // Don't reset ghosts immediately - wait for animation to complete
+        // The actual reset will happen in checkDeathAnimationState()
+    }
+}
+
+// Add this method to World class
+void World::checkDeathAnimationState() {
+    if (m_pacman->isDying() && m_pacman->isDeathAnimationComplete()) {
+        // Death animation finished, now reset positions
+        m_pacman->setPosition(m_pacman->getSpawnPoint());
+        m_pacman->resetDeathAnimation();
+
+        for (auto& ghost : m_ghosts) {
+            ghost->respawn();
         }
-        if (pacman.getLives() <= 0) {
-            pacman.setPosition({0.5,0.5});
+
+        // Check if game over
+        if (m_pacman->getLives() <= 0) {
+            // Handle game over state
+            // You'll need to implement this according to your State pattern
         }
     }
 }

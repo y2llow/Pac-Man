@@ -10,46 +10,53 @@ PacmanView::PacmanView(std::shared_ptr<PacmanModel> pacmanModel, Camera& camera)
     // Setup sprite met texture van sprite sheet
     auto& spriteSheet = SpriteSheet::getInstance();
     m_sprite.setTexture(spriteSheet.getTexture());
-
     updateShape();
 }
 
 void PacmanView::update(float deltaTime) {
     m_animationTimer += deltaTime;
+
+    if (m_pacmanmodel->isDying()) {
+        m_deathAnimationTimer += deltaTime;
+    } else {
+        m_deathAnimationTimer = 0.0f;
+    }
+
     updateShape();
 }
-
 void PacmanView::draw(sf::RenderWindow& window) {
     window.draw(m_sprite);
 }
-
 void PacmanView::updateShape() {
     auto& spriteSheet = SpriteSheet::getInstance();
-
-    // Bepaal welke animatie frame te gebruiken (0.1 seconden per frame)
-    int frameIndex = static_cast<int>(m_animationTimer / 0.1f) % 3;
-
-    // Kies sprite op basis van richting en animatie frame
     std::string spriteId;
-    int direction = m_pacmanmodel->getDirection();
 
-    switch (direction) {
-        case 0: // Links
-            spriteId = frameIndex == 0 ? "pacman_left_closed" :
-                      frameIndex == 1 ? "pacman_left_half" : "pacman_left_open";
-            break;
-        case 1: // Beneden
-            spriteId = frameIndex == 0 ? "pacman_down_closed" :
-                      frameIndex == 1 ? "pacman_down_half" : "pacman_down_open";
-            break;
-        case 2: // Rechts
-            spriteId = frameIndex == 0 ? "pacman_right_closed" :
-                      frameIndex == 1 ? "pacman_right_half" : "pacman_right_open";
-            break;
-        case 3: // Boven
-            spriteId = frameIndex == 0 ? "pacman_up_closed" :
-                      frameIndex == 1 ? "pacman_up_half" : "pacman_up_open";
-            break;
+    if (m_pacmanmodel->isDying()) {
+        // Death animation takes priority
+        spriteId = getDeathAnimationSprite();
+    } else {
+        // Normal movement animation
+        int frameIndex = static_cast<int>(m_animationTimer / 0.1f) % 3;
+        int direction = m_pacmanmodel->getDirection();
+
+        switch (direction) {
+            case 0: // Links
+                spriteId = frameIndex == 0 ? "pacman_left_closed" :
+                          frameIndex == 1 ? "pacman_left_half" : "pacman_left_open";
+                break;
+            case 1: // Beneden
+                spriteId = frameIndex == 0 ? "pacman_down_closed" :
+                          frameIndex == 1 ? "pacman_down_half" : "pacman_down_open";
+                break;
+            case 2: // Rechts
+                spriteId = frameIndex == 0 ? "pacman_right_closed" :
+                          frameIndex == 1 ? "pacman_right_half" : "pacman_right_open";
+                break;
+            case 3: // Boven
+                spriteId = frameIndex == 0 ? "pacman_up_closed" :
+                          frameIndex == 1 ? "pacman_up_half" : "pacman_up_open";
+                break;
+        }
     }
 
     // Set texture rectangle
@@ -62,7 +69,7 @@ void PacmanView::updateShape() {
     Vector2f logicSize = m_pacmanmodel->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    // Set sprite scale om de juiste grootte te krijgen
+    // Set sprite scale
     sf::IntRect textureRect = m_sprite.getTextureRect();
     float scaleX = pixelSize.x / textureRect.width;
     float scaleY = pixelSize.y / textureRect.height;
@@ -73,4 +80,17 @@ void PacmanView::updateShape() {
 
     // Set position
     m_sprite.setPosition(pixelPos.x, pixelPos.y);
+}
+
+std::string PacmanView::getDeathAnimationSprite() const {
+    // Map death animation time to sprite frames
+    // Total death animation duration is 2 seconds, we have 11 frames
+    float deathProgress = m_deathAnimationTimer / 2.0f; // 0 to 1
+    int frameIndex = static_cast<int>(deathProgress * 10); // 0 to 10
+
+    // Clamp to valid range
+    frameIndex = std::min(frameIndex, 10);
+    frameIndex = std::max(frameIndex, 0);
+
+    return "pacman_death_" + std::to_string(frameIndex);
 }

@@ -16,6 +16,11 @@ public:
      void setPosition(const Vector2f& position) override;
     [[nodiscard]]  Vector2f getSize() const override{return m_size;}
 
+    // Death animation methods
+    void startDeathAnimation();
+    bool isDying() const { return m_isDying; }
+    bool isDeathAnimationComplete() const { return m_deathAnimationComplete; }
+    void resetDeathAnimation();
 
     // Pacman specific funcitons
     Vector2f CheckTunneling(Vector2f position) const;
@@ -37,6 +42,7 @@ public:
     [[nodiscard]] Vector2f calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
     [[nodiscard]] float getSpeed() const { return PACMAN_SPEED; }
 
+    [[nodiscard]]Vector2f getSpawnPoint() const {return m_spawnpoint;}
 private:
     //default privates
     Vector2f m_position;
@@ -50,6 +56,12 @@ private:
     float m_lastMove{};
     unsigned int m_lives = 3;
     Vector2f m_spawnpoint;
+
+    // Death animation state
+    bool m_isDying = false;
+    bool m_deathAnimationComplete = false;
+    float m_deathAnimationTimer = 0.0f;
+    static constexpr float DEATH_ANIMATION_DURATION = 2.0f; // 2 seconds for full death animation
 
 
 };
