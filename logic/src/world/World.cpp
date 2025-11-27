@@ -105,6 +105,9 @@ void World::createEntitiesFromMap() {
 
 // Update your World::update method
 void World::update(float deltaTime) {
+    // Update score over time (decreases score)
+    m_score->updateScoreOverTime(deltaTime);
+
     // Check if we need to handle death animation completion
     checkDeathAnimationState();
 
@@ -120,6 +123,12 @@ void World::update(float deltaTime) {
 
         // DERDE: Collectible collisions (na movement)
         handleCollectibleCollisions();
+
+        // Check for level completion
+        if (areAllCoinsCollected()) {
+            m_score->onLevelCleared();
+            advanceToNextLevel();
+        }
     } else {
         // Only update Pac-Man during death animation (for animation timing)
         m_pacman->update(deltaTime);
@@ -378,11 +387,8 @@ void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
         m_score->onGhostEaten();
         ghost.respawn();
     } else {
-        // Start death animation instead of immediate reset
+        m_score->onPacManDied(); // Notify score about death
         pacman.loseLife(); // This now starts the death animation
-
-        // Don't reset ghosts immediately - wait for animation to complete
-        // The actual reset will happen in checkDeathAnimationState()
     }
 }
 
@@ -406,13 +412,12 @@ void World::checkDeathAnimationState() {
 }
 
 void World::handlePacmanFruitCollision(FruitModel& fruit) {
-    m_score->onCoinCollected();
+    m_score->onFruitCollected();
     fruit.collect();
     for (auto& ghost : m_ghosts) {
         ghost->setScared(true);
     }
 }
-
 void World::cleanupCollectedItems() {
     // Remove any null pointers or cleanup
     m_coins.erase(std::remove_if(m_coins.begin(), m_coins.end(),
@@ -426,16 +431,34 @@ void World::cleanupCollectedItems() {
         }), m_fruits.end());
 }
 
+void World::advanceToNextLevel() {
+    // Reset coins and fruits for next level
+    // You'll need to implement this based on your level loading system
+    std::cout << "Advancing to next level!" << std::endl;
+
+    // For now, just reset the current level
+    // In a complete implementation, you would:
+    // 1. Increment level counter
+    // 2. Increase ghost speed (difficulty scaling)
+    // 3. Shorten fear mode duration
+    // 4. Reload the maze with new coins/fruits
+    // 5. Reset ghost positions
+
+    // Example implementation:
+    initialize(); // Reload current level for now
+    m_score->resetCoinChain(); // Reset coin chain for new level
+}
+
 //TODO IMPLEMNT THISS
+// Update checkGameState to handle game over with high scores
 void World::checkGameState() {
-    // Check win condition (all coins collected)
-    // if (m_coins.empty()) {
-    //     m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
-    // }
-    // // Check lose condition (no lives left)
-    // for (auto& pacman : m_pacman) {
-    //     if (pacman->getLives() <= 0) {
-    //         m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
-    //     }
-    // }
+    if (m_pacman->getLives() <= 0) {
+        // Game over - save high scores
+        m_score->saveHighScores();
+        std::cout << "Game Over! Final Score: " << m_score->getCurrentScore() << std::endl;
+        // You'll need to implement state transition to game over screen
+
+        //game over text for 3 seconds qnd tehn switch back to menustate
+        // m_stateManager.switchToState(std::make_unique<GameOverState>(...));
+    }
 }

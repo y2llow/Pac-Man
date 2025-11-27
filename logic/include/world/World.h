@@ -36,6 +36,8 @@ public:
     bool wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
     void handlePredictiveMovement(float deltaTime);
     void handleCollectibleCollisions();
+    bool areAllCoinsCollected() const { return m_coins.empty() && m_fruits.empty(); }
+    void advanceToNextLevel();
 
     // Add getters for LevelState to access entities for rendering
     [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }
