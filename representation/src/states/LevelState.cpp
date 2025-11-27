@@ -118,6 +118,10 @@ void LevelState::update(float deltaTime) {
     // Handle game over timer
     if (m_isGameOver) {
         m_gameOverTimer += deltaTime;
+        // m_world->getPacman()->update(deltaTime);
+        // m_world->getPacman()->startDeathAnimation();
+        // m_factory->getPacmanView()->update(deltaTime);
+
 
         if (m_gameOverTimer >= GAME_OVER_DISPLAY_TIME) {
             // Time's up - go back to menu
