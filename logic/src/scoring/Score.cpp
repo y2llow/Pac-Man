@@ -19,7 +19,7 @@ void Score::updateScoreOverTime(float deltaTime) {
     // Decrease score over time (every second)
     m_scoreDecreaseTimer += deltaTime;
     if (m_scoreDecreaseTimer >= 1.0f) {
-        m_currentScore = std::max(0, m_currentScore - static_cast<int>(SCORE_DECREASE_RATE));
+        m_currentScore = std::max(0, (m_currentScore - SCORE_DECREASE_RATE));
         m_scoreDecreaseTimer = 0.0f;
     }
 
@@ -29,16 +29,8 @@ void Score::updateScoreOverTime(float deltaTime) {
 
 void Score::onCoinCollected() {
     // Calculate bonus based on time since last coin
-    float chainBonus = 1.0f;
-//todo change
-    if (m_timeSinceLastCoin < MAX_COIN_CHAIN_TIME) {
-        // Smaller time window = higher bonus (inverse relationship)
-        // When time is small (quick succession), bonus is high
-        // When time is large (slow collection), bonus is low
-        chainBonus = 1.0f + ( (m_timeSinceLastCoin / MAX_COIN_CHAIN_TIME));
-    }
-
-    int coinValue = static_cast<int>(BASE_COIN_SCORE * chainBonus);
+    int timeBonus = 1 + m_timeSinceLastCoin;
+    int coinValue = std::min(BASE_COIN_SCORE * timeBonus, 250); // can max be 500
     m_currentScore += coinValue;
 
     // Reset chain timer for next coin

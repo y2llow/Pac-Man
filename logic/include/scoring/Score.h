@@ -47,7 +47,7 @@ private:
     // Time-based scoring variables
     float m_timeSinceLastCoin;
     float m_scoreDecreaseTimer;
-    static constexpr float SCORE_DECREASE_RATE = 5.0f; // Points per second
+    static constexpr int SCORE_DECREASE_RATE = 5.0f; // Points per second
     static constexpr float MAX_COIN_CHAIN_TIME = 3.0f; // Max time for chain bonus
     static constexpr int BASE_COIN_SCORE = 10;
     static constexpr int BASE_GHOST_SCORE = 50;
