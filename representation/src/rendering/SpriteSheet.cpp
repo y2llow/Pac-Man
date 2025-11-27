@@ -40,7 +40,7 @@ void SpriteSheet::defineAllSprites() {
     defineSpriteRect("pacman_down_open", sf::IntRect(852, 255, 33, 33));
 
     // LEFT direction
-    defineSpriteRect("pacman_left_closed", sf::IntRect(853, 5, 33, 33));
+    defineSpriteRect("pacman_left_closed", sf::IntRect(853, 305, 33, 33));
     defineSpriteRect("pacman_left_half", sf::IntRect(853, 355, 33, 33));
     defineSpriteRect("pacman_left_open", sf::IntRect(853, 405, 33, 33));
 
