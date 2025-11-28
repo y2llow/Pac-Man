@@ -19,8 +19,6 @@ add_library(PacMan-representation STATIC
         src/states/LevelState.cpp
         include/states/PausedState.h
         src/states/PausedState.cpp
-        include/states/VictoryState.h
-        src/states/VictoryState.cpp
         include/states/GameOverState.h
         src/states/GameOverState.cpp
 
