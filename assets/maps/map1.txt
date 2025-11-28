@@ -2,8 +2,8 @@
 xxxxxxxxxxxxxxxxxxxx
 x....x........x....x
 x.xx.x.xxxxxx.x.xxfx
-x.x..............x.x
-x.x.xx.xxddxx.xx.x.x
+x.x.......S......x.x
+x.x.xx.xxxdxx.xx.x.x
 x......xrbopx......x
 x.x.xx.xxxxxx.xx.x.x
 x.x..............x.x

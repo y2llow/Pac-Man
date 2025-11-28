@@ -1,9 +1,11 @@
 xxxxxxxxxxxxxxxxxxxx
 x                  x
 x                  x
-x                  x
-x                  x
-x       .          x
-x                  x
-x        P   r     x
+x                o x
+xp                 x
+x       fS          x
+x                 x
+x b           r    x
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxPxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx

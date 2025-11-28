@@ -5,14 +5,14 @@ x........x........x
 xfxx.xxx.x.xxx.xxfx
 x.................x
 x.xx.x.xxxxx.x.xx.x
-x....x...x...x....x
-xxxx.xxx.x.xxx.xxxx
-###x.x...r...x.x###
-xxxx.x.xxdxx.x.xxxx
-.......xbpox.......
-xxxx.x.xxxxx.x.xxxx
-###x.x.......x.x###
-xxxx.x.xxxxx.x.xxxx
+x....x.......x....x
+xxx.xxx.xxx.xxx.xxx
+##x.x....S....x.x##
+xxx.x.xxxdxxx.x.xxx
+......xbp rox......
+xxx.x.xxxxxxx.x.xxx
+##x.x.........x.x##
+xxx.x.xxxxxxx.x.xxx
 x........x........x
 x.xx.xxx.x.xxx.xx.x
 x..x.....P.....x..x
