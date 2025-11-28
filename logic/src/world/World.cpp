@@ -460,8 +460,6 @@ bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& 
             }
         }
     }
-
-
     return false;
 }
 void World::handleCollectibleCollisions() {
