@@ -460,7 +460,6 @@ void World::advanceToNextLevel() {
 
     // Make ghosts harder each level
     for (auto ghost: m_ghosts) {
-        ghost->SetScaredSpeed(0.5f * LEVEL);
         ghost->SetSpeed(0.25f * LEVEL);
         ghost->SetScaredTimerInc(LEVEL);
     }

@@ -45,14 +45,11 @@ void GhostModel::respawn() {
 void GhostModel::updateMovement(float deltaTime) {
     if (!m_canMove) return;
 
-    // Move in the chosen direction
-    float currentSpeed = m_scared ? m_scaredSpeed : m_speed;
-
     switch (m_direction) {
-        case 0: m_position.x -= currentSpeed * deltaTime; break; // left
-        case 1: m_position.y += currentSpeed * deltaTime; break; // down
-        case 2: m_position.x += currentSpeed * deltaTime; break; // right
-        case 3: m_position.y -= currentSpeed * deltaTime; break; // up
+        case 0: m_position.x -= m_speed * deltaTime; break; // left
+        case 1: m_position.y += m_speed * deltaTime; break; // down
+        case 2: m_position.x += m_speed * deltaTime; break; // right
+        case 3: m_position.y -= m_speed * deltaTime; break; // up
     }
 }
 
