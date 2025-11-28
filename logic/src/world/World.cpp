@@ -14,7 +14,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
     }
 }
