@@ -84,6 +84,11 @@ Vector2f GhostModel::checkTunneling(Vector2f position) const {
     return position;
 }
 
+//todo specific ai movement
+void GhostModel::GhostAIMovement() {
+
+}
+
 // Red Ghost Implementation - One of the ghosts, when in chasing mode, should always be locked to moving in a
 // fixed direction (either always up, down, right or left). If a ghost reaches a corner or
 // intersection it will reconsider which direction it will be locked to. In particular, with
@@ -97,6 +102,10 @@ void RedGhostModel::updateMovement(float deltaTime) {
 
 }
 
+void RedGhostModel::GhostAIMovement() {
+
+}
+
 
 
 // Blue Ghost Implementation - Moves right
@@ -107,6 +116,9 @@ void BlueGhostModel::updateMovement(float deltaTime) {
     }
     GhostModel::updateMovement(deltaTime);
 }
+void BlueGhostModel::GhostAIMovement() {
+
+}
 
 // Orange Ghost Implementation - Moves down
 void OrangeGhostModel::updateMovement(float deltaTime) {
@@ -116,6 +128,9 @@ void OrangeGhostModel::updateMovement(float deltaTime) {
     }
     GhostModel::updateMovement(deltaTime);
 }
+void OrangeGhostModel::GhostAIMovement() {
+
+}
 
 // Pink Ghost Implementation - Moves up
 void PinkGhostModel::updateMovement(float deltaTime) {
@@ -124,6 +139,10 @@ void PinkGhostModel::updateMovement(float deltaTime) {
         SetMovingToStart(true);
     }
     GhostModel::updateMovement(deltaTime);
+}
+
+void PinkGhostModel::GhostAIMovement() {
+
 }
 
 void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {

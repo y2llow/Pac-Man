@@ -138,8 +138,10 @@ void World::update(float deltaTime) {
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
 
-            }else {
+            }else if (!ghost->GetOutsideStart()) {
                 handlePredictiveGhostMovement(ghost,deltaTime);
+            }else {
+                ghost->GhostAIMovement();
             }
                 // handleGhostMovement(ghost, deltaTime);
             // }else {

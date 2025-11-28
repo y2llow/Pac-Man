@@ -52,6 +52,9 @@ public:
     void SetMovingToStart(bool m_moving_to_start) {m_MovingToStart = m_moving_to_start;}
     [[nodiscard]]bool GetMovingToStart() const {return m_MovingToStart;}
     virtual void resetMovingToStartTimer(float TimeWaiting) ;
+
+    virtual void GhostAIMovement();
+
 protected:
     Vector2f m_position;
     std::string m_textureId;
@@ -76,6 +79,8 @@ public:
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+
 
 private:
     float m_MovingToStartTimer = 0;
@@ -89,6 +94,8 @@ public:
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+
 
 private:
     float m_MovingToStartTimer = 0;
@@ -101,6 +108,8 @@ public:
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+
 
 private:
     float m_MovingToStartTimer = 5;
@@ -113,6 +122,8 @@ public:
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+
 
 private:
     float m_MovingToStartTimer = 10;
