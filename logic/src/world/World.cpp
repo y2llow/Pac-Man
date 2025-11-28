@@ -451,8 +451,8 @@ bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& 
             return true;
         }
     }
-//todo add this back togheter with a timer for different ghosts
-    // Check collision with all doors - also works!
+
+    // Check collision with all doors - if they are not escaping the house
     if (!ghost.GetMovingToStart()) {
         for (const auto& door : m_doors) {
             if (checkCollision(tempghost, *door)) {
