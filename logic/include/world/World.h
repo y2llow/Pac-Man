@@ -80,7 +80,7 @@ private:
     Vector2f m_startPosition;
 
     float PACMAN_SIZE = 0.99f;
-    float GHOST_SIZE = 0.97f;
+    float GHOST_SIZE = 0.90f;
     float COIN_SIZE = 0.15f;
     float FRUIT_SIZE = 0.65f;
 

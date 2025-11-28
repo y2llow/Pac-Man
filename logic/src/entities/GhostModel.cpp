@@ -81,24 +81,40 @@ Vector2f GhostModel::checkTunneling(Vector2f position) const {
 // intersection it will reconsider which direction it will be locked to. In particular, with
 // probability p = 0.5, the ghost will lock to a random direction (that is viable).
 void RedGhostModel::updateMovement(float deltaTime) {
-    // MoveToStartPosition();
+    m_MovingToStartTimer -= deltaTime;
+       if (m_MovingToStartTimer <= 0) {
+           SetMovingToStart(true);
+       }
     GhostModel::updateMovement(deltaTime);
+
 }
 
 
 
 // Blue Ghost Implementation - Moves right
 void BlueGhostModel::updateMovement(float deltaTime) {
+    m_MovingToStartTimer -= deltaTime;
+    if (m_MovingToStartTimer <= 0) {
+        SetMovingToStart(true);
+    }
     GhostModel::updateMovement(deltaTime);
 }
 
 // Orange Ghost Implementation - Moves down
 void OrangeGhostModel::updateMovement(float deltaTime) {
+    m_MovingToStartTimer -= deltaTime;
+    if (m_MovingToStartTimer <= 0) {
+        SetMovingToStart(true);
+    }
     GhostModel::updateMovement(deltaTime);
 }
 
 // Pink Ghost Implementation - Moves up
 void PinkGhostModel::updateMovement(float deltaTime) {
+    m_MovingToStartTimer -= deltaTime;
+    if (m_MovingToStartTimer <= 0) {
+        SetMovingToStart(true);
+    }
     GhostModel::updateMovement(deltaTime);
 }
 
@@ -118,6 +134,7 @@ void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {
     }
     if (std::abs(GhostPosition.x - startposition.x) < m_speed * deltaTime && std::abs(GhostPosition.y - startposition.y) < m_speed * deltaTime) {
         SetOutsideStart(true);
+        SetMovingToStart(false);
     }
 }
 

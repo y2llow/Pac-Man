@@ -15,7 +15,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -450,12 +450,15 @@ bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& 
         }
     }
 //todo add this back togheter with a timer for different ghosts
-    // // Check collision with all doors - also works!
-    // for (const auto& door : m_doors) {
-    //     if (checkCollision(tempghost, *door)) {
-    //         return true;
-    //     }
-    // }
+    // Check collision with all doors - also works!
+    if (!ghost.GetMovingToStart()) {
+        for (const auto& door : m_doors) {
+            if (checkCollision(tempghost, *door)) {
+                return true;
+            }
+        }
+    }
+
 
     return false;
 }
