@@ -137,10 +137,11 @@ void World::update(float deltaTime) {
             // If ghost is outside starting house
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
-
-            }else if (!ghost->GetOutsideStart()) {
+            } //if ghost is inside the house but noot going to the start
+            else if (!ghost->GetOutsideStart()) {
                 handlePredictiveGhostMovement(ghost,deltaTime);
-            }else {
+            } // specific movement for all the ghosts
+            else {
                 ghost->GhostAIMovement();
                 handlePredictiveGhostMovement(ghost,deltaTime);
 
@@ -562,7 +563,6 @@ void World::handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float 
 
 }
 //todo add prediction for ghosts check in how many ways the ghost can do a correct movement if that way is more than 2 (right and left) trigger random choosing and repeat
-
 
 void World::advanceToNextLevel() {
     // Increment level
