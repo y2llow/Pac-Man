@@ -51,7 +51,7 @@ public:
     void SetOutsideStart(bool m_outside_start) {m_outsideStart = m_outside_start;}
     void SetMovingToStart(bool m_moving_to_start) {m_MovingToStart = m_moving_to_start;}
     [[nodiscard]]bool GetMovingToStart() const {return m_MovingToStart;}
-
+    virtual void resetMovingToStartTimer(float TimeWaiting) ;
 protected:
     Vector2f m_position;
     std::string m_textureId;
@@ -75,6 +75,8 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 0; } // Left
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+
 private:
     float m_MovingToStartTimer = 0;
 
@@ -86,6 +88,8 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 2; } // Right
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+
 private:
     float m_MovingToStartTimer = 0;
 };
@@ -96,6 +100,8 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 1; } // Down
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+
 private:
     float m_MovingToStartTimer = 5;
 };
@@ -106,6 +112,8 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 3; } // Up
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+
 private:
     float m_MovingToStartTimer = 10;
 };

@@ -43,7 +43,15 @@ void GhostModel::respawn() {
     m_scared = false;
     m_scaredTimer = 0.0f;
     m_canMove = true;
+    m_outsideStart = false;
+    m_MovingToStart = false;
+    resetMovingToStartTimer(3);
 }
+void GhostModel::resetMovingToStartTimer(float TimeWaiting) {}
+void RedGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
+void BlueGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
+void OrangeGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
+void PinkGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
 
 void GhostModel::updateMovement(float deltaTime) {
     if (!m_canMove) return;

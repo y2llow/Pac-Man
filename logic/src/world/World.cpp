@@ -137,13 +137,15 @@ void World::update(float deltaTime) {
             // If ghost is outside starting house
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
+
+            }else {
+                handlePredictiveGhostMovement(ghost,deltaTime);
             }
                 // handleGhostMovement(ghost, deltaTime);
             // }else {
             //     ghost->MoveToStartPosition(m_startPosition, deltaTime);
             // }
             //todo before update check first if there is a wall inront of the ghosts or in the movement they want to go
-            handlePredictiveGhostMovement(ghost,deltaTime);
 
             ghost->updateMovement(deltaTime);
             ghost->update(deltaTime);
