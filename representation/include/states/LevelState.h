@@ -6,7 +6,6 @@
 #include "factory/ConcreteFactory.h"
 #include "world/World.h"
 
-#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics.hpp>
 
 class LevelState : public State {
@@ -40,6 +39,14 @@ private:
     static constexpr float GAME_OVER_DISPLAY_TIME = 3.0f;
     sf::Text m_gameOverText;
     sf::RectangleShape m_gameOverOverlay;
+
+    // Level Complete overlay
+    bool m_isLevelComplete = false;
+    float m_levelCompleteTimer = 0.0f;
+    static constexpr float LEVEL_COMPLETE_DISPLAY_TIME = 2.0f;
+    sf::Text m_levelCompleteText;
+    sf::RectangleShape m_levelCompleteOverlay;
+    int m_completedLevel = 1;
 };
 
 #endif

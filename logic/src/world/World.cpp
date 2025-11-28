@@ -102,8 +102,6 @@ void World::createEntitiesFromMap() {
     std::cout << "World: Created " << m_walls.size() << " walls and " << m_coins.size() << " coins" << std::endl;
 }
 
-
-// Update your World::update method
 void World::update(float deltaTime) {
     // Update score over time (decreases score)
     m_score->updateScoreOverTime(deltaTime);
@@ -124,11 +122,12 @@ void World::update(float deltaTime) {
         // DERDE: Collectible collisions (na movement)
         handleCollectibleCollisions();
 
-        // Check for level completion
+        // Check for level completion - maar DON'T call advanceToNextLevel hier!
+        // Dat wordt nu gedaan vanuit LevelState na de overlay
         if (areAllCoinsCollected()) {
             m_score->onLevelCleared();
-            advanceToNextLevel();
-
+            // VERWIJDERD: advanceToNextLevel();
+            // Dit wordt nu vanuit LevelState gedaan
         }
     } else {
         // Only update Pac-Man during death animation (for animation timing)
@@ -148,8 +147,8 @@ void World::update(float deltaTime) {
 
     // VIERDE: Cleanup
     cleanupCollectedItems();
-
 }
+
 
 void World::handlePredictiveMovement(float deltaTime) {
     // 1. Update input buffer
@@ -438,22 +437,34 @@ void World::advanceToNextLevel() {
     m_coins.clear();
     m_fruits.clear();
     m_ghosts.clear();
-    m_pacman.reset();
+
+    // Reset Pacman position to spawn
+    if (m_pacman) {
+        m_pacman->setPosition(m_pacman->getSpawnPoint());
+    }
 
     // Clear all views EXCEPT PacmanView using polymorphism
-    // No cast needed - just call through the abstract interface!
     m_factory->clearNonPacmanViews();
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
-        createEntitiesFromMap();
-    }
-    for (auto ghost: m_ghosts) {
-        ghost->SetScaredSpeed(0.5f * LEVEL);
-        ghost->SetSpeed(0.3 * LEVEL);
-        ghost->SetScaredTimerInc(LEVEL);
+
+    // Load the appropriate map based on level
+    std::string mapFile = "assets/maps/map1.txt";
+    if (LEVEL == 2) {
+        mapFile = "assets/maps/map2.txt";
+    } else if (LEVEL == 3) {
+        mapFile = "assets/maps/map3.txt";
     }
 
+    if (m_mapModel.loadFromFile(mapFile)) {
+        createEntitiesFromMap();
+    }
+
+    // Make ghosts harder each level
+    for (auto ghost: m_ghosts) {
+        ghost->SetScaredSpeed(0.5f * LEVEL);
+        ghost->SetSpeed(0.25f * LEVEL);
+        ghost->SetScaredTimerInc(LEVEL);
+    }
 
     // Reset score chain for new level
     m_score->resetCoinChain();
 }
-

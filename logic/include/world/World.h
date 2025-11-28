@@ -38,6 +38,8 @@ public:
     void handleCollectibleCollisions();
     [[nodiscard]] bool areAllCoinsCollected() const { return m_coins.empty() && m_fruits.empty(); }
     void advanceToNextLevel();
+    [[nodiscard]] int getCurrentLevel() const { return LEVEL; } // NIEUW
+
 
     // Add getters for LevelState to access entities for rendering
     [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }

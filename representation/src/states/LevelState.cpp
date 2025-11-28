@@ -42,13 +42,22 @@ void LevelState::initialize() {
         m_livesText.setFillColor(sf::Color::Yellow);
         m_livesText.setStyle(sf::Text::Bold);
 
+        // Game Over text
         m_gameOverText.setFont(m_font);
         m_gameOverText.setString("GAME OVER");
         m_gameOverText.setFillColor(sf::Color::Red);
         m_gameOverText.setStyle(sf::Text::Bold);
 
-        // Setup overlay
+        // Setup game over overlay
         m_gameOverOverlay.setFillColor(sf::Color(0, 0, 0, 180));
+
+        // NIEUW: Level Complete text
+        m_levelCompleteText.setFont(m_font);
+        m_levelCompleteText.setFillColor(sf::Color::Yellow);
+        m_levelCompleteText.setStyle(sf::Text::Bold);
+
+        // Setup level complete overlay
+        m_levelCompleteOverlay.setFillColor(sf::Color(255, 255, 0, 120)); // Geel, semi-transparant
     }
 
     updateLayout();
@@ -75,7 +84,6 @@ void LevelState::updateLayout() {
     }
 
     // Scale text based on window size
-    // Character size scales with window height (e.g., 7% of window height)
     unsigned int scaledCharSize = static_cast<unsigned int>(windowSize.y * 0.07f);
     m_scoreText.setCharacterSize(scaledCharSize);
     m_livesText.setCharacterSize(scaledCharSize);
@@ -88,24 +96,69 @@ void LevelState::updateLayout() {
     m_livesText.setString("Lives: " + std::to_string(currentLives));
 
     // Position score text at top-left with padding
-    float padding = windowSize.x * 0.005f; // 2% padding
+    float padding = windowSize.x * 0.005f;
     m_scoreText.setPosition(padding, padding);
 
     // Position lives text at top-right with padding
     sf::FloatRect livesBounds = m_livesText.getLocalBounds();
     m_livesText.setPosition(windowSize.x - livesBounds.width - padding, 0);
 
+    // Game Over text - SCALABLE based on window size
+    // Start with height-based size
     unsigned int gameOverCharSize = static_cast<unsigned int>(windowSize.y * 0.12f);
     m_gameOverText.setCharacterSize(gameOverCharSize);
 
+    // Check if text is too wide for the window
     sf::FloatRect gameOverBounds = m_gameOverText.getLocalBounds();
+    float maxWidthGameOver = windowSize.x * 0.9f; // Use 90% of window width
+
+    // If text is too wide, scale it down to fit
+    if (gameOverBounds.width > maxWidthGameOver) {
+        float scaleFactor = maxWidthGameOver / gameOverBounds.width;
+        gameOverCharSize = static_cast<unsigned int>(gameOverCharSize * scaleFactor);
+        m_gameOverText.setCharacterSize(gameOverCharSize);
+
+        // Recalculate bounds after resize
+        gameOverBounds = m_gameOverText.getLocalBounds();
+    }
+
+    // Center the text
     m_gameOverText.setOrigin(gameOverBounds.width / 2, gameOverBounds.height / 2);
     m_gameOverText.setPosition(windowSize.x / 2, windowSize.y / 2);
 
-    // Setup overlay size
     m_gameOverOverlay.setSize(sf::Vector2f(windowSize.x, windowSize.y));
+
+    // Level Complete text - SCALABLE based on window size
+    // Start with height-based size
+    unsigned int levelCompleteCharSize = static_cast<unsigned int>(windowSize.y * 0.12f);
+    m_levelCompleteText.setCharacterSize(levelCompleteCharSize);
+
+    // Update the string to ensure bounds are correct
+    if (m_isLevelComplete) {
+        m_levelCompleteText.setString("LEVEL " + std::to_string(m_completedLevel) + " COMPLETE!");
+    }
+
+    // Check if text is too wide for the window
+    sf::FloatRect levelCompleteBounds = m_levelCompleteText.getLocalBounds();
+    float maxWidth = windowSize.x * 0.9f; // Use 90% of window width
+
+    // If text is too wide, scale it down to fit
+    if (levelCompleteBounds.width > maxWidth) {
+        float scaleFactor = maxWidth / levelCompleteBounds.width;
+        levelCompleteCharSize = static_cast<unsigned int>(levelCompleteCharSize * scaleFactor);
+        m_levelCompleteText.setCharacterSize(levelCompleteCharSize);
+
+        // Recalculate bounds after resize
+        levelCompleteBounds = m_levelCompleteText.getLocalBounds();
+    }
+
+    // Center the text
+    m_levelCompleteText.setOrigin(levelCompleteBounds.width / 2, levelCompleteBounds.height / 2);
+    m_levelCompleteText.setPosition(windowSize.x / 2, windowSize.y / 2);
+
+    m_levelCompleteOverlay.setSize(sf::Vector2f(windowSize.x, windowSize.y));
 }
-//TODO make functions of these long
+
 void LevelState::update(float deltaTime) {
     // Check for game over first
     if (m_world && m_world->getPacman()->getLives() <= 0 && !m_isGameOver) {
@@ -141,11 +194,43 @@ void LevelState::update(float deltaTime) {
         return;
     }
 
-    // Normal game updates (only when not game over)
+    // NIEUW: Handle level complete timer
+    if (m_isLevelComplete) {
+        m_levelCompleteTimer += deltaTime;
+
+        if (m_levelCompleteTimer >= LEVEL_COMPLETE_DISPLAY_TIME) {
+            // Time's up - advance to next level
+            m_isLevelComplete = false;
+            m_levelCompleteTimer = 0.0f;
+
+            if (m_world) {
+                m_world->advanceToNextLevel();
+                m_completedLevel = m_world->getCurrentLevel();
+            }
+        }
+
+        // Don't update game logic during level complete screen
+        return;
+    }
+
+    // Normal game updates (only when not game over or level complete)
     handleInput();
 
     if (m_world) {
         m_world->update(deltaTime);
+
+        // Check if level was just completed
+        if (m_world->areAllCoinsCollected() && !m_isLevelComplete) {
+            m_isLevelComplete = true;
+            m_levelCompleteTimer = 0.0f;
+            m_completedLevel = m_world->getCurrentLevel();
+
+            // Update text with current level
+            m_levelCompleteText.setString("LEVEL " + std::to_string(m_completedLevel) + " COMPLETE!");
+
+            // Force a complete layout update to recalculate everything
+            updateLayout();
+        }
     }
 
     if (m_factory) {
@@ -185,6 +270,12 @@ void LevelState::render() {
     // Draw UI text
     m_window.draw(m_scoreText);
     m_window.draw(m_livesText);
+
+    // Draw Level Complete overlay if needed
+    if (m_isLevelComplete) {
+        m_window.draw(m_levelCompleteOverlay);
+        m_window.draw(m_levelCompleteText);
+    }
 
     // Draw Game Over overlay if needed
     if (m_isGameOver) {
@@ -230,7 +321,10 @@ void LevelState::handleEvent(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         switch (event.key.code) {
         case sf::Keyboard::Escape:
-            m_stateManager.pushState(std::make_unique<PausedState>(m_stateManager, m_window, m_camera));
+            // Don't allow pause during level complete or game over
+            if (!m_isLevelComplete && !m_isGameOver) {
+                m_stateManager.pushState(std::make_unique<PausedState>(m_stateManager, m_window, m_camera));
+            }
             break;
         default:
             break;
