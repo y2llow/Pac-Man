@@ -38,6 +38,10 @@ public:
     void handlePacmanFruitCollision(FruitModel& fruit);
     void cleanupCollectedItems();
 
+    // Ghost movement
+    void handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+
+
     // Nieuwe predictive collision methodes
     [[nodiscard]] bool wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
     void handlePredictiveMovement(float deltaTime);
@@ -71,6 +75,7 @@ private:
     std::shared_ptr<PacmanModel> m_pacman;
 
     Vector2f m_gridSize;
+    Vector2f m_startPosition;
 
     float PACMAN_SIZE = 0.99f;
     float GHOST_SIZE = 0.99f;

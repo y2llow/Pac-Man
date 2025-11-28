@@ -15,7 +15,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -48,6 +48,15 @@ void World::createEntitiesFromMap() {
                     Vector2f(tileWidth * COIN_SIZE, tileHeight * COIN_SIZE),
                     "Coin"
                 );
+                m_coins.push_back(coin);
+            }
+            else if (grid[y][x] == 'S') {
+                auto coin = m_factory->createCoin(
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth * COIN_SIZE, tileHeight * COIN_SIZE),
+                    "Coin"
+                );
+                m_startPosition = Vector2f(posX, posY);
                 m_coins.push_back(coin);
             }
             else if (grid[y][x] == 'P') {
@@ -123,7 +132,17 @@ void World::update(float deltaTime) {
         // EERST: Predictive movement voor Pacman
         handlePredictiveMovement(deltaTime);
 
+//todo
         for (auto& ghost : m_ghosts) {
+            // If ghost is outside starting house
+            if (!ghost->GetOutsideStart()) {
+                ghost->MoveToStartPosition(m_startPosition, deltaTime);
+            }
+                // handleGhostMovement(ghost, deltaTime);
+            // }else {
+            //     ghost->MoveToStartPosition(m_startPosition, deltaTime);
+            // }
+            //todo before update check first if there is a wall inront of the ghosts or in the movement they want to go
             ghost->updateMovement(deltaTime);
             ghost->update(deltaTime);
         }
@@ -370,34 +389,6 @@ void World::handleCollectibleCollisions() {
     }
 }
 
-
-//
-// bool World::checkCollision(const PacmanModel& pacman, const EntityModel& entity2) {
-//     // Get bounds for pacman (assuming center-based coordinates)
-//     float pacman_left = pacman.getPosition().x - (pacman.getSize().x / 2);
-//     float pacman_right = pacman.getPosition().x + (pacman.getSize().x / 2);
-//     float pacman_bottom = pacman.getPosition().y - (pacman.getSize().y / 2);
-//     float pacman_top = pacman.getPosition().y + (pacman.getSize().y / 2);
-//
-//     // Get bounds for entity2
-//     float e2_left = entity2.getPosition().x - (entity2.getSize().x / 2);
-//     float e2_right = entity2.getPosition().x + (entity2.getSize().x / 2);
-//     float e2_bottom = entity2.getPosition().y - (entity2.getSize().y / 2);
-//     float e2_top = entity2.getPosition().y + (entity2.getSize().y / 2);
-//
-//     // Correct AABB collision detection
-//     if (pacman_right > e2_left &&
-//         pacman_left < e2_right &&
-//         pacman_top > e2_bottom &&
-//         pacman_bottom < e2_top) {
-//         return true;  // Collision detected
-//     }
-//
-//     return false;  // No collision
-// }
-
-
-
 void World::handlePacmanCoinCollision(CoinModel& coin) {
     m_score->onCoinCollected();
     coin.collect();
@@ -445,6 +436,27 @@ void World::cleanupCollectedItems() {
             return fruit->isCollected();
         }), m_fruits.end());
 }
+
+
+
+//todo add funciton so ghosts go to start position and than toggel their own following path
+void World::handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime){
+    // if (ghost.isRed) {
+    //     redghostmovement();
+    // }
+    // if (ghost.isBlue) {
+    //     Blueghostmovement();
+    // }
+    // if (ghost.isOrange) {
+    //     Orangeghostmovement();
+    // }
+    // if (ghost.isPink) {
+    //     Pinkghostmovement();
+    // }
+
+}
+//todo add prediction for ghosts check in how many ways the ghost can do a correct movement if that way is more than 2 (right and left) trigger random choosing and repeat
+
 
 void World::advanceToNextLevel() {
     // Increment level

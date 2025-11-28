@@ -63,7 +63,7 @@ void GhostModel::reverseDirection() {
     }
 }
 
-Vector2f GhostModel::checkTunneling(Vector2f position) {
+Vector2f GhostModel::checkTunneling(Vector2f position) const {
     float edge = 1.0f + m_size.x / 2.0f;
     if (position.x < -edge) {
         position.x = edge;
@@ -73,10 +73,16 @@ Vector2f GhostModel::checkTunneling(Vector2f position) {
     return position;
 }
 
-// Red Ghost Implementation - Moves left
+// Red Ghost Implementation - One of the ghosts, when in chasing mode, should always be locked to moving in a
+// fixed direction (either always up, down, right or left). If a ghost reaches a corner or
+// intersection it will reconsider which direction it will be locked to. In particular, with
+// probability p = 0.5, the ghost will lock to a random direction (that is viable).
 void RedGhostModel::updateMovement(float deltaTime) {
+    // MoveToStartPosition();
     GhostModel::updateMovement(deltaTime);
 }
+
+
 
 // Blue Ghost Implementation - Moves right
 void BlueGhostModel::updateMovement(float deltaTime) {
@@ -91,6 +97,47 @@ void OrangeGhostModel::updateMovement(float deltaTime) {
 // Pink Ghost Implementation - Moves up
 void PinkGhostModel::updateMovement(float deltaTime) {
     GhostModel::updateMovement(deltaTime);
+}
+
+void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {
+    Vector2f GhostPosition = this->getPosition();
+    if (GhostPosition.x < startposition.x) {
+        m_direction = 2;
+    }
+    if (GhostPosition.x > startposition.x) {
+        m_direction = 0;
+    }
+    if (std::abs(GhostPosition.x - startposition.x) < m_speed * deltaTime && GhostPosition.y < startposition.y ) {
+        m_direction = 1;
+    }
+    if (std::abs(GhostPosition.x - startposition.x) < m_speed * deltaTime && GhostPosition.y > startposition.y ) {
+        m_direction = 3;
+    }
+    if (std::abs(GhostPosition.x - startposition.x) < m_speed * deltaTime && std::abs(GhostPosition.y - startposition.y) < m_speed * deltaTime) {
+        SetOutsideStart(true);
+    }
+    if (!m_canMove) return;
+
+    switch (m_direction) {
+    case 0: m_position.x -= m_speed * deltaTime; break; // left
+    case 1: m_position.y += m_speed * deltaTime; break; // down
+    case 2: m_position.x += m_speed * deltaTime; break; // right
+    case 3: m_position.y -= m_speed * deltaTime; break; // up
+    }
+}
+
+Vector2f GhostModel::calculateNextPosition(float deltaTime) const {
+    Vector2f newPosition = m_position;
+    float moveAmount = m_speed * deltaTime;
+
+    switch (m_direction) {
+    case 0: newPosition.x -= moveAmount; break; // Left
+    case 1: newPosition.y += moveAmount; break; // Down
+    case 2: newPosition.x += moveAmount; break; // Right
+    case 3: newPosition.y -= moveAmount; break; // Up
+    }
+
+    return checkTunneling(newPosition);
 }
 
 // #include "entities/GhostModel.h"

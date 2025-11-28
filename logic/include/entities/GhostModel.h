@@ -1,6 +1,5 @@
 #ifndef GHOST_H
 #define GHOST_H
-
 #include "EntityModel.h"
 #include <memory>
 
@@ -20,13 +19,19 @@ public:
     [[nodiscard]] Vector2f getSize() const override { return m_size; }
     [[nodiscard]] int getDirection() const { return m_direction; }
 
+
+
     // Ghost specific functions
-    Vector2f checkTunneling(Vector2f position);
+    Vector2f checkTunneling(Vector2f position) const;
     [[nodiscard]] bool isScared() const { return m_scared; }
     void setScared(bool scared);
     void setScaredTimer(float time) { m_scaredTimer = time; m_scared = true; }
     void respawn();
     [[nodiscard]] float getScaredTimer() const { return m_scaredTimer; }
+
+    // ai movement
+    void MoveToStartPosition(Vector2f startposition , float deltaTime );
+    Vector2f calculateNextPosition(float deltaTime) const;
 
     // Simple movement
     virtual void updateMovement(float deltaTime);
@@ -38,18 +43,23 @@ public:
     void SetSpeed(float _m_speed) { m_speed = _m_speed;}
     void SetScaredTimerInc(float m_scared_timerInc) {m_scaredTimerInc = m_scared_timerInc;}
 
+    [[nodiscard]]bool GetOutsideStart() const {return m_outsideStart;}
+    void SetOutsideStart(bool m_outside_start) {m_outsideStart = m_outside_start;}
+
 protected:
     Vector2f m_position;
     std::string m_textureId;
     Vector2f m_size;
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
     // Ghost specific
-    float m_speed = 0.3f ;
+    float m_speed = 0.2f ;
     int m_scaredTimerInc = 0;
     float m_scaredTimer = 0.0f;
     Vector2f m_spawnPoint;
     bool m_scared = false;
     bool m_canMove = true;
+
+    bool m_outsideStart = false;
 };
 
 class RedGhostModel : public GhostModel {
