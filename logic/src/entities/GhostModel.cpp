@@ -1,4 +1,7 @@
 #include "entities/GhostModel.h"
+
+#include "world/World.h"
+
 #include <utility>
 
 GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::string textureId)
@@ -116,14 +119,6 @@ void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {
     if (std::abs(GhostPosition.x - startposition.x) < m_speed * deltaTime && std::abs(GhostPosition.y - startposition.y) < m_speed * deltaTime) {
         SetOutsideStart(true);
     }
-    if (!m_canMove) return;
-
-    switch (m_direction) {
-    case 0: m_position.x -= m_speed * deltaTime; break; // left
-    case 1: m_position.y += m_speed * deltaTime; break; // down
-    case 2: m_position.x += m_speed * deltaTime; break; // right
-    case 3: m_position.y -= m_speed * deltaTime; break; // up
-    }
 }
 
 Vector2f GhostModel::calculateNextPosition(float deltaTime) const {
@@ -139,6 +134,27 @@ Vector2f GhostModel::calculateNextPosition(float deltaTime) const {
 
     return checkTunneling(newPosition);
 }
+
+bool GhostModel::canMoveInDirection(int direction, const World& world, float deltaTime) const {
+    Vector2f testPosition = calculateNextPositionInDirection(m_position, direction, deltaTime); // 60fps
+    return !world.GhostWouldCollideWithWalls(*this, testPosition);
+}
+
+Vector2f GhostModel::calculateNextPositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const {
+        Vector2f newPosition = startPos;
+        float moveAmount = m_speed * deltaTime;
+
+        switch (direction) {
+        case 0: newPosition.x -= moveAmount; break; // Left
+        case 1: newPosition.y += moveAmount; break; // Down
+        case 2: newPosition.x += moveAmount; break; // Right
+        case 3: newPosition.y -= moveAmount; break; // Up
+        }
+
+        return checkTunneling(newPosition);
+}
+
+
 
 // #include "entities/GhostModel.h"
 // #include "entities/PacmanModel.h"

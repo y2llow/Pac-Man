@@ -18,6 +18,7 @@ public:
     void setPosition(const Vector2f& position) override;
     [[nodiscard]] Vector2f getSize() const override { return m_size; }
     [[nodiscard]] int getDirection() const { return m_direction; }
+    int SetDirection( int direction )  { return m_direction = direction; }
 
 
 
@@ -32,6 +33,9 @@ public:
     // ai movement
     void MoveToStartPosition(Vector2f startposition , float deltaTime );
     Vector2f calculateNextPosition(float deltaTime) const;
+    Vector2f calculateNextPositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
+    bool canMoveInDirection(int direction, const World& world, float deltaTime) const ;
+
 
     // Simple movement
     virtual void updateMovement(float deltaTime);

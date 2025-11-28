@@ -38,7 +38,7 @@ public:
     [[nodiscard]] int getBufferedDirection() const { return m_bufferedDirection; }
 
     // Nieuwe methodes voor movement logic
-    [[nodiscard]] bool canMoveInDirection(int direction, const World& world) const;
+    [[nodiscard]] bool canMoveInDirection(int direction, const World& world, float deltaTime) const;
     [[nodiscard]] Vector2f calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
     [[nodiscard]] float getSpeed() const { return PACMAN_SPEED; }
 

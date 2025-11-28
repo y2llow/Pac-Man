@@ -40,11 +40,13 @@ public:
 
     // Ghost movement
     void handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+    [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& pacman, const Vector2f& newPosition) const ;
+    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime);
 
 
     // Nieuwe predictive collision methodes
-    [[nodiscard]] bool wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
-    void handlePredictiveMovement(float deltaTime);
+    [[nodiscard]] bool PacmanWouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
+    void handlePredictivePacmanMovement(float deltaTime);
     void handleCollectibleCollisions();
     [[nodiscard]] bool areAllCoinsCollected() const { return m_coins.empty() && m_fruits.empty(); }
     void advanceToNextLevel();
@@ -78,7 +80,7 @@ private:
     Vector2f m_startPosition;
 
     float PACMAN_SIZE = 0.99f;
-    float GHOST_SIZE = 0.99f;
+    float GHOST_SIZE = 0.97f;
     float COIN_SIZE = 0.15f;
     float FRUIT_SIZE = 0.65f;
 

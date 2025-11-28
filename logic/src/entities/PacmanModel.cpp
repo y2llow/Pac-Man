@@ -89,9 +89,9 @@ void PacmanModel::clearBufferedDirection() {
     m_bufferedDirection = -1;
 }
 
-bool PacmanModel::canMoveInDirection(int direction, const World& world) const {
-    Vector2f testPosition = calculatePositionInDirection(m_position, direction, 0.016f); // 60fps
-    return !world.wouldCollideWithWalls(*this, testPosition);
+bool PacmanModel::canMoveInDirection(int direction, const World& world, float deltaTime) const {
+    Vector2f testPosition = calculatePositionInDirection(m_position, direction, deltaTime);
+    return !world.PacmanWouldCollideWithWalls(*this, testPosition);
 }
 
 Vector2f PacmanModel::calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const {

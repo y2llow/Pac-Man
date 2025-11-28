@@ -130,7 +130,7 @@ void World::update(float deltaTime) {
     // If Pac-Man is dying, skip normal movement updates
     if (!m_pacman->isDying()) {
         // EERST: Predictive movement voor Pacman
-        handlePredictiveMovement(deltaTime);
+        handlePredictivePacmanMovement(deltaTime);
 
 //todo
         for (auto& ghost : m_ghosts) {
@@ -143,6 +143,8 @@ void World::update(float deltaTime) {
             //     ghost->MoveToStartPosition(m_startPosition, deltaTime);
             // }
             //todo before update check first if there is a wall inront of the ghosts or in the movement they want to go
+            handlePredictiveGhostMovement(ghost,deltaTime);
+
             ghost->updateMovement(deltaTime);
             ghost->update(deltaTime);
         }
@@ -178,7 +180,7 @@ void World::update(float deltaTime) {
 }
 
 
-void World::handlePredictiveMovement(float deltaTime) {
+void World::handlePredictivePacmanMovement(float deltaTime) {
     // 1. Update input buffer
     m_pacman->update(deltaTime);
 
@@ -189,7 +191,7 @@ void World::handlePredictiveMovement(float deltaTime) {
         Vector2f bufferedPosition = m_pacman->calculatePositionInDirection(
             m_pacman->getPosition(), bufferedDir, deltaTime);
 
-        if (!wouldCollideWithWalls(*m_pacman, bufferedPosition)) {
+        if (!PacmanWouldCollideWithWalls(*m_pacman, bufferedPosition)) {
             // Buffered direction is possible! Change direction
             m_pacman->setDirection(bufferedDir);
             m_pacman->clearBufferedDirection();
@@ -215,7 +217,7 @@ void World::handlePredictiveMovement(float deltaTime) {
     // 3. Move in current direction (or new if buffer worked)
     Vector2f nextPosition = m_pacman->calculateNextPosition(deltaTime);
 
-    if (!wouldCollideWithWalls(*m_pacman, nextPosition)) {
+    if (!PacmanWouldCollideWithWalls(*m_pacman, nextPosition)) {
         m_pacman->applyMovement(nextPosition);
     } else {
         // NEW: Can't move forward - find closest valid position to the wall
@@ -233,6 +235,82 @@ void World::handlePredictiveMovement(float deltaTime) {
 
     // 4. Notify observers
     m_pacman->notifyObservers();
+}
+
+void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) {
+
+    if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {
+    }
+    else if (ghost->canMoveInDirection(ghost->SetDirection(0),*this, deltaTime)) {
+        ghost->SetDirection(0);
+    }
+    else if (ghost->canMoveInDirection(ghost->SetDirection(1),*this, deltaTime)) {
+        ghost->SetDirection(1);
+
+    }
+    else if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+        ghost->SetDirection(2);
+
+    }
+    else if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+        ghost->SetDirection(3);
+    }
+
+
+    // // 1. Update input buffer
+    // ghost->update(deltaTime);
+    //
+    // // 2. Check if buffered direction is possible
+    // int bufferedDir = ghost->getBufferedDirection();
+    // if (bufferedDir != -1) {
+    //     // Try buffered direction
+    //     Vector2f bufferedPosition = ghost->calculatePositionInDirection(
+    //         ghost->getPosition(), bufferedDir, deltaTime);
+    //
+    //     if (!PacmanWouldCollideWithWalls(*ghost, bufferedPosition)) {
+    //         // Buffered direction is possible! Change direction
+    //         ghost->setDirection(bufferedDir);
+    //         ghost->clearBufferedDirection();
+    //     } else {
+    //         // Try position correction to allow the turn
+    //         Vector2f correctedPos = tryPositionCorrection(
+    //             ghost->getPosition(),
+    //             ghost->getDirection(),
+    //             bufferedDir,
+    //             deltaTime
+    //         );
+    //
+    //         if (correctedPos.x != ghost->getPosition().x ||
+    //             correctedPos.y != ghost->getPosition().y) {
+    //             // Correction was successful! Apply it and change direction
+    //             ghost->setPosition(correctedPos);
+    //             ghost->setDirection(bufferedDir);
+    //             ghost->clearBufferedDirection();
+    //         }
+    //     }
+    // }
+    //
+    // // 3. Move in current direction (or new if buffer worked)
+    // Vector2f nextPosition = ghost->calculateNextPosition(deltaTime);
+    //
+    // if (!PacmanWouldCollideWithWalls(*ghost, nextPosition)) {
+    //     ghost->applyMovement(nextPosition);
+    // } else {
+    //     // NEW: Can't move forward - find closest valid position to the wall
+    //     Vector2f closestPos = findClosestPositionToWall(
+    //         ghost->getPosition(),
+    //         ghost->getDirection(),
+    //         deltaTime
+    //     );
+    //
+    //     if (closestPos.x != ghost->getPosition().x ||
+    //         closestPos.y != ghost->getPosition().y) {
+    //         ghost->setPosition(closestPos);
+    //     }
+    // }
+    //
+    // // 4. Notify observers
+    // ghost->notifyObservers();
 }
 
 Vector2f World::findClosestPositionToWall(const Vector2f& currentPos,
@@ -332,7 +410,7 @@ Vector2f World::tryPositionCorrection(const Vector2f& currentPos,
         Vector2f bufferedTestPos = m_pacman->calculatePositionInDirection(
             testPos, bufferedDir, deltaTime);
 
-        if (!wouldCollideWithWalls(*m_pacman, bufferedTestPos)) {
+        if (!PacmanWouldCollideWithWalls(*m_pacman, bufferedTestPos)) {
             return testPos; // This correction allows the turn!
         }
     }
@@ -340,7 +418,7 @@ Vector2f World::tryPositionCorrection(const Vector2f& currentPos,
     return currentPos; // No correction found
 }
 
-bool World::wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const {
+bool World::PacmanWouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const {
     PacmanModel tempPacman = pacman;
     tempPacman.setPosition(newPosition);
 
@@ -357,6 +435,27 @@ bool World::wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& new
             return true;
         }
     }
+
+    return false;
+}
+
+bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& newPosition) const {
+    GhostModel tempghost = ghost;
+    tempghost.setPosition(newPosition);
+
+    // Check collision with all walls - now works with template!
+    for (const auto& wall : m_walls) {
+        if (checkCollision(tempghost, *wall)) {
+            return true;
+        }
+    }
+//todo add this back togheter with a timer for different ghosts
+    // // Check collision with all doors - also works!
+    // for (const auto& door : m_doors) {
+    //     if (checkCollision(tempghost, *door)) {
+    //         return true;
+    //     }
+    // }
 
     return false;
 }
