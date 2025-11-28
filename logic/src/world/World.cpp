@@ -97,6 +97,14 @@ void World::createEntitiesFromMap() {
                 );
                 m_ghosts.push_back(ghost);
             }
+            else if (grid[y][x] == 'd') {
+                auto door = m_factory->createDoor(
+                    Vector2f(posX, posY),
+                    Vector2f(tileWidth , tileHeight),
+                    "wall"
+                );
+                m_doors.push_back(door);
+            }
         }
     }
     std::cout << "World: Created " << m_walls.size() << " walls and " << m_coins.size() << " coins" << std::endl;
@@ -425,8 +433,6 @@ void World::cleanupCollectedItems() {
 }
 
 void World::advanceToNextLevel() {
-    std::cout << "Advancing to next level!" << std::endl;
-
     // Increment level
     if (LEVEL < 3) {
         LEVEL++;

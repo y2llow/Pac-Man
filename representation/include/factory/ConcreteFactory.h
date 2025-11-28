@@ -15,6 +15,7 @@ public:
 
     // Change return types to shared_ptr
     std::shared_ptr<WallModel> createWall(const Vector2f& position, const Vector2f& size, const std::string& textureId) override;
+    std::shared_ptr<DoorModel> createDoor(const Vector2f& position, const Vector2f& size, const std::string& textureId) override;
     std::shared_ptr<CoinModel> createCoin(const Vector2f& position, const Vector2f& size, const std::string& textureId) override;
     std::shared_ptr<PacmanModel> createPacman(const Vector2f& position, const Vector2f& size, const std::string& textureId) override;
     std::shared_ptr<RedGhostModel> createRedGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) override;

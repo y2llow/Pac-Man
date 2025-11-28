@@ -252,7 +252,7 @@ void LevelState::update(float deltaTime) {
 
         sf::FloatRect livesBounds = m_livesText.getLocalBounds();
         float padding = m_window.getSize().x * 0.005f;
-        m_livesText.setPosition(m_window.getSize().x - livesBounds.width - padding, padding);
+        m_livesText.setPosition(m_window.getSize().x - livesBounds.width - padding * 3 , padding);
     }
 }
 

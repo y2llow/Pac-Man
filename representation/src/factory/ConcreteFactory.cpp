@@ -1,5 +1,6 @@
 #include "factory/ConcreteFactory.h"
 #include "entities/WallModel.h"
+#include "entities/DoorModel.h"
 #include "entities/CoinModel.h"
 #include "entities/FruitModel.h"
 #include "entities/GhostModel.h"
@@ -10,6 +11,9 @@
 #include "views/characterview/GhostView.h"
 #include "views/characterview/PacmanView.h"
 #include "Camera.h"
+#include "views/DoorView.h"
+
+
 #include <memory>
 
 SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
@@ -32,6 +36,10 @@ std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, c
 
 std::shared_ptr<WallModel> SFMLFactory::createWall(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
     return createEntity<WallModel, WallView>(position, size, textureId);
+}
+
+std::shared_ptr<DoorModel> SFMLFactory::createDoor(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
+    return createEntity<DoorModel, DoorView>(position, size, textureId);
 }
 
 std::shared_ptr<CoinModel> SFMLFactory::createCoin(const Vector2f& position, const Vector2f& size, const std::string& textureId) {

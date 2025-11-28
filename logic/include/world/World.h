@@ -43,6 +43,7 @@ public:
 
     // Add getters for LevelState to access entities for rendering
     [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }
+    [[nodiscard]] const std::vector<std::shared_ptr<DoorModel>>& getDoors() const { return m_doors; }
     [[nodiscard]] const std::vector<std::shared_ptr<CoinModel>>& getCoins() const { return m_coins; }
     [[nodiscard]] const std::vector<std::shared_ptr<GhostModel>>& getGhosts() const { return m_ghosts; }
     [[nodiscard]] const std::vector<std::shared_ptr<FruitModel>>& getFruit() const { return m_fruits; }
@@ -57,6 +58,7 @@ private:
 
     // Change ALL vectors to shared_ptr
     std::vector<std::shared_ptr<WallModel>> m_walls;
+    std::vector<std::shared_ptr<DoorModel>> m_doors;
     std::vector<std::shared_ptr<CoinModel>> m_coins;
     std::vector<std::shared_ptr<GhostModel>> m_ghosts;
     std::vector<std::shared_ptr<FruitModel>> m_fruits;

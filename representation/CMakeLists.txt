@@ -67,6 +67,8 @@ add_library(PacMan-representation STATIC
         src/states/State.cpp
         include/rendering/SpriteSheet.h
         src/rendering/SpriteSheet.cpp
+        include/views/DoorView.h
+        src/views/DoorView.cpp
 )
 
 # Set include directories

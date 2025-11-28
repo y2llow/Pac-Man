@@ -7,8 +7,8 @@ x.................x
 x.xx.x.xxxxx.x.xx.x
 x....x...x...x....x
 xxxx.xxx.x.xxx.xxxx
-###x.x.......x.x###
-xxxx.x.xxrxx.x.xxxx
+###x.x...r...x.x###
+xxxx.x.xxdxx.x.xxxx
 .......xbpox.......
 xxxx.x.xxxxx.x.xxxx
 ###x.x.......x.x###
