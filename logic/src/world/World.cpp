@@ -135,7 +135,7 @@ void World::update(float deltaTime) {
 //todo
         for (auto& ghost : m_ghosts) {
             // If ghost is outside starting house
-            if (!ghost->GetOutsideStart()) {
+            if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
             }
                 // handleGhostMovement(ghost, deltaTime);
