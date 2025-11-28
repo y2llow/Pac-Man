@@ -1,5 +1,6 @@
 #include "entities/GhostModel.h"
 
+#include "core/Random.h"
 #include "world/World.h"
 
 #include <utility>
@@ -94,6 +95,10 @@ void GhostModel::GhostAIMovement() {
 
 }
 
+void GhostModel::handleWorldBehavior(World& world) {
+
+}
+
 // Red Ghost Implementation - One of the ghosts, when in chasing mode, should always be locked to moving in a
 // fixed direction (either always up, down, right or left). If a ghost reaches a corner or
 // intersection it will reconsider which direction it will be locked to. In particular, with
@@ -108,8 +113,14 @@ void RedGhostModel::updateMovement(float deltaTime) {
 }
 
 void RedGhostModel::GhostAIMovement() {
+    Random::getInstance();
 
 }
+
+void RedGhostModel::handleWorldBehavior(World& world)  {
+    world.handleRedGhostLogic(*this);  // *this is correct here!
+}
+
 
 
 
@@ -125,6 +136,10 @@ void BlueGhostModel::GhostAIMovement() {
 
 }
 
+void BlueGhostModel::handleWorldBehavior(World& world)  {
+
+}
+
 // Orange Ghost Implementation - Moves down
 void OrangeGhostModel::updateMovement(float deltaTime) {
     m_MovingToStartTimer -= deltaTime;
@@ -134,6 +149,10 @@ void OrangeGhostModel::updateMovement(float deltaTime) {
     GhostModel::updateMovement(deltaTime);
 }
 void OrangeGhostModel::GhostAIMovement() {
+
+}
+
+void OrangeGhostModel::handleWorldBehavior(World& world)  {
 
 }
 
@@ -147,6 +166,10 @@ void PinkGhostModel::updateMovement(float deltaTime) {
 }
 
 void PinkGhostModel::GhostAIMovement() {
+
+}
+
+void PinkGhostModel::handleWorldBehavior(World& world)  {
 
 }
 

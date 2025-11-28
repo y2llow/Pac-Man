@@ -19,6 +19,8 @@ public:
     [[nodiscard]] Vector2f getSize() const override { return m_size; }
     [[nodiscard]] int getDirection() const { return m_direction; }
     int SetDirection( int direction )  { return m_direction = direction; }
+    [[nodiscard]] int getLastDirection() const { return m_lastDirection; }
+    int SetLastDirection( int direction )  { return m_lastDirection = direction; }
 
 
 
@@ -57,12 +59,14 @@ public:
     virtual void resetMovingToStartTimer(float TimeWaiting) ;
 
     virtual void GhostAIMovement();
+    virtual void handleWorldBehavior(World& world) ;  // Use reference, not pointer
 
 protected:
     Vector2f m_position;
     std::string m_textureId;
     Vector2f m_size;
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
+    int m_lastDirection;
     // Ghost specific
     float GHOST_SPEED = 0.2f;
     float m_speed ;
@@ -84,6 +88,7 @@ public:
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
     void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
 
 
 private:
@@ -99,6 +104,8 @@ public:
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
     void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
+
 
 
 private:
@@ -113,6 +120,8 @@ public:
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
     void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
+
 
 
 private:
@@ -127,6 +136,8 @@ public:
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
     void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
+
 
 
 private:

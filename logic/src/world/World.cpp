@@ -1,4 +1,6 @@
 #include "world/World.h"
+
+#include "core/Random.h"
 #include "entities/WallModel.h"
 #include "entities/CoinModel.h"
 #include "entities/PacmanModel.h"
@@ -15,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map3.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -142,8 +144,8 @@ void World::update(float deltaTime) {
                 handlePredictiveGhostMovement(ghost,deltaTime);
             } // specific movement for all the ghosts
             else {
-                ghost->GhostAIMovement();
-                handlePredictiveGhostMovement(ghost,deltaTime);
+                handlePredictiveRedGhostMovement(ghost,deltaTime);
+                // handlePredictiveGhostMovement(ghost,deltaTime);
 
             }
                 // handleGhostMovement(ghost, deltaTime);
@@ -185,6 +187,45 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
+
+void World::handleRedGhostLogic(RedGhostModel& ghost) {
+
+
+}
+
+void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) {
+    std::vector<int> AvailablePaths;
+    // && currentDirection != ghost->getDirection()
+    if (ghost->canMoveInDirection(ghost->SetDirection(0),*this, deltaTime) ) {
+        AvailablePaths.push_back(0);    }
+     if (ghost->canMoveInDirection(ghost->SetDirection(1),*this, deltaTime)) {
+        AvailablePaths.push_back(1);    }
+    if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+        AvailablePaths.push_back(2);    }
+     if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+        AvailablePaths.push_back(3);    }
+
+    if (!AvailablePaths.empty()) {
+        auto& rando = Random::getInstance(); // Note the parentheses!
+        int chosenDirection = rando.getRandomElement(AvailablePaths);
+        ghost->SetDirection(chosenDirection);
+    }
+
+}
+void World::handleBlueGhostLogic(RedGhostModel& ghost) {
+
+}
+
+
+void World::handleOrangeGhostLogic(RedGhostModel& ghost) {
+
+}
+
+void World::handlePinkGhostLogic(RedGhostModel& ghost) {
+
+}
+
+
 
 
 void World::handlePredictivePacmanMovement(float deltaTime) {
