@@ -9,15 +9,20 @@ GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::stri
 }
 
 void GhostModel::update(float deltaTime) {
+    float currentSpeed = GHOST_SPEED;  // Store base speed separately
+
     // Update scared timer
     if (m_scared) {
         m_scaredTimer -= deltaTime * m_scaredTimerInc;
+        currentSpeed = GHOST_SPEED * 0.5f;  // 50% speed when scared
+
         if (m_scaredTimer <= 0) {
             m_scared = false;
             m_scaredTimer = 0.0f;
         }
     }
 
+    m_speed = currentSpeed;  // Set the actual speed used for movement
     m_position = checkTunneling(m_position);
     notifyObservers();
 }

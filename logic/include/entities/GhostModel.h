@@ -45,6 +45,9 @@ public:
     void setCanMove(bool canMove) { m_canMove = canMove; }
 
     void SetSpeed(float _m_speed) { m_speed = _m_speed;}
+    float GetSpeed() { return m_speed;}
+    void SetBaseSpeed(float _GHOST_SPEED) { GHOST_SPEED = _GHOST_SPEED;}
+    float GetBaseSpeed() { return GHOST_SPEED;}
     void SetScaredTimerInc(float m_scared_timerInc) {m_scaredTimerInc = m_scared_timerInc;}
 
     [[nodiscard]]bool GetOutsideStart() const {return m_outsideStart;}
@@ -61,7 +64,8 @@ protected:
     Vector2f m_size;
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
     // Ghost specific
-    float m_speed = 0.2f ;
+    float GHOST_SPEED = 0.2f;
+    float m_speed ;
     int m_scaredTimerInc = 0;
     float m_scaredTimer = 0.0f;
     Vector2f m_spawnPoint;

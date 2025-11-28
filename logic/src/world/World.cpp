@@ -15,7 +15,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map3.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -142,6 +142,8 @@ void World::update(float deltaTime) {
                 handlePredictiveGhostMovement(ghost,deltaTime);
             }else {
                 ghost->GhostAIMovement();
+                handlePredictiveGhostMovement(ghost,deltaTime);
+
             }
                 // handleGhostMovement(ghost, deltaTime);
             // }else {
@@ -595,8 +597,8 @@ void World::advanceToNextLevel() {
     }
 
     // Make ghosts harder each level
-    for (auto ghost: m_ghosts) {
-        ghost->SetSpeed(0.25f * LEVEL);
+    for (const auto& ghost: m_ghosts) {
+        ghost->SetBaseSpeed(ghost->GetBaseSpeed() * LEVEL);
         ghost->SetScaredTimerInc(LEVEL);
     }
 
