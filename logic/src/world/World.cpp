@@ -5,6 +5,7 @@
 #include "entities/GhostModel.h"
 #include "entities/FruitModel.h"
 
+
 #include <cmath>
 #include <iostream>
 
@@ -245,8 +246,16 @@ Vector2f World::findClosestPositionToWall(const Vector2f& currentPos,
         tempPacman.setPosition(testPos);
 
         bool collides = false;
+
         for (const auto& wall : m_walls) {
             if (checkCollision(tempPacman, *wall)) {
+                collides = true;
+                break;
+            }
+        }
+
+        for (const auto& door : m_doors) {
+            if (checkCollision(tempPacman, *door)) {  // This should work if DoorModel properly inherits
                 collides = true;
                 break;
             }
@@ -313,21 +322,27 @@ Vector2f World::tryPositionCorrection(const Vector2f& currentPos,
 }
 
 bool World::wouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const {
-    // Maak tijdelijke pacman met nieuwe positie voor collision check
     PacmanModel tempPacman = pacman;
     tempPacman.setPosition(newPosition);
 
-    // Check collision met alle walls
+    // Check collision with all walls - now works with template!
     for (const auto& wall : m_walls) {
         if (checkCollision(tempPacman, *wall)) {
-            return true; // Zou colliden
+            return true;
         }
     }
-    return false; // Geen collision
-}
 
+    // Check collision with all doors - also works!
+    for (const auto& door : m_doors) {
+        if (checkCollision(tempPacman, *door)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 void World::handleCollectibleCollisions() {
-    // Pacman vs Coins (na movement)
+    // Pacman vs Coins
     for (auto it = m_coins.begin(); it != m_coins.end(); ) {
         if (checkCollision(*m_pacman, **it)) {
             handlePacmanCoinCollision(**it);
@@ -337,7 +352,7 @@ void World::handleCollectibleCollisions() {
         }
     }
 
-// Pacman vs Fruits (na movement)
+    // Pacman vs Fruits
     for (auto it = m_fruits.begin(); it != m_fruits.end(); ) {
         if (checkCollision(*m_pacman, **it)) {
             handlePacmanFruitCollision(**it);
@@ -347,40 +362,39 @@ void World::handleCollectibleCollisions() {
         }
     }
 
-// Pacman vs Ghosts (na movement)
+    // Pacman vs Ghosts
     for (auto& ghost : m_ghosts) {
         if (checkCollision(*m_pacman, *ghost)) {
             handlePacmanGhostCollision(*m_pacman, *ghost);
         }
     }
-
 }
 
 
-
-bool World::checkCollision(const PacmanModel& pacman, const EntityModel& entity2) {
-    // Get bounds for pacman (assuming center-based coordinates)
-    float pacman_left = pacman.getPosition().x - (pacman.getSize().x / 2);
-    float pacman_right = pacman.getPosition().x + (pacman.getSize().x / 2);
-    float pacman_bottom = pacman.getPosition().y - (pacman.getSize().y / 2);
-    float pacman_top = pacman.getPosition().y + (pacman.getSize().y / 2);
-
-    // Get bounds for entity2
-    float e2_left = entity2.getPosition().x - (entity2.getSize().x / 2);
-    float e2_right = entity2.getPosition().x + (entity2.getSize().x / 2);
-    float e2_bottom = entity2.getPosition().y - (entity2.getSize().y / 2);
-    float e2_top = entity2.getPosition().y + (entity2.getSize().y / 2);
-
-    // Correct AABB collision detection
-    if (pacman_right > e2_left &&
-        pacman_left < e2_right &&
-        pacman_top > e2_bottom &&
-        pacman_bottom < e2_top) {
-        return true;  // Collision detected
-    }
-
-    return false;  // No collision
-}
+//
+// bool World::checkCollision(const PacmanModel& pacman, const EntityModel& entity2) {
+//     // Get bounds for pacman (assuming center-based coordinates)
+//     float pacman_left = pacman.getPosition().x - (pacman.getSize().x / 2);
+//     float pacman_right = pacman.getPosition().x + (pacman.getSize().x / 2);
+//     float pacman_bottom = pacman.getPosition().y - (pacman.getSize().y / 2);
+//     float pacman_top = pacman.getPosition().y + (pacman.getSize().y / 2);
+//
+//     // Get bounds for entity2
+//     float e2_left = entity2.getPosition().x - (entity2.getSize().x / 2);
+//     float e2_right = entity2.getPosition().x + (entity2.getSize().x / 2);
+//     float e2_bottom = entity2.getPosition().y - (entity2.getSize().y / 2);
+//     float e2_top = entity2.getPosition().y + (entity2.getSize().y / 2);
+//
+//     // Correct AABB collision detection
+//     if (pacman_right > e2_left &&
+//         pacman_left < e2_right &&
+//         pacman_top > e2_bottom &&
+//         pacman_bottom < e2_top) {
+//         return true;  // Collision detected
+//     }
+//
+//     return false;  // No collision
+// }
 
 
 

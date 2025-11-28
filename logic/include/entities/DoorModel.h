@@ -1,5 +1,6 @@
 #ifndef DOOR_MODEL_H
 #define DOOR_MODEL_H
+
 #include "entities/EntityModel.h"
 #include <string>
 

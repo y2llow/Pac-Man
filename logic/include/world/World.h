@@ -13,6 +13,11 @@
 #include "entities/PacmanModel.h"
 #include "entities/GhostModel.h"
 #include "entities/FruitModel.h"
+#include "entities/DoorModel.h"
+
+// Forward declarations for classes that don't need full definition
+class LogicFactory;
+class Vector2f;
 
 class World {
 public:
@@ -23,13 +28,14 @@ public:
 
     Score& getScore() { return *m_score; }
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
-    // void addEntity(std::unique_ptr<EntityModel> entity);
 
-    static bool checkCollision(const PacmanModel& pacman, const EntityModel& entity2);
-    // void handlePacmanWallCollision(PacmanModel&pacman, const WallModel&wall);
-    void handlePacmanGhostCollision(PacmanModel&pacman, GhostModel&ghost);
-    void handlePacmanCoinCollision(CoinModel&coin);
-    void handlePacmanFruitCollision(FruitModel&fruit);
+    // Template collision detection - works with any entity type
+    template<typename T1, typename T2>
+    static bool checkCollision(const T1& entity1, const T2& entity2);
+
+    void handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost);
+    void handlePacmanCoinCollision(CoinModel& coin);
+    void handlePacmanFruitCollision(FruitModel& fruit);
     void cleanupCollectedItems();
 
     // Nieuwe predictive collision methodes
@@ -38,39 +44,38 @@ public:
     void handleCollectibleCollisions();
     [[nodiscard]] bool areAllCoinsCollected() const { return m_coins.empty() && m_fruits.empty(); }
     void advanceToNextLevel();
-    [[nodiscard]] int getCurrentLevel() const { return LEVEL; } // NIEUW
-
 
     // Add getters for LevelState to access entities for rendering
     [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }
-    [[nodiscard]] const std::vector<std::shared_ptr<DoorModel>>& getDoors() const { return m_doors; }
     [[nodiscard]] const std::vector<std::shared_ptr<CoinModel>>& getCoins() const { return m_coins; }
     [[nodiscard]] const std::vector<std::shared_ptr<GhostModel>>& getGhosts() const { return m_ghosts; }
     [[nodiscard]] const std::vector<std::shared_ptr<FruitModel>>& getFruit() const { return m_fruits; }
+    [[nodiscard]] const std::vector<std::shared_ptr<DoorModel>>& getDoors() const { return m_doors; }
     [[nodiscard]] const std::shared_ptr<PacmanModel>& getPacman() const { return m_pacman; }
     [[nodiscard]] std::shared_ptr<Score> Getscore() const {return m_score;}
 
+    // Add this method to fix the LevelState error
+    [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
 
 private:
     MapModel m_mapModel;
     LogicFactory* m_factory;
     std::shared_ptr<Score> m_score;
 
-    // Change ALL vectors to shared_ptr
+    // Entity storage
     std::vector<std::shared_ptr<WallModel>> m_walls;
-    std::vector<std::shared_ptr<DoorModel>> m_doors;
     std::vector<std::shared_ptr<CoinModel>> m_coins;
     std::vector<std::shared_ptr<GhostModel>> m_ghosts;
     std::vector<std::shared_ptr<FruitModel>> m_fruits;
+    std::vector<std::shared_ptr<DoorModel>> m_doors;
     std::shared_ptr<PacmanModel> m_pacman;
-
 
     Vector2f m_gridSize;
 
-    float PACMAN_SIZE = 0.99;
-    float GHOST_SIZE = 0.99;
-    float COIN_SIZE = 0.15;
-    float FRUIT_SIZE = 0.65;
+    float PACMAN_SIZE = 0.99f;
+    float GHOST_SIZE = 0.99f;
+    float COIN_SIZE = 0.15f;
+    float FRUIT_SIZE = 0.65f;
 
     int LEVEL = 1;
 
@@ -85,5 +90,29 @@ private:
     void checkDeathAnimationState();
 };
 
-#endif
+template<typename T1, typename T2>
+bool World::checkCollision(const T1& entity1, const T2& entity2) {
+    // Get bounds for entity1
+    float e1_left = entity1.getPosition().x - (entity1.getSize().x / 2);
+    float e1_right = entity1.getPosition().x + (entity1.getSize().x / 2);
+    float e1_bottom = entity1.getPosition().y - (entity1.getSize().y / 2);
+    float e1_top = entity1.getPosition().y + (entity1.getSize().y / 2);
 
+    // Get bounds for entity2
+    float e2_left = entity2.getPosition().x - (entity2.getSize().x / 2);
+    float e2_right = entity2.getPosition().x + (entity2.getSize().x / 2);
+    float e2_bottom = entity2.getPosition().y - (entity2.getSize().y / 2);
+    float e2_top = entity2.getPosition().y + (entity2.getSize().y / 2);
+
+    // Correct AABB collision detection
+    if (e1_right > e2_left &&
+        e1_left < e2_right &&
+        e1_top > e2_bottom &&
+        e1_bottom < e2_top) {
+        return true;  // Collision detected
+    }
+
+    return false;  // No collision
+}
+
+#endif
