@@ -1,5 +1,6 @@
 #include "entities/GhostModel.h"
 
+#include "core/Random.h"
 #include "world/World.h"
 
 #include <utility>
@@ -9,15 +10,20 @@ GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::stri
 }
 
 void GhostModel::update(float deltaTime) {
+    float currentSpeed = GHOST_SPEED;  // Store base speed separately
+
     // Update scared timer
     if (m_scared) {
         m_scaredTimer -= deltaTime * m_scaredTimerInc;
+        currentSpeed = GHOST_SPEED * 0.5f;  // 50% speed when scared
+
         if (m_scaredTimer <= 0) {
             m_scared = false;
             m_scaredTimer = 0.0f;
         }
     }
 
+    m_speed = currentSpeed;  // Set the actual speed used for movement
     m_position = checkTunneling(m_position);
     notifyObservers();
 }
@@ -43,7 +49,15 @@ void GhostModel::respawn() {
     m_scared = false;
     m_scaredTimer = 0.0f;
     m_canMove = true;
+    m_outsideStart = false;
+    m_MovingToStart = false;
+    resetMovingToStartTimer(3);
 }
+void GhostModel::resetMovingToStartTimer(float TimeWaiting) {}
+void RedGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
+void BlueGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
+void OrangeGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
+void PinkGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
 
 void GhostModel::updateMovement(float deltaTime) {
     if (!m_canMove) return;
@@ -76,6 +90,15 @@ Vector2f GhostModel::checkTunneling(Vector2f position) const {
     return position;
 }
 
+//todo specific ai movement
+void GhostModel::GhostAIMovement() {
+
+}
+
+void GhostModel::handleWorldBehavior(World& world) {
+
+}
+
 // Red Ghost Implementation - One of the ghosts, when in chasing mode, should always be locked to moving in a
 // fixed direction (either always up, down, right or left). If a ghost reaches a corner or
 // intersection it will reconsider which direction it will be locked to. In particular, with
@@ -89,6 +112,16 @@ void RedGhostModel::updateMovement(float deltaTime) {
 
 }
 
+void RedGhostModel::GhostAIMovement() {
+    Random::getInstance();
+
+}
+
+void RedGhostModel::handleWorldBehavior(World& world)  {
+    world.handleRedGhostLogic(*this);  // *this is correct here!
+}
+
+
 
 
 // Blue Ghost Implementation - Moves right
@@ -99,6 +132,13 @@ void BlueGhostModel::updateMovement(float deltaTime) {
     }
     GhostModel::updateMovement(deltaTime);
 }
+void BlueGhostModel::GhostAIMovement() {
+
+}
+
+void BlueGhostModel::handleWorldBehavior(World& world)  {
+
+}
 
 // Orange Ghost Implementation - Moves down
 void OrangeGhostModel::updateMovement(float deltaTime) {
@@ -108,6 +148,13 @@ void OrangeGhostModel::updateMovement(float deltaTime) {
     }
     GhostModel::updateMovement(deltaTime);
 }
+void OrangeGhostModel::GhostAIMovement() {
+
+}
+
+void OrangeGhostModel::handleWorldBehavior(World& world)  {
+
+}
 
 // Pink Ghost Implementation - Moves up
 void PinkGhostModel::updateMovement(float deltaTime) {
@@ -116,6 +163,14 @@ void PinkGhostModel::updateMovement(float deltaTime) {
         SetMovingToStart(true);
     }
     GhostModel::updateMovement(deltaTime);
+}
+
+void PinkGhostModel::GhostAIMovement() {
+
+}
+
+void PinkGhostModel::handleWorldBehavior(World& world)  {
+
 }
 
 void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {

@@ -1,4 +1,6 @@
 #include "world/World.h"
+
+#include "core/Random.h"
 #include "entities/WallModel.h"
 #include "entities/CoinModel.h"
 #include "entities/PacmanModel.h"
@@ -137,13 +139,20 @@ void World::update(float deltaTime) {
             // If ghost is outside starting house
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
+            } //if ghost is inside the house but noot going to the start
+            else if (!ghost->GetOutsideStart()) {
+                handlePredictiveGhostMovement(ghost,deltaTime);
+            } // specific movement for all the ghosts
+            else {
+                handlePredictiveRedGhostMovement(ghost,deltaTime);
+                // handlePredictiveGhostMovement(ghost,deltaTime);
+
             }
                 // handleGhostMovement(ghost, deltaTime);
             // }else {
             //     ghost->MoveToStartPosition(m_startPosition, deltaTime);
             // }
             //todo before update check first if there is a wall inront of the ghosts or in the movement they want to go
-            handlePredictiveGhostMovement(ghost,deltaTime);
 
             ghost->updateMovement(deltaTime);
             ghost->update(deltaTime);
@@ -178,6 +187,45 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
+
+void World::handleRedGhostLogic(RedGhostModel& ghost) {
+
+
+}
+
+void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) {
+    std::vector<int> AvailablePaths;
+    // && currentDirection != ghost->getDirection()
+    if (ghost->canMoveInDirection(ghost->SetDirection(0),*this, deltaTime) ) {
+        AvailablePaths.push_back(0);    }
+     if (ghost->canMoveInDirection(ghost->SetDirection(1),*this, deltaTime)) {
+        AvailablePaths.push_back(1);    }
+    if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+        AvailablePaths.push_back(2);    }
+     if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+        AvailablePaths.push_back(3);    }
+
+    if (!AvailablePaths.empty()) {
+        auto& rando = Random::getInstance(); // Note the parentheses!
+        int chosenDirection = rando.getRandomElement(AvailablePaths);
+        ghost->SetDirection(chosenDirection);
+    }
+
+}
+void World::handleBlueGhostLogic(RedGhostModel& ghost) {
+
+}
+
+
+void World::handleOrangeGhostLogic(RedGhostModel& ghost) {
+
+}
+
+void World::handlePinkGhostLogic(RedGhostModel& ghost) {
+
+}
+
+
 
 
 void World::handlePredictivePacmanMovement(float deltaTime) {
@@ -449,8 +497,8 @@ bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& 
             return true;
         }
     }
-//todo add this back togheter with a timer for different ghosts
-    // Check collision with all doors - also works!
+
+    // Check collision with all doors - if they are not escaping the house
     if (!ghost.GetMovingToStart()) {
         for (const auto& door : m_doors) {
             if (checkCollision(tempghost, *door)) {
@@ -458,8 +506,6 @@ bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& 
             }
         }
     }
-
-
     return false;
 }
 void World::handleCollectibleCollisions() {
@@ -559,7 +605,6 @@ void World::handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float 
 }
 //todo add prediction for ghosts check in how many ways the ghost can do a correct movement if that way is more than 2 (right and left) trigger random choosing and repeat
 
-
 void World::advanceToNextLevel() {
     // Increment level
     if (LEVEL < 3) {
@@ -593,8 +638,8 @@ void World::advanceToNextLevel() {
     }
 
     // Make ghosts harder each level
-    for (auto ghost: m_ghosts) {
-        ghost->SetSpeed(0.25f * LEVEL);
+    for (const auto& ghost: m_ghosts) {
+        ghost->SetBaseSpeed(ghost->GetBaseSpeed() * LEVEL);
         ghost->SetScaredTimerInc(LEVEL);
     }
 

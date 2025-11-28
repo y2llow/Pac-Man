@@ -19,6 +19,8 @@ public:
     [[nodiscard]] Vector2f getSize() const override { return m_size; }
     [[nodiscard]] int getDirection() const { return m_direction; }
     int SetDirection( int direction )  { return m_direction = direction; }
+    [[nodiscard]] int getLastDirection() const { return m_lastDirection; }
+    int SetLastDirection( int direction )  { return m_lastDirection = direction; }
 
 
 
@@ -45,20 +47,29 @@ public:
     void setCanMove(bool canMove) { m_canMove = canMove; }
 
     void SetSpeed(float _m_speed) { m_speed = _m_speed;}
+    float GetSpeed() { return m_speed;}
+    void SetBaseSpeed(float _GHOST_SPEED) { GHOST_SPEED = _GHOST_SPEED;}
+    float GetBaseSpeed() { return GHOST_SPEED;}
     void SetScaredTimerInc(float m_scared_timerInc) {m_scaredTimerInc = m_scared_timerInc;}
 
     [[nodiscard]]bool GetOutsideStart() const {return m_outsideStart;}
     void SetOutsideStart(bool m_outside_start) {m_outsideStart = m_outside_start;}
     void SetMovingToStart(bool m_moving_to_start) {m_MovingToStart = m_moving_to_start;}
     [[nodiscard]]bool GetMovingToStart() const {return m_MovingToStart;}
+    virtual void resetMovingToStartTimer(float TimeWaiting) ;
+
+    virtual void GhostAIMovement();
+    virtual void handleWorldBehavior(World& world) ;  // Use reference, not pointer
 
 protected:
     Vector2f m_position;
     std::string m_textureId;
     Vector2f m_size;
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
+    int m_lastDirection;
     // Ghost specific
-    float m_speed = 0.2f ;
+    float GHOST_SPEED = 0.2f;
+    float m_speed ;
     int m_scaredTimerInc = 0;
     float m_scaredTimer = 0.0f;
     Vector2f m_spawnPoint;
@@ -75,6 +86,11 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 0; } // Left
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
+
+
 private:
     float m_MovingToStartTimer = 0;
 
@@ -86,6 +102,12 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 2; } // Right
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
+
+
+
 private:
     float m_MovingToStartTimer = 0;
 };
@@ -96,6 +118,12 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 1; } // Down
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
+
+
+
 private:
     float m_MovingToStartTimer = 5;
 };
@@ -106,6 +134,12 @@ public:
         : GhostModel(position, size, textureId) { m_direction = 3; } // Up
 
     void updateMovement(float deltaTime) override;
+    void resetMovingToStartTimer(float TimeWaiting) override;
+    void GhostAIMovement() override;
+    void handleWorldBehavior(World& world) override ;
+
+
+
 private:
     float m_MovingToStartTimer = 10;
 };

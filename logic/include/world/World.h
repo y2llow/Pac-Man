@@ -63,6 +63,12 @@ public:
     // Add this method to fix the LevelState error
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
 
+    void handleRedGhostLogic(RedGhostModel& ghost) ;
+    void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
+    void handleBlueGhostLogic(RedGhostModel& ghost) ;
+    void handleOrangeGhostLogic(RedGhostModel& ghost) ;
+    void handlePinkGhostLogic(RedGhostModel& ghost) ;
+
 private:
     MapModel m_mapModel;
     LogicFactory* m_factory;
@@ -80,7 +86,7 @@ private:
     Vector2f m_startPosition;
 
     float PACMAN_SIZE = 0.99f;
-    float GHOST_SIZE = 0.90f;
+    float GHOST_SIZE = 0.9;
     float COIN_SIZE = 0.15f;
     float FRUIT_SIZE = 0.65f;
 
