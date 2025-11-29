@@ -61,6 +61,13 @@ public:
     virtual void GhostAIMovement();
     virtual void handleWorldBehavior(World& world) ;  // Use reference, not pointer
 
+    // In GhostModel class, voeg toe bij de public methods:
+    [[nodiscard]] bool isAtIntersection(const World& world, float deltaTime) const;
+    [[nodiscard]] std::vector<int> getValidDirectionsAtIntersection(const World& world, float deltaTime) const;
+    [[nodiscard]] Vector2f findClosestPositionToWall(const Vector2f& currentPos, int direction, float deltaTime) const;
+
+     bool willCrossIntersection(const World& world, float deltaTime) const;
+    [[nodiscard]] Vector2f getIntersectionPoint(const World& world, float deltaTime) const;
 protected:
     Vector2f m_position;
     std::string m_textureId;
@@ -68,7 +75,7 @@ protected:
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
     int m_lastDirection;
     // Ghost specific
-    float GHOST_SPEED = 0.2f;
+    float GHOST_SPEED = 0.15f;
     float m_speed ;
     int m_scaredTimerInc = 0;
     float m_scaredTimer = 0.0f;

@@ -27,6 +27,78 @@ void GhostModel::update(float deltaTime) {
     m_position = checkTunneling(m_position);
     notifyObservers();
 }
+bool GhostModel::willCrossIntersection(const World& world, float deltaTime) const {
+    // Check meerdere punten langs het pad
+    Vector2f startPos = m_position;
+    Vector2f endPos = calculateNextPosition(deltaTime);
+
+    // Check 5 punten langs de beweging
+    const int numChecks = 5;
+    for (int i = 0; i <= numChecks; i++) {
+        float t = static_cast<float>(i) / numChecks;
+        Vector2f checkPos;
+        checkPos.x = startPos.x + (endPos.x - startPos.x) * t;
+        checkPos.y = startPos.y + (endPos.y - startPos.y) * t;
+
+        // Maak temp ghost op deze positie
+        GhostModel tempGhost = *this;
+        tempGhost.setPosition(checkPos);
+
+        // Check intersection op deze positie
+        int validDirections = 0;
+        int oppositeDirection = (m_direction + 2) % 4;
+
+        for (int dir = 0; dir < 4; dir++) {
+            if (dir == oppositeDirection) continue;
+
+            Vector2f testPos = tempGhost.calculateNextPositionInDirection(checkPos, dir, deltaTime);
+            if (!world.GhostWouldCollideWithWalls(tempGhost, testPos)) {
+                validDirections++;
+            }
+        }
+
+        if (validDirections > 1) {
+            return true; // We gaan door een intersection!
+        }
+    }
+
+    return false;
+}
+
+Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) const {
+    Vector2f startPos = m_position;
+    Vector2f endPos = calculateNextPosition(deltaTime);
+
+    // Check meerdere punten en return het eerste intersection punt
+    const int numChecks = 10;
+    for (int i = 0; i <= numChecks; i++) {
+        float t = static_cast<float>(i) / numChecks;
+        Vector2f checkPos;
+        checkPos.x = startPos.x + (endPos.x - startPos.x) * t;
+        checkPos.y = startPos.y + (endPos.y - startPos.y) * t;
+
+        GhostModel tempGhost = *this;
+        tempGhost.setPosition(checkPos);
+
+        int validDirections = 0;
+        int oppositeDirection = (m_direction + 2) % 4;
+
+        for (int dir = 0; dir < 4; dir++) {
+            if (dir == oppositeDirection) continue;
+
+            Vector2f testPos = tempGhost.calculateNextPositionInDirection(checkPos, dir, deltaTime);
+            if (!world.GhostWouldCollideWithWalls(tempGhost, testPos)) {
+                validDirections++;
+            }
+        }
+
+        if (validDirections > 1) {
+            return checkPos; // Dit is het intersection punt
+        }
+    }
+
+    return m_position; // Geen intersection gevonden
+}
 
 void GhostModel::setPosition(const Vector2f& position) {
     m_position = position;
@@ -224,6 +296,85 @@ Vector2f GhostModel::calculateNextPositionInDirection(const Vector2f& startPos, 
         }
 
         return checkTunneling(newPosition);
+}
+
+bool GhostModel::isAtIntersection(const World& world, float deltaTime) const {
+    // Een intersection is waar je meer dan 2 richtingen op kan
+    // (huidige richting + tegenovergestelde tellen niet mee)
+    int validDirections = 0;
+    int oppositeDirection = (m_direction + 2) % 4;
+
+    for (int dir = 0; dir < 4; dir++) {
+        if (dir == oppositeDirection) continue; // Skip tegenovergestelde richting
+
+        if (canMoveInDirection(dir, world, deltaTime)) {
+            validDirections++;
+        }
+    }
+
+    // Als we meer dan 1 richting kunnen (behalve terug), is het een intersection
+    return validDirections > 1;
+}
+
+std::vector<int> GhostModel::getValidDirectionsAtIntersection(const World& world, float deltaTime) const {
+    std::vector<int> validDirs;
+    int oppositeDirection = (m_direction + 2) % 4;
+
+    for (int dir = 0; dir < 4; dir++) {
+        // Skip tegenovergestelde richting (ghosts gaan niet terug)
+        if (dir == oppositeDirection) continue;
+
+        if (canMoveInDirection(dir, world, deltaTime)) {
+            validDirs.push_back(dir);
+        }
+    }
+
+    return validDirs;
+}
+
+Vector2f GhostModel::findClosestPositionToWall(const Vector2f& currentPos,
+                                                int direction,
+                                                float deltaTime) const {
+    // Binary search om dichtste positie te vinden zonder collision
+    float moveAmount = m_speed * deltaTime;
+    float minDistance = 0.0f;
+    float maxDistance = moveAmount;
+    float bestDistance = 0.0f;
+
+    const int iterations = 10;
+
+    for (int i = 0; i < iterations; ++i) {
+        float testDistance = (minDistance + maxDistance) / 2.0f;
+        Vector2f testPos = currentPos;
+
+        switch (direction) {
+            case 0: testPos.x -= testDistance; break; // Left
+            case 1: testPos.y += testDistance; break; // Down
+            case 2: testPos.x += testDistance; break; // Right
+            case 3: testPos.y -= testDistance; break; // Up
+        }
+
+        testPos = checkTunneling(testPos);
+
+        // Maak temp ghost om collision te checken
+        GhostModel tempGhost = *this;
+        tempGhost.setPosition(testPos);
+
+        // We kunnen World niet direct checken, dus we geven alleen de beste distance terug
+        // Dit wordt gebruikt in World::handlePredictiveGhostMovement
+        bestDistance = testDistance;
+        minDistance = testDistance;
+    }
+
+    Vector2f closestPos = currentPos;
+    switch (direction) {
+        case 0: closestPos.x -= bestDistance; break;
+        case 1: closestPos.y += bestDistance; break;
+        case 2: closestPos.x += bestDistance; break;
+        case 3: closestPos.y -= bestDistance; break;
+    }
+
+    return checkTunneling(closestPos);
 }
 
 

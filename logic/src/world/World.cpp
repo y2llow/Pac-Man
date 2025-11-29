@@ -136,26 +136,20 @@ void World::update(float deltaTime) {
 
 //todo
         for (auto& ghost : m_ghosts) {
-            // If ghost is outside starting house
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
-            } //if ghost is inside the house but noot going to the start
-            else if (!ghost->GetOutsideStart()) {
-                TrappedGhostMovement(ghost,deltaTime);
-                handlePredictiveGhostMovement(ghost,deltaTime);
-            } // specific movement for all the ghosts
-            else {
-                // handlePredictiveRedGhostMovement(ghost,deltaTime);
-                handlePredictiveGhostMovement(ghost,deltaTime);
-
+                ghost->updateMovement(deltaTime);
+                // ghost->update(deltaTime); // Alleen update voor scared timer etc.
+            } else if (!ghost->GetOutsideStart()) {
+                TrappedGhostMovement(ghost, deltaTime);
+                ghost->updateMovement(deltaTime);
+                // ghost->update(deltaTime);
+            } else {
+                handlePredictiveRedGhostMovement(ghost, deltaTime);
+                // ghost->update(deltaTime);
             }
-                // handleGhostMovement(ghost, deltaTime);
-            // }else {
-            //     ghost->MoveToStartPosition(m_startPosition, deltaTime);
-            // }
-            //todo before update check first if there is a wall inront of the ghosts or in the movement they want to go
-            ghost->updateMovement(deltaTime);
-            ghost->update(deltaTime);
+            // ghost->updateMovement(deltaTime);
+            ghost->update(deltaTime); // Alleen update voor scared timer etc.
         }
 
         // DERDE: Collectible collisions (na movement)
@@ -187,8 +181,162 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
+void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+    // Check of we DOOR een intersection gaan bewegen
+    bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
-void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) {
+    if (crossingIntersection) {
+        // Beweeg naar het intersection punt
+        Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
+        ghost->setPosition(intersectionPoint);
+
+        // Nu zijn we bij de intersection - check valid directions
+        std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
+
+        if (!validDirs.empty()) {
+            auto& rng = Random::getInstance();
+            bool willChangeDirection = rng.getBool(0.5);
+
+            // DEBUG OUTPUT
+            std::cout << "🔴 INTERSECTION! Pos: (" << intersectionPoint.x << ", "
+                      << intersectionPoint.y << ") | Roll: "
+                      << (willChangeDirection ? "CHANGE" : "KEEP") << " | Options: ";
+            for (int dir : validDirs) {
+                std::cout << dir << " ";
+            }
+
+            if (willChangeDirection) {
+                int chosenDirection = rng.getRandomElement(validDirs);
+                std::cout << "| Chose: " << chosenDirection << std::endl;
+                ghost->SetDirection(chosenDirection);
+            } else {
+                std::cout << "| Keep: " << ghost->getDirection() << std::endl;
+                bool currentDirValid = false;
+                for (int dir : validDirs) {
+                    if (dir == ghost->getDirection()) {
+                        currentDirValid = true;
+                        break;
+                    }
+                }
+
+                if (!currentDirValid) {
+                    int newDirection = rng.getRandomElement(validDirs);
+                    std::cout << "| Forced: " << newDirection << std::endl;
+                    ghost->SetDirection(newDirection);
+                }
+            }
+        }
+
+        // Beweeg de rest van de distance in nieuwe richting
+        Vector2f remainingMovement = ghost->calculateNextPosition(deltaTime);
+        if (!GhostWouldCollideWithWalls(*ghost, remainingMovement)) {
+            ghost->setPosition(remainingMovement);
+        }
+    } else {
+        // Geen intersection - normale movement
+        Vector2f nextPosition = ghost->calculateNextPosition(deltaTime);
+
+        if (!GhostWouldCollideWithWalls(*ghost, nextPosition)) {
+            ghost->setPosition(nextPosition);
+        } else {
+            // Kan niet vooruit - vind dichtste positie tot muur
+            Vector2f closestPos = findClosestPositionToWallForGhost(
+                ghost->getPosition(),
+                ghost->getDirection(),
+                deltaTime,
+                *ghost
+            );
+
+            if (closestPos.x != ghost->getPosition().x ||
+                closestPos.y != ghost->getPosition().y) {
+                ghost->setPosition(closestPos);
+            } else {
+                // Volledig vast - kies nieuwe richting
+                std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
+                if (!validDirs.empty()) {
+                    auto& rng = Random::getInstance();
+                    int newDirection = rng.getRandomElement(validDirs);
+
+                    std::cout << "*** STUCK - Forcing direction: " << newDirection << " ***" << std::endl;
+
+                    ghost->SetDirection(newDirection);
+
+                    nextPosition = ghost->calculateNextPosition(deltaTime);
+                    if (!GhostWouldCollideWithWalls(*ghost, nextPosition)) {
+                        ghost->setPosition(nextPosition);
+                    }
+                }
+            }
+        }
+    }
+
+    ghost->notifyObservers();
+}
+
+Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos,
+                                                   int direction,
+                                                   float deltaTime,
+                                                    GhostModel& ghost) const {
+    float moveAmount = ghost.GetSpeed() * deltaTime;
+    float minDistance = 0.0f;
+    float maxDistance = moveAmount;
+    float bestDistance = 0.0f;
+
+    const int iterations = 10;
+
+    for (int i = 0; i < iterations; ++i) {
+        float testDistance = (minDistance + maxDistance) / 2.0f;
+        Vector2f testPos = currentPos;
+
+        switch (direction) {
+            case 0: testPos.x -= testDistance; break;
+            case 1: testPos.y += testDistance; break;
+            case 2: testPos.x += testDistance; break;
+            case 3: testPos.y -= testDistance; break;
+        }
+
+        testPos = ghost.checkTunneling(testPos);
+
+        GhostModel tempGhost = ghost;
+        tempGhost.setPosition(testPos);
+
+        bool collides = false;
+        for (const auto& wall : m_walls) {
+            if (checkCollision(tempGhost, *wall)) {
+                collides = true;
+                break;
+            }
+        }
+
+        if (!ghost.GetMovingToStart()) {
+            for (const auto& door : m_doors) {
+                if (checkCollision(tempGhost, *door)) {
+                    collides = true;
+                    break;
+                }
+            }
+        }
+
+        if (collides) {
+            maxDistance = testDistance;
+        } else {
+            bestDistance = testDistance;
+            minDistance = testDistance;
+        }
+    }
+
+    Vector2f closestPos = currentPos;
+    switch (direction) {
+        case 0: closestPos.x -= bestDistance; break;
+        case 1: closestPos.y += bestDistance; break;
+        case 2: closestPos.x += bestDistance; break;
+        case 3: closestPos.y -= bestDistance; break;
+    }
+
+    return ghost.checkTunneling(closestPos);
+}
+
+void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const {
     if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {
 
     }
@@ -212,24 +360,29 @@ void World::handleRedGhostLogic(RedGhostModel& ghost) {
 
 }
 
-void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) {
-    std::vector<int> AvailablePaths;
-    // && currentDirection != ghost->getDirection()
-    if (ghost->canMoveInDirection(ghost->SetDirection(0),*this, deltaTime) ) {
-        AvailablePaths.push_back(0);    }
-     if (ghost->canMoveInDirection(ghost->SetDirection(1),*this, deltaTime)) {
-        AvailablePaths.push_back(1);    }
-    if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
-        AvailablePaths.push_back(2);    }
-     if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
-        AvailablePaths.push_back(3);    }
+void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+    // Gebruik dezelfde ray-casting logic
+    bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
-    if (!AvailablePaths.empty()) {
-        auto& rando = Random::getInstance(); // Note the parentheses!
-        int chosenDirection = rando.getRandomElement(AvailablePaths);
-        ghost->SetDirection(chosenDirection);
+    if (crossingIntersection) {
+        Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
+        ghost->setPosition(intersectionPoint);
+
+        std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
+
+        if (!validDirs.empty()) {
+            auto& rng = Random::getInstance();
+            bool willChangeDirection = rng.getBool(0.5);
+
+            if (willChangeDirection) {
+                int chosenDirection = rng.getRandomElement(validDirs);
+                ghost->SetDirection(chosenDirection);
+            }
+        }
     }
 
+    // Normale movement
+    handlePredictiveGhostMovement(ghost, deltaTime);
 }
 void World::handleBlueGhostLogic(RedGhostModel& ghost) {
 

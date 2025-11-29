@@ -25,6 +25,7 @@ public:
 
     void initialize();
     void update(float deltaTime);
+    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
 
     Score& getScore() { return *m_score; }
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
@@ -68,7 +69,7 @@ public:
     void handleBlueGhostLogic(RedGhostModel& ghost) ;
     void handleOrangeGhostLogic(RedGhostModel& ghost) ;
     void handlePinkGhostLogic(RedGhostModel& ghost) ;
-    void TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime);
+    void TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const;
 
 private:
     MapModel m_mapModel;
@@ -102,6 +103,12 @@ private:
                                    int direction,
                                    float deltaTime) const;
     void checkDeathAnimationState();
+
+    [[nodiscard]] Vector2f findClosestPositionToWallForGhost(
+    const Vector2f&currentPos,
+    int direction,
+    float deltaTime,
+    GhostModel&ghost) const;
 };
 
 template<typename T1, typename T2>
