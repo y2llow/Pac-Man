@@ -7,7 +7,7 @@
 #include "entities/GhostModel.h"
 #include "entities/FruitModel.h"
 
-
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
@@ -141,11 +141,12 @@ void World::update(float deltaTime) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
             } //if ghost is inside the house but noot going to the start
             else if (!ghost->GetOutsideStart()) {
+                TrappedGhostMovement(ghost,deltaTime);
                 handlePredictiveGhostMovement(ghost,deltaTime);
             } // specific movement for all the ghosts
             else {
-                handlePredictiveRedGhostMovement(ghost,deltaTime);
-                // handlePredictiveGhostMovement(ghost,deltaTime);
+                // handlePredictiveRedGhostMovement(ghost,deltaTime);
+                handlePredictiveGhostMovement(ghost,deltaTime);
 
             }
                 // handleGhostMovement(ghost, deltaTime);
@@ -153,7 +154,6 @@ void World::update(float deltaTime) {
             //     ghost->MoveToStartPosition(m_startPosition, deltaTime);
             // }
             //todo before update check first if there is a wall inront of the ghosts or in the movement they want to go
-
             ghost->updateMovement(deltaTime);
             ghost->update(deltaTime);
         }
@@ -187,6 +187,25 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
+
+void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) {
+    if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {
+
+    }
+    else if (ghost->canMoveInDirection(0,*this, deltaTime)) {
+        ghost->SetDirection(0);
+    }
+    else if (ghost->canMoveInDirection(1,*this, deltaTime)) {
+        ghost->SetDirection(1);
+    }
+    else if (ghost->canMoveInDirection(2,*this, deltaTime)) {
+        ghost->SetDirection(2);
+    }
+    else if (ghost->canMoveInDirection(3,*this, deltaTime)) {
+        ghost->SetDirection(3);
+    }
+}
+
 
 void World::handleRedGhostLogic(RedGhostModel& ghost) {
 
@@ -285,22 +304,24 @@ void World::handlePredictivePacmanMovement(float deltaTime) {
     m_pacman->notifyObservers();
 }
 
-void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) {
-
+void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const {
     if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {
-    }
-    else if (ghost->canMoveInDirection(ghost->SetDirection(0),*this, deltaTime)) {
+
+     }
+    else if (ghost->canMoveInDirection(0,*this, deltaTime) && ghost->getLastDirection() != 2) {
+        ghost->SetLastDirection(0);
         ghost->SetDirection(0);
     }
-    else if (ghost->canMoveInDirection(ghost->SetDirection(1),*this, deltaTime)) {
+    else if (ghost->canMoveInDirection(1,*this, deltaTime)&& ghost->getLastDirection() != 3) {
+        ghost->SetLastDirection(1);
         ghost->SetDirection(1);
-
     }
-    else if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+    else if (ghost->canMoveInDirection(2,*this, deltaTime)&& ghost->getLastDirection() != 0) {
+        ghost->SetLastDirection(2);
         ghost->SetDirection(2);
-
     }
-    else if (ghost->canMoveInDirection(ghost->SetDirection(2),*this, deltaTime)) {
+    else if (ghost->canMoveInDirection(3,*this, deltaTime)&& ghost->getLastDirection() != 4) {
+        ghost->SetLastDirection(3);
         ghost->SetDirection(3);
     }
 

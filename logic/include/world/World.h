@@ -41,7 +41,7 @@ public:
     // Ghost movement
     void handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& pacman, const Vector2f& newPosition) const ;
-    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime);
+    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const;
 
 
     // Nieuwe predictive collision methodes
@@ -68,6 +68,7 @@ public:
     void handleBlueGhostLogic(RedGhostModel& ghost) ;
     void handleOrangeGhostLogic(RedGhostModel& ghost) ;
     void handlePinkGhostLogic(RedGhostModel& ghost) ;
+    void TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime);
 
 private:
     MapModel m_mapModel;
@@ -86,7 +87,7 @@ private:
     Vector2f m_startPosition;
 
     float PACMAN_SIZE = 0.99f;
-    float GHOST_SIZE = 0.9;
+    float GHOST_SIZE = 0.99f;
     float COIN_SIZE = 0.15f;
     float FRUIT_SIZE = 0.65f;
 

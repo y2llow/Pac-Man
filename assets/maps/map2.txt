@@ -9,7 +9,7 @@ x....x.......x....x
 xxx.xxx.xxx.xxx.xxx
 ##x.x....S....x.x##
 xxx.x.xxxdxxx.x.xxx
-......x  r  x......
+......xrp obx......
 xxx.x.xxxxxxx.x.xxx
 ##x.x.........x.x##
 xxx.x.xxxxxxx.x.xxx
