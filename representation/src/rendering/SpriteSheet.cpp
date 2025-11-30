@@ -13,7 +13,6 @@ bool SpriteSheet::loadSpriteSheet(const std::string& filename) {
     }
     
     defineAllSprites();
-    std::cout << "Sprite sheet loaded successfully: " << filename << std::endl;
     return true;
 }
 

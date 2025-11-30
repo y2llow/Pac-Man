@@ -201,19 +201,19 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
             bool willChangeDirection = rng.getBool(0.5);
 
             // DEBUG OUTPUT
-            std::cout << "🔴 INTERSECTION! Pos: (" << intersectionPoint.x << ", "
-                      << intersectionPoint.y << ") | Roll: "
-                      << (willChangeDirection ? "CHANGE" : "KEEP") << " | Options: ";
-            for (int dir : validDirs) {
-                std::cout << dir << " ";
-            }
+            // std::cout << "🔴 INTERSECTION! Pos: (" << intersectionPoint.x << ", "
+            //           << intersectionPoint.y << ") | Roll: "
+            //           << (willChangeDirection ? "CHANGE" : "KEEP") << " | Options: ";
+            // for (int dir : validDirs) {
+            //     std::cout << dir << " ";
+            // }
 
             if (willChangeDirection) {
                 int chosenDirection = rng.getRandomElement(validDirs);
-                std::cout << "| Chose: " << chosenDirection << std::endl;
+                // std::cout << "| Chose: " << chosenDirection << std::endl;
                 ghost->SetDirection(chosenDirection);
             } else {
-                std::cout << "| Keep: " << ghost->getDirection() << std::endl;
+                // std::cout << "| Keep: " << ghost->getDirection() << std::endl;
                 bool currentDirValid = false;
                 for (int dir : validDirs) {
                     if (dir == ghost->getDirection()) {
@@ -224,7 +224,7 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
 
                 if (!currentDirValid) {
                     int newDirection = rng.getRandomElement(validDirs);
-                    std::cout << "| Forced: " << newDirection << std::endl;
+                    // std::cout << "| Forced: " << newDirection << std::endl;
                     ghost->SetDirection(newDirection);
                 }
             }
@@ -260,7 +260,7 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
                     auto& rng = Random::getInstance();
                     int newDirection = rng.getRandomElement(validDirs);
 
-                    std::cout << "*** STUCK - Forcing direction: " << newDirection << " ***" << std::endl;
+                    // std::cout << "*** STUCK - Forcing direction: " << newDirection << " ***" << std::endl;
 
                     ghost->SetDirection(newDirection);
 
