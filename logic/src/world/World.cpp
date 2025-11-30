@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map5.txt")) {
         createEntitiesFromMap();
         attachScoreObservers(); // ADD THIS LINE
     }
@@ -188,7 +188,25 @@ void World::update(float deltaTime) {
 }
 
 void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
-    // Check of we DOOR een intersection gaan bewegen
+    Vector2f startPos = ghost->getPosition();
+    Vector2f nextPos = ghost->calculateNextPosition(deltaTime);
+
+    // NEW: Check for tunneling first
+    float distance = std::abs(nextPos.x - startPos.x) + std::abs(nextPos.y - startPos.y);
+    float moveAmount = ghost->GetSpeed() * deltaTime;
+
+    bool isTunneling = distance > moveAmount * 1.5f;
+
+    if (isTunneling) {
+        // Direct tunneling - geen intersection checks
+        if (!GhostWouldCollideWithWalls(*ghost, nextPos)) {
+            ghost->setPosition(nextPos);
+        }
+        ghost->notifyObservers();
+        return;
+    }
+
+    // Rest of existing intersection logic...
     bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
     if (crossingIntersection) {

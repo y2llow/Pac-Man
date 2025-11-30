@@ -31,6 +31,15 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
     // Check meerdere punten langs het pad
     Vector2f startPos = m_position;
     Vector2f endPos = calculateNextPosition(deltaTime);
+
+    float distance = std::abs(endPos.x - startPos.x) + std::abs(endPos.y - startPos.y);
+    float moveAmount = m_speed * deltaTime;
+
+    // If the distance is much larger than moveAmount, it's tunneling - skip intersection check
+    if (distance > moveAmount * 1.5f) {
+        return false;
+    }
+
 //todo maybe lower this or make this dependant on speed
     // Check 10 punten langs de beweging
     const int numChecks = 10 ;
@@ -39,6 +48,9 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
         Vector2f checkPos;
         checkPos.x = startPos.x + (endPos.x - startPos.x) * t;
         checkPos.y = startPos.y + (endPos.y - startPos.y) * t;
+        // NEW: Skip intersections outside the visible field [-1, 1]
+        if (checkPos.x < -1.0f || checkPos.x > 1.0f || checkPos.y < -1.0f || checkPos.y > 1.0f) {
+            continue;}
 
         // Maak temp ghost op deze positie
         GhostModel tempGhost = *this;
@@ -69,6 +81,13 @@ Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) c
     Vector2f startPos = m_position;
     Vector2f endPos = calculateNextPosition(deltaTime);
 
+    float distance = std::abs(endPos.x - startPos.x) + std::abs(endPos.y - startPos.y);
+    float moveAmount = m_speed * deltaTime;
+
+    if (distance > moveAmount * 1.5f) {
+        return m_position; // No intersection during tunneling
+    }
+
     // Check meerdere punten en return het eerste intersection punt
     const int numChecks = 10 ;
     for (int i = 0; i <= numChecks; i++) {
@@ -76,6 +95,9 @@ Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) c
         Vector2f checkPos;
         checkPos.x = startPos.x + (endPos.x - startPos.x) * t;
         checkPos.y = startPos.y + (endPos.y - startPos.y) * t;
+
+        if (checkPos.x < -1.0f || checkPos.x > 1.0f || checkPos.y < -1.0f || checkPos.y > 1.0f) {
+            continue; }
 
         GhostModel tempGhost = *this;
         tempGhost.setPosition(checkPos);
