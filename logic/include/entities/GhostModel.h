@@ -67,11 +67,11 @@ protected:
     std::string m_textureId;
     Vector2f m_size;
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
-    int m_lastDirection;
+    int m_lastDirection{};
 
     // Ghost specific
     float GHOST_SPEED = 0.25f;
-    float m_speed ;
+    float m_speed{} ;
     int m_scaredTimerInc = 1;
     float m_scaredTimer = 0.0f;
     Vector2f m_spawnPoint;
