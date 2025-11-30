@@ -42,7 +42,6 @@ public:
     // Ghost movement
     void handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& pacman, const Vector2f& newPosition) const ;
-    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const;
 
 
     // Nieuwe predictive collision methodes

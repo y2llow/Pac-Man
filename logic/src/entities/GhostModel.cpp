@@ -22,6 +22,7 @@ void GhostModel::update(float deltaTime) {
             m_scaredTimer = 0.0f;
         }
     }
+
     m_speed = currentSpeed;  // Set the actual speed used for movement
     m_position = checkTunneling(m_position);
     notifyObservers();
