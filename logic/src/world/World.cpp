@@ -139,6 +139,9 @@ void World::update(float deltaTime) {
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
                 ghost->updateMovement(deltaTime);
+                if (ghost->GetOutsideStart()) {
+                    ghost->setPosition(m_startPosition);
+                }
                 // ghost->update(deltaTime); // Alleen update voor scared timer etc.
             } else if (!ghost->GetOutsideStart()) {
                 TrappedGhostMovement(ghost, deltaTime);
@@ -146,6 +149,7 @@ void World::update(float deltaTime) {
                 // ghost->update(deltaTime);
             } else {
                 handlePredictiveRedGhostMovement(ghost, deltaTime);
+
                 // ghost->update(deltaTime);
             }
             // ghost->updateMovement(deltaTime);
@@ -355,11 +359,6 @@ void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float 
 }
 
 
-void World::handleRedGhostLogic(RedGhostModel& ghost) {
-
-
-}
-
 void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
     // Gebruik dezelfde ray-casting logic
     bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
@@ -384,16 +383,16 @@ void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& 
     // Normale movement
     handlePredictiveGhostMovement(ghost, deltaTime);
 }
-void World::handleBlueGhostLogic(RedGhostModel& ghost) {
+void World::handleBlueGhostLogic(BlueGhostModel& ghost) {
 
 }
 
 
-void World::handleOrangeGhostLogic(RedGhostModel& ghost) {
+void World::handleOrangeGhostLogic(OrangeGhostModel& ghost) {
 
 }
 
-void World::handlePinkGhostLogic(RedGhostModel& ghost) {
+void World::handlePinkGhostLogic(PinkGhostModel& ghost) {
 
 }
 
@@ -452,6 +451,7 @@ void World::handlePredictivePacmanMovement(float deltaTime) {
             m_pacman->setPosition(closestPos);
         }
     }
+    // std::cout << m_pacman->getPosition().x <<" , " <<m_pacman->getPosition().y << std::endl;
 
     // 4. Notify observers
     m_pacman->notifyObservers();
@@ -673,7 +673,7 @@ bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& 
     }
 
     // Check collision with all doors - if they are not escaping the house
-    if (!ghost.GetMovingToStart()) {
+    if (ghost.GetOutsideStart()) {
         for (const auto& door : m_doors) {
             if (checkCollision(tempghost, *door)) {
                 return true;

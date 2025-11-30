@@ -124,7 +124,9 @@ void SpriteSheet::defineAllSprites() {
 
     // ===== GHOST SCARED (fear mode) =====
     defineSpriteRect("ghost_scared_1", sf::IntRect(1, 554, 35, 35));
-    defineSpriteRect("ghost_scared_2", sf::IntRect(51, 554, 35, 35));
+    defineSpriteRect("ghost_scared_2", sf::IntRect(1, 604, 35, 35));
+    defineSpriteRect("ghost_blink_scared_1", sf::IntRect(51, 554, 35, 35));
+    defineSpriteRect("ghost_blink_scared_2", sf::IntRect(51, 604, 35, 35));
 
     // ===== COLLECTIBLES =====
     defineSpriteRect("coin", sf::IntRect(411, 313, 16, 16));

@@ -1,8 +1,11 @@
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x         r      S                         x
-x xxx xxxx xxx xx xxxxxxx xxxxx xxx xx xxx x
-x                                          x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x P.                              .        x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxx
+x x x xx
+x   x xx
+x xdxxxx
+#b   S #
+x ddddxx
+x x x xx
+x   xrxx
+xxxxxxxx
+xP .xxxx
+xxxxxxxx

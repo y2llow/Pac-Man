@@ -44,10 +44,14 @@ void GhostView::updateSprite() {
             float blinkTime = 3.0f - timeRemaining;
             int blinkPhase = static_cast<int>(blinkTime / blinkSpeed) % 2;
 
-            spriteId = blinkPhase == 0 ? "ghost_scared_1" : "ghost_scared_2";
+            spriteId = blinkPhase == 0 ? "ghost_scared_1" : "ghost_blink_scared_1";
         } else {
+            if (spriteId == "ghost_scared_1")
+                spriteId = "ghost_scared_2";
+            else {
+                spriteId = "ghost_scared_1";
+            }
             // Normal scared animation
-            spriteId = "ghost_scared_1";
         }
     } else {
         // Normal ghost - select sprite based on direction

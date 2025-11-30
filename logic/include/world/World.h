@@ -63,12 +63,10 @@ public:
 
     // Add this method to fix the LevelState error
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
-
-    void handleRedGhostLogic(RedGhostModel& ghost) ;
-    void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
-    void handleBlueGhostLogic(RedGhostModel& ghost) ;
-    void handleOrangeGhostLogic(RedGhostModel& ghost) ;
-    void handlePinkGhostLogic(RedGhostModel& ghost) ;
+    void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+    void handleBlueGhostLogic(BlueGhostModel& ghost) ;
+    void handleOrangeGhostLogic(OrangeGhostModel& ghost) ;
+    void handlePinkGhostLogic(PinkGhostModel& ghost) ;
     void TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const;
 
 private:
@@ -135,5 +133,6 @@ bool World::checkCollision(const T1& entity1, const T2& entity2) {
 
     return false;  // No collision
 }
+
 
 #endif
