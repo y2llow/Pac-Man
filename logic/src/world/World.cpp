@@ -24,6 +24,7 @@ void World::initialize() {
 }
 
 void World::createEntitiesFromMap() {
+    //todo use -1,1 here for teh coordinates for camera instead of the sez conversions
     const auto& grid = m_mapModel.getGrid();
     Vector2f gridSize = m_mapModel.getGridSize();
 
@@ -185,6 +186,7 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
+
 void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
     // Check of we DOOR een intersection gaan bewegen
     bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
@@ -366,7 +368,6 @@ void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& 
     if (crossingIntersection) {
         Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
         ghost->setPosition(intersectionPoint);
-
         std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
 
         if (!validDirs.empty()) {
@@ -379,6 +380,7 @@ void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& 
             }
         }
     }
+
 
     // Normale movement
     handlePredictiveGhostMovement(ghost, deltaTime);
