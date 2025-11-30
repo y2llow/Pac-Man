@@ -14,15 +14,14 @@ void GhostModel::update(float deltaTime) {
 
     // Update scared timer
     if (m_scared) {
-        m_scaredTimer -= deltaTime * m_scaredTimerInc;
-        currentSpeed = GHOST_SPEED * 0.5f;  // 50% speed when scared
-
-        if (m_scaredTimer <= 0) {
+        if (m_scaredTimer >= 0) {
+            m_scaredTimer -= deltaTime * m_scaredTimerInc;
+            currentSpeed = GHOST_SPEED * 0.5f;  // 50% speed when scared
+        }else{
             m_scared = false;
             m_scaredTimer = 0.0f;
         }
     }
-
     m_speed = currentSpeed;  // Set the actual speed used for movement
     m_position = checkTunneling(m_position);
     notifyObservers();
@@ -170,6 +169,7 @@ Vector2f GhostModel::checkTunneling(Vector2f position) const {
 void RedGhostModel::updateMovement(float deltaTime) {
     m_MovingToStartTimer -= deltaTime;
        if (m_MovingToStartTimer <= 0) {
+           if (GetOutsideStart() != true)
            SetMovingToStart(true);
        }
     GhostModel::updateMovement(deltaTime);
@@ -181,6 +181,7 @@ void RedGhostModel::updateMovement(float deltaTime) {
 void BlueGhostModel::updateMovement(float deltaTime) {
     m_MovingToStartTimer -= deltaTime;
     if (m_MovingToStartTimer <= 0) {
+        if (GetOutsideStart() != true)
         SetMovingToStart(true);
     }
     GhostModel::updateMovement(deltaTime);
@@ -191,6 +192,7 @@ void BlueGhostModel::updateMovement(float deltaTime) {
 void OrangeGhostModel::updateMovement(float deltaTime) {
     m_MovingToStartTimer -= deltaTime;
     if (m_MovingToStartTimer <= 0) {
+        if (GetOutsideStart() != true)
         SetMovingToStart(true);
     }
     GhostModel::updateMovement(deltaTime);
@@ -200,6 +202,7 @@ void OrangeGhostModel::updateMovement(float deltaTime) {
 void PinkGhostModel::updateMovement(float deltaTime) {
     m_MovingToStartTimer -= deltaTime;
     if (m_MovingToStartTimer <= 0) {
+        if (GetOutsideStart() != true)
         SetMovingToStart(true);
     }
     GhostModel::updateMovement(deltaTime);
