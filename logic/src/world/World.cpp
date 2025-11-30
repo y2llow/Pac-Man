@@ -654,16 +654,16 @@ void World::handleCollectibleCollisions() {
 }
 
 void World::handlePacmanCoinCollision(CoinModel& coin) {
-    m_score->onCoinCollected();
+    // m_score->onCoinCollected();
     coin.collect();
 }
 
 void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
     if (ghost.isScared()) {
-        m_score->onGhostEaten();
+        // m_score->onGhostEaten();
         ghost.respawn();
     } else {
-        m_score->onPacManDied(); // Notify score about death
+        // m_score->onPacManDied(); // Notify score about death
         pacman.loseLife(); // This now starts the death animation
     }
 }
@@ -682,7 +682,7 @@ void World::checkDeathAnimationState() {
 }
 
 void World::handlePacmanFruitCollision(FruitModel& fruit) {
-    m_score->onFruitCollected();
+    // m_score->onFruitCollected();
     fruit.collect();
     for (auto& ghost : m_ghosts) {
         ghost->setScared(true);
@@ -775,11 +775,22 @@ void World::attachScoreObservers() {
         });
     }
 
+    // Fruits
     for (auto& fruit : m_fruits) {
         fruit->attachObserver([this, fruitPtr = fruit.get()]() {
-            // Only update score if fruit was just collected
             if (fruitPtr->isCollected() && m_score) {
                 m_score->onFruitCollected();
+            }
+        });
+    }
+
+    // Ghosts - trigger when they get scared (eaten)
+    for (auto& ghost : m_ghosts) {
+        ghost->attachObserver([this, ghostPtr = ghost.get()]() {
+            // GhostModel now only notifies when state changes
+            // So if we get a notification and ghost is scared, it was just eaten
+            if (ghostPtr->isScared() && m_score) {
+                m_score->onGhostEaten();
             }
         });
     }

@@ -50,9 +50,10 @@ private:
     static constexpr int SCORE_DECREASE_RATE = 5.0f; // Points per second
     static constexpr float MAX_COIN_CHAIN_TIME = 3.0f; // Max time for chain bonus
     static constexpr int BASE_COIN_SCORE = 10;
-    static constexpr int BASE_GHOST_SCORE = 50;
-    static constexpr int BASE_FRUIT_SCORE = 20;
-    static constexpr int LEVEL_CLEAR_BONUS = 100;
+    static constexpr int BASE_GHOST_SCORE = 100;
+    static constexpr int BASE_FRUIT_SCORE = 50;
+    static constexpr int LEVEL_CLEAR_BONUS = 250;
+    static constexpr int PACMAN_DEATH_BONUS = 125;
 };
 
 #endif
