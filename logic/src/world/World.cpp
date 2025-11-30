@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map5.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
         attachScoreObservers(); // ADD THIS LINE
     }
