@@ -6,8 +6,7 @@ CoinModel::CoinModel(const Vector2f& position, const Vector2f& size, const std::
 }
 
 void CoinModel::update(float deltaTime) {
-
-    notifyObservers();
+    // notifyObservers();
     // Coins are static - no update logic needed unless animated
 }
 

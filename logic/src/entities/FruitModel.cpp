@@ -5,7 +5,7 @@ m_position = position;{m_size = size;}
 }
 
 void FruitModel::update(float deltaTime)  {
-    notifyObservers();
+    // notifyObservers();
 }
 
 

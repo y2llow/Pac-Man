@@ -17,8 +17,9 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
+        attachScoreObservers(); // ADD THIS LINE
     }
 }
 
@@ -730,6 +731,7 @@ void World::advanceToNextLevel() {
 
     if (m_mapModel.loadFromFile(mapFile)) {
         createEntitiesFromMap();
+        attachScoreObservers();
     }
 
     // Make ghosts harder each level
@@ -740,4 +742,46 @@ void World::advanceToNextLevel() {
 
     // Reset score chain for new level
     m_score->resetCoinChain();
+}
+
+void World::attachScoreObservers() {
+    // Attach score as observer to all collectibles
+    for (auto& coin : m_coins) {
+        coin->attachObserver([this, coinPtr = coin.get()]() {
+            // Only update score if coin was just collected
+            if (coinPtr->isCollected() && m_score) {
+                m_score->onCoinCollected();
+            }
+        });
+    }
+
+    for (auto& fruit : m_fruits) {
+        fruit->attachObserver([this, fruitPtr = fruit.get()]() {
+            // Only update score if fruit was just collected
+            if (fruitPtr->isCollected() && m_score) {
+                m_score->onFruitCollected();
+            }
+        });
+    }
+
+    // Attach to pacman for death events
+    if (m_pacman) {
+        m_pacman->attachObserver([this]() {
+            // Only trigger once when death animation starts
+            if (m_pacman->isDying() && !m_pacman->isDeathAnimationComplete() && m_score) {
+                static bool deathHandled = false;
+                if (!deathHandled) {
+                    m_score->onPacManDied();
+                    deathHandled = true;
+                }
+                // Reset flag when animation completes
+                if (m_pacman->isDeathAnimationComplete()) {
+                    deathHandled = false;
+                }
+            }
+        });
+    }
+
+    // For ghosts, we'll keep manual score update in collision handler
+    // since we need to detect the collision moment, not the respawn
 }

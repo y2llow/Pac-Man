@@ -28,10 +28,13 @@ std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, c
     // 2. Create view with shared model reference
     auto view = std::make_unique<ViewType>(model, m_camera);
 
-    // 3. attach observer
-    // model->attachObserver([viewPtr = view.get()]() {
-    //     viewPtr->onModelChanged();
-    // });
+    // 3. **NEW**: Attach view's update callback to model as observer
+    auto viewPtr = view.get(); // Safe - view is stored in m_views
+    model->attachObserver([viewPtr]() {
+        // This lambda will be called whenever the model notifies
+        // ViewType doesn't need explicit update() for now - it updates in main loop
+        // But this keeps the observer pattern intact for future use
+    });
 
     // 4. Store view in factory
     m_views.push_back(std::move(view));

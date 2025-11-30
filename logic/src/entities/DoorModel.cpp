@@ -7,7 +7,7 @@ DoorModel::DoorModel(const Vector2f& position, const Vector2f& size, const std::
     }
 
 void DoorModel::update(float deltaTime) {
-    notifyObservers();
+    // notifyObservers();
 }
 
 void DoorModel::setPosition(const Vector2f& position) {

@@ -25,7 +25,7 @@ public:
 
     void initialize();
     void update(float deltaTime);
-    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
+    void attachScoreObservers();
 
     Score& getScore() { return *m_score; }
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
@@ -42,7 +42,7 @@ public:
     // Ghost movement
     void handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& pacman, const Vector2f& newPosition) const ;
-
+    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
 
     // Nieuwe predictive collision methodes
     [[nodiscard]] bool PacmanWouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
