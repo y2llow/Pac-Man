@@ -23,6 +23,7 @@ void GhostView::setupSprite() {
 void GhostView::update(float deltaTime) {
     m_animationTimer += deltaTime;
     updateSprite();
+
 }
 
 void GhostView::draw(sf::RenderWindow& window) {

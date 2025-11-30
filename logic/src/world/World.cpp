@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
     }
 }
@@ -149,11 +149,10 @@ void World::update(float deltaTime) {
                 // ghost->update(deltaTime);
             } else {
                 handlePredictiveRedGhostMovement(ghost, deltaTime);
-
-                // ghost->update(deltaTime);
             }
-            // ghost->updateMovement(deltaTime);
             ghost->update(deltaTime); // Alleen update voor scared timer etc.
+
+            // ghost->updateMovement(deltaTime);
         }
 
         // DERDE: Collectible collisions (na movement)

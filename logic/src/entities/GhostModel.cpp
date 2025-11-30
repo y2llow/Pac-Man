@@ -31,9 +31,9 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
     // Check meerdere punten langs het pad
     Vector2f startPos = m_position;
     Vector2f endPos = calculateNextPosition(deltaTime);
-
+//todo maybe lower this or make this dependant on speed
     // Check 10 punten langs de beweging
-    const int numChecks = 3 ;
+    const int numChecks = 10 ;
     for (int i = 0; i <= numChecks; i++) {
         float t = static_cast<float>(i) / numChecks;
         Vector2f checkPos;
@@ -70,7 +70,7 @@ Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) c
     Vector2f endPos = calculateNextPosition(deltaTime);
 
     // Check meerdere punten en return het eerste intersection punt
-    const int numChecks = 3 ;
+    const int numChecks = 10 ;
     for (int i = 0; i <= numChecks; i++) {
         float t = static_cast<float>(i) / numChecks;
         Vector2f checkPos;

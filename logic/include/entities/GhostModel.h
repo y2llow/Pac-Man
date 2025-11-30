@@ -72,7 +72,7 @@ protected:
     // Ghost specific
     float GHOST_SPEED = 0.25f;
     float m_speed ;
-    int m_scaredTimerInc = 0;
+    int m_scaredTimerInc = 1;
     float m_scaredTimer = 0.0f;
     Vector2f m_spawnPoint;
     bool m_scared = false;
