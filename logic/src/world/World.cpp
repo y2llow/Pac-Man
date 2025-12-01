@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
         attachScoreObservers(); // ADD THIS LINE
     }
@@ -654,17 +654,16 @@ void World::handleCollectibleCollisions() {
 }
 
 void World::handlePacmanCoinCollision(CoinModel& coin) {
-    // m_score->onCoinCollected();
     coin.collect();
 }
 
 void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
-    if (ghost.isScared()) {
-        // m_score->onGhostEaten();
-        ghost.respawn();
-    } else {
-        // m_score->onPacManDied(); // Notify score about death
-        pacman.loseLife(); // This now starts the death animation
+    if (ghost.isScared() && !ghost.wasEaten()) {
+        m_score->onGhostEaten();  // Score ONCE at collision
+        ghost.SetWasEaten(true);   // Mark as eaten
+        ghost.respawn();           // This will notify observers for view updates
+    } else if (!ghost.isScared()) {
+        pacman.loseLife();  // This calls startDeathAnimation, which notifies
     }
 }
 
@@ -765,54 +764,64 @@ void World::advanceToNextLevel() {
 }
 
 void World::attachScoreObservers() {
-    // Attach score as observer to all collectibles
+    // Coins - use capture by value for safety
     for (auto& coin : m_coins) {
-        coin->attachObserver([this, coinPtr = coin.get()]() {
-            // Only update score if coin was just collected
-            if (coinPtr->isCollected() && m_score) {
+        // Store a weak reference to check validity
+        std::weak_ptr<CoinModel> weakCoin = coin;
+
+        coin->attachObserver([this, weakCoin]() {
+            auto coinPtr = weakCoin.lock();
+            if (!coinPtr || !m_score) return;
+
+            // Only award score ONCE when just collected
+            if (coinPtr->isCollected() && !coinPtr->getScoreAwarded()) {
                 m_score->onCoinCollected();
+                // Note: m_scoreAwarded is set in collect() method
             }
         });
     }
 
     // Fruits
     for (auto& fruit : m_fruits) {
-        fruit->attachObserver([this, fruitPtr = fruit.get()]() {
-            if (fruitPtr->isCollected() && m_score) {
+        std::weak_ptr<FruitModel> weakFruit = fruit;
+
+        fruit->attachObserver([this, weakFruit]() {
+            auto fruitPtr = weakFruit.lock();
+            if (!fruitPtr || !m_score) return;
+
+            if (fruitPtr->isCollected() && !fruitPtr->getScoreAwarded()) {
                 m_score->onFruitCollected();
             }
         });
     }
 
-    // Ghosts - trigger when they get scared (eaten)
+    // Ghosts - award score when eaten (collision while scared)
     for (auto& ghost : m_ghosts) {
-        ghost->attachObserver([this, ghostPtr = ghost.get()]() {
-            // GhostModel now only notifies when state changes
-            // So if we get a notification and ghost is scared, it was just eaten
-            if (ghostPtr->isScared() && m_score) {
-                m_score->onGhostEaten();
-            }
+        std::weak_ptr<GhostModel> weakGhost = ghost;
+
+        ghost->attachObserver([this, weakGhost]() {
+            auto ghostPtr = weakGhost.lock();
+            if (!ghostPtr || !m_score) return;
+
+            // Ghost was just eaten if it's respawning and wasn't scored yet
+            // This is handled in collision, so we don't score here
+            // Observers on ghosts are mainly for view updates
         });
     }
 
-    // Attach to pacman for death events
+    // Pacman - award death penalty ONCE when animation starts
     if (m_pacman) {
         m_pacman->attachObserver([this]() {
-            // Only trigger once when death animation starts
-            if (m_pacman->isDying() && !m_pacman->isDeathAnimationComplete() && m_score) {
-                static bool deathHandled = false;
-                if (!deathHandled) {
-                    m_score->onPacManDied();
-                    deathHandled = true;
-                }
-                // Reset flag when animation completes
-                if (m_pacman->isDeathAnimationComplete()) {
-                    deathHandled = false;
-                }
+            if (!m_score || !m_pacman) return;
+
+            // Only score when death animation JUST started
+            if (m_pacman->isDying() &&
+                !m_pacman->isDeathAnimationComplete() &&
+                !m_pacman->getDeathScoreAwarded()) {
+
+                m_score->onPacManDied();
+                m_pacman->setDeathScoreAwarded(true);
             }
         });
     }
-
-    // For ghosts, we'll keep manual score update in collision handler
-    // since we need to detect the collision moment, not the respawn
 }

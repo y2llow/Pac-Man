@@ -41,16 +41,20 @@ void PacmanModel::update(float deltaTime) {
 }
 
 void PacmanModel::startDeathAnimation() {
-    m_isDying = true;
-    m_deathAnimationTimer = 0.0f;
-    m_deathAnimationComplete = false;
-    notifyObservers(); // Notify view about state change
+    if (!m_isDying) {  // Only start once
+        m_isDying = true;
+        m_deathAnimationTimer = 0.0f;
+        m_deathAnimationComplete = false;
+        m_deathScoreAwarded = false;  // Reset score flag
+        notifyObservers();
+    }
 }
 
 void PacmanModel::resetDeathAnimation() {
     m_isDying = false;
     m_deathAnimationComplete = false;
     m_deathAnimationTimer = 0.0f;
+    m_deathScoreAwarded = false;
     notifyObservers();
 }
 

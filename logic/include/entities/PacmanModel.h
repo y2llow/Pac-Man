@@ -41,6 +41,8 @@ public:
     [[nodiscard]] bool canMoveInDirection(int direction, const World& world, float deltaTime) const;
     [[nodiscard]] Vector2f calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
     [[nodiscard]] float getSpeed() const { return PACMAN_SPEED; }
+    [[nodiscard]] bool getDeathScoreAwarded() const {return m_deathScoreAwarded; }
+    void setDeathScoreAwarded(bool scoreAwarded) {m_deathScoreAwarded = scoreAwarded; }
 
     [[nodiscard]]Vector2f getSpawnPoint() const {return m_spawnpoint;}
 private:
@@ -61,6 +63,7 @@ private:
     // Death animation state
     bool m_isDying = false;
     bool m_deathAnimationComplete = false;
+    bool m_deathScoreAwarded = false;
     float m_deathAnimationTimer = 0.0f;
     static constexpr float DEATH_ANIMATION_DURATION = 2.0f; // 2 seconds for full death animation
 

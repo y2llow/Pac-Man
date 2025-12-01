@@ -18,6 +18,8 @@ void CoinModel::setPosition(const Vector2f& position) {
 void CoinModel::collect() {
     if (!m_collected) {
         m_collected = true;
-        notifyObservers();
+        m_scoreAwarded = false;  // Reset for the notification
+        notifyObservers();  // This will trigger scoring
+        m_scoreAwarded = true;  // Mark as awarded after notification
     }
 }

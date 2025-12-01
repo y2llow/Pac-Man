@@ -54,6 +54,8 @@ public:
     void SetMovingToStart(bool m_moving_to_start) {m_MovingToStart = m_moving_to_start;}
     [[nodiscard]]bool GetMovingToStart() const {return m_MovingToStart;}
     virtual void resetMovingToStartTimer(float TimeWaiting) ;
+    [[nodiscard]] bool wasEaten() const{return m_wasEaten;}
+    void SetWasEaten(bool wasEaten) { m_wasEaten = wasEaten;}
 
     // In GhostModel class, voeg toe bij de public methods:
     [[nodiscard]] bool isAtIntersection(const World& world, float deltaTime) const;
@@ -70,12 +72,13 @@ protected:
     int m_lastDirection{};
 
     // Ghost specific
-    float GHOST_SPEED = 0.15;
+    float GHOST_SPEED = 0.5;
     float m_speed{} ;
     int m_scaredTimerInc = 1;
     float m_scaredTimer = 0.0f;
     Vector2f m_spawnPoint;
     bool m_scared = false;
+    bool m_wasEaten = false;
     bool m_canMove = true;
 
     bool m_outsideStart = false;

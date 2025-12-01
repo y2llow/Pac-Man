@@ -15,6 +15,8 @@ public:
     [[nodiscard]]  Vector2f getPosition() const override {return m_position;}
     void setPosition(const Vector2f& position) override;
     [[nodiscard]]  Vector2f getSize() const override{return m_size;}
+    [[nodiscard]] bool getScoreAwarded() const {return m_scoreAwarded; }
+    void setScoreAwarded(bool scoreAwarded) {m_scoreAwarded = scoreAwarded; }
 
     // FruitModel specific funcitons
     void collect();  // This will notify observers!
@@ -28,7 +30,8 @@ private:
     Vector2f m_size;
 
     //FruitModel specific privates
-    bool m_collected = false;  // Track collection state
+    bool m_collected = false;
+    bool m_scoreAwarded = false;
 
 };
 #endif //FRUIT_H

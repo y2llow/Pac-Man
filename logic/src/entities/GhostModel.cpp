@@ -10,23 +10,28 @@ GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::stri
 }
 
 void GhostModel::update(float deltaTime) {
-    float currentSpeed = GHOST_SPEED;  // Store base speed separately
+    float currentSpeed = GHOST_SPEED;
+    bool wasScared = m_scared;
 
-    // Update scared timer
     if (m_scared) {
         if (m_scaredTimer >= 0) {
             m_scaredTimer -= deltaTime * m_scaredTimerInc;
-            currentSpeed = GHOST_SPEED * 0.5f;  // 50% speed when scared
-        }else{
+            currentSpeed = GHOST_SPEED * 0.5f;
+        } else {
             m_scared = false;
             m_scaredTimer = 0.0f;
         }
     }
 
-    m_speed = currentSpeed;  // Set the actual speed used for movement
+    m_speed = currentSpeed;
     m_position = checkTunneling(m_position);
-    notifyObservers();
+
+    // Only notify if scared state changed
+    if (wasScared != m_scared) {
+        notifyObservers();
+    }
 }
+
 bool GhostModel::willCrossIntersection(const World& world, float deltaTime) const {
     // Check meerdere punten langs het pad
     Vector2f startPos = m_position;
@@ -131,22 +136,38 @@ void GhostModel::setScared(bool scared) {
     if (scared && !m_scared) {
         // Just became scared - reverse direction
         reverseDirection();
+        m_wasEaten = false;  // Reset eaten flag
     }
+
+    bool wasScared = m_scared;
     m_scared = scared;
+
     if (scared) {
-        m_scaredTimer = 10.0f; // 10 seconds scared time
+        m_scaredTimer = 10.0f;
+    }
+
+    // Only notify if state CHANGED
+    if (wasScared != m_scared) {
+        notifyObservers();
     }
 }
 
 void GhostModel::respawn() {
     m_position = m_spawnPoint;
+    bool wasScared = m_scared;
     m_scared = false;
     m_scaredTimer = 0.0f;
     m_canMove = true;
     m_outsideStart = false;
     m_MovingToStart = false;
     resetMovingToStartTimer(3);
+
+    // Only notify if state changed
+    if (wasScared) {
+        notifyObservers();
+    }
 }
+
 void GhostModel::resetMovingToStartTimer(float TimeWaiting) {}
 void RedGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}
 void BlueGhostModel::resetMovingToStartTimer(float TimeWaiting) {m_MovingToStartTimer =  TimeWaiting;}

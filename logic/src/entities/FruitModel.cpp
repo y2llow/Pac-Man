@@ -17,6 +17,8 @@ void FruitModel::setPosition(const Vector2f& position)  {
 void FruitModel::collect() {
     if (!m_collected) {
         m_collected = true;
+        m_scoreAwarded = false;
         notifyObservers();
+        m_scoreAwarded = true;
     }
 }
