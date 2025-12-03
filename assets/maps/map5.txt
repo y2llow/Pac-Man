@@ -1,5 +1,5 @@
 #########x#########
-#########P#########
+###################
 xxxxxxxxxxxxxxxxxxx
 x........x........x
 xfxx.xxx.x.xxx.xxfx
@@ -19,5 +19,5 @@ x..x...........x..x
 xx.x.x.xxxxx.x.x.xx
 x....x...x...x....x
 xfxxxxxx.x.xxxxxxfx
-x.................x
+x........P........x
 xxxxxxxxxxxxxxxxxxx

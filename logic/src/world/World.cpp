@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
         createEntitiesFromMap();
         attachScoreObservers(); // ADD THIS LINE
     }
@@ -136,7 +136,6 @@ void World::update(float deltaTime) {
         // EERST: Predictive movement voor Pacman
         handlePredictivePacmanMovement(deltaTime);
 
-//todo
         for (auto& ghost : m_ghosts) {
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
@@ -151,6 +150,7 @@ void World::update(float deltaTime) {
                 // ghost->update(deltaTime);
             } else {
                 handlePredictiveRedGhostMovement(ghost, deltaTime);
+                BlueGhostMovement(ghost, deltaTime);
             }
             ghost->update(deltaTime); // Alleen update voor scared timer etc.
 
@@ -297,6 +297,98 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
     // ghost->notifyObservers();
 }
 
+void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const {
+    if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {
+
+    }
+    else if (ghost->canMoveInDirection(0,*this, deltaTime)) {
+        ghost->SetDirection(0);
+    }
+    else if (ghost->canMoveInDirection(1,*this, deltaTime)) {
+        ghost->SetDirection(1);
+    }
+    else if (ghost->canMoveInDirection(2,*this, deltaTime)) {
+        ghost->SetDirection(2);
+    }
+    else if (ghost->canMoveInDirection(3,*this, deltaTime)) {
+        ghost->SetDirection(3);
+    }
+}
+
+void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+    // Gebruik dezelfde ray-casting logic
+    bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
+
+    if (crossingIntersection) {
+        Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
+        ghost->setPosition(intersectionPoint);
+        std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
+
+        if (!validDirs.empty()) {
+            auto& rng = Random::getInstance();
+            bool willChangeDirection = rng.getBool(0.5);
+
+            if (willChangeDirection) {
+                int chosenDirection = rng.getRandomElement(validDirs);
+                ghost->SetDirection(chosenDirection);
+            }
+        }
+    }
+
+
+    // Normale movement
+    handlePredictiveGhostMovement(ghost, deltaTime);
+}
+
+void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+    // Two ghosts, when in chasing mode, should always move in the direction that Pac-Man is
+    // currently facing. Concretely, it should move in the direction that minizes the Manhattan
+    // distance to the locations “in front of” Pac-Man. For this, look at the viable actions from
+    // the set {up, down, left, right} and compute for each viable action what the Manhattan
+    // distance to Pac-Man would have been if the ghost had taken one step in that particular
+    // direction. Ties between the best actions are broken at random.
+
+/*  //first
+    getPacmanDirection();
+    NextPosInCurrentDirectionPacman();
+    NextPosInDirectionsGhost(); this directions gets priority
+
+    vector <int> Directions {0,1,2,3};
+    Vector2f ShortestDistance;
+    int ShortestDirection;
+
+
+    for i in Directions[i]{
+        NextPosInCurrentDirectionGhost();
+        GetManhattenDistance(ghostPosTemp, pacmanNextPos)
+
+        if GetManhattenDistance < ShortestDistance {
+            ShortestDistance = getManhattenDistance;
+            ShortestDirection = Directions[i]
+        }
+     }
+
+     setDirectionGhost(ShortestDirection);
+
+     handlepredictiveghostmovement();
+
+*/
+}
+
+Vector2f World::getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos) {
+    float dx = abs(ghostPos.x - pacmanNextPos.x);
+    float dy = abs(ghostPos.y - pacmanNextPos.y);
+    return {dx,dy};
+}
+
+
+void World::handleOrangeGhostLogic(OrangeGhostModel& ghost) {
+
+}
+
+void World::handlePinkGhostLogic(PinkGhostModel& ghost) {
+
+}
 Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos,
                                                    int direction,
                                                    float deltaTime,
@@ -313,10 +405,10 @@ Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos,
         Vector2f testPos = currentPos;
 
         switch (direction) {
-            case 0: testPos.x -= testDistance; break;
-            case 1: testPos.y += testDistance; break;
-            case 2: testPos.x += testDistance; break;
-            case 3: testPos.y -= testDistance; break;
+        case 0: testPos.x -= testDistance; break;
+        case 1: testPos.y += testDistance; break;
+        case 2: testPos.x += testDistance; break;
+        case 3: testPos.y -= testDistance; break;
         }
 
         testPos = ghost.checkTunneling(testPos);
@@ -351,69 +443,13 @@ Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos,
 
     Vector2f closestPos = currentPos;
     switch (direction) {
-        case 0: closestPos.x -= bestDistance; break;
-        case 1: closestPos.y += bestDistance; break;
-        case 2: closestPos.x += bestDistance; break;
-        case 3: closestPos.y -= bestDistance; break;
+    case 0: closestPos.x -= bestDistance; break;
+    case 1: closestPos.y += bestDistance; break;
+    case 2: closestPos.x += bestDistance; break;
+    case 3: closestPos.y -= bestDistance; break;
     }
 
     return ghost.checkTunneling(closestPos);
-}
-
-void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const {
-    if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {
-
-    }
-    else if (ghost->canMoveInDirection(0,*this, deltaTime)) {
-        ghost->SetDirection(0);
-    }
-    else if (ghost->canMoveInDirection(1,*this, deltaTime)) {
-        ghost->SetDirection(1);
-    }
-    else if (ghost->canMoveInDirection(2,*this, deltaTime)) {
-        ghost->SetDirection(2);
-    }
-    else if (ghost->canMoveInDirection(3,*this, deltaTime)) {
-        ghost->SetDirection(3);
-    }
-}
-
-
-void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
-    // Gebruik dezelfde ray-casting logic
-    bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
-
-    if (crossingIntersection) {
-        Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
-        ghost->setPosition(intersectionPoint);
-        std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
-
-        if (!validDirs.empty()) {
-            auto& rng = Random::getInstance();
-            bool willChangeDirection = rng.getBool(0.5);
-
-            if (willChangeDirection) {
-                int chosenDirection = rng.getRandomElement(validDirs);
-                ghost->SetDirection(chosenDirection);
-            }
-        }
-    }
-
-
-    // Normale movement
-    handlePredictiveGhostMovement(ghost, deltaTime);
-}
-void World::handleBlueGhostLogic(BlueGhostModel& ghost) {
-
-}
-
-
-void World::handleOrangeGhostLogic(OrangeGhostModel& ghost) {
-
-}
-
-void World::handlePinkGhostLogic(PinkGhostModel& ghost) {
-
 }
 
 

@@ -63,6 +63,9 @@ public:
     // Add this method to fix the LevelState error
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
     void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+    void BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+    static Vector2f getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos);
+
     void handleBlueGhostLogic(BlueGhostModel& ghost) ;
     void handleOrangeGhostLogic(OrangeGhostModel& ghost) ;
     void handlePinkGhostLogic(PinkGhostModel& ghost) ;
