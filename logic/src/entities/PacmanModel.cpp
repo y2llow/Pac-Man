@@ -22,7 +22,10 @@ Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
 }
 
 void PacmanModel::setDirection(int newDirection) {
-    m_direction = newDirection;
+    if (m_direction != newDirection) {
+        m_direction = newDirection;
+        notifyObservers();
+    }
 }
 
 void PacmanModel::applyMovement(const Vector2f& newPosition) {
@@ -36,6 +39,7 @@ void PacmanModel::update(float deltaTime) {
 
         if (m_deathAnimationTimer >= DEATH_ANIMATION_DURATION) {
             m_deathAnimationComplete = true;
+            notifyObservers();
         }
     }
 }
@@ -81,8 +85,6 @@ Vector2f PacmanModel::CheckTunneling(Vector2f position) const {
 
 void PacmanModel::setPosition(const Vector2f& position)  {
     m_position = position;
-    notifyObservers();
-
 }
 
 void PacmanModel::bufferDirection(int newDirection) {

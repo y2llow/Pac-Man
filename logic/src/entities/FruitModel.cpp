@@ -11,7 +11,6 @@ void FruitModel::update(float deltaTime)  {
 
 void FruitModel::setPosition(const Vector2f& position)  {
      m_position = position;
-     notifyObservers();
  }
 
 void FruitModel::collect() {

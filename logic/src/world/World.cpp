@@ -294,7 +294,7 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
         }
     }
 
-    ghost->notifyObservers();
+    // ghost->notifyObservers();
 }
 
 Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos,
@@ -474,7 +474,7 @@ void World::handlePredictivePacmanMovement(float deltaTime) {
     // std::cout << m_pacman->getPosition().x <<" , " <<m_pacman->getPosition().y << std::endl;
 
     // 4. Notify observers
-    m_pacman->notifyObservers();
+    // m_pacman->notifyObservers();
 }
 
 Vector2f World::findClosestPositionToWall(const Vector2f& currentPos,

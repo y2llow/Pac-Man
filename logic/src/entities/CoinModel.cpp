@@ -6,13 +6,12 @@ CoinModel::CoinModel(const Vector2f& position, const Vector2f& size, const std::
 }
 
 void CoinModel::update(float deltaTime) {
-    // notifyObservers();
     // Coins are static - no update logic needed unless animated
 }
 
 void CoinModel::setPosition(const Vector2f& position) {
     m_position = position;
-    notifyObservers();  // Notify view when position changes
+    // notifyObservers();  // Notify view when position changes
 }
 
 void CoinModel::collect() {

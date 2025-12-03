@@ -12,5 +12,4 @@ void WallModel::update(float deltaTime) {
 
 void WallModel::setPosition(const Vector2f& position) {
     m_position = position;
-    notifyObservers();  // Notify views when position changes
 }
