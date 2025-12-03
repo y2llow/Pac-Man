@@ -45,14 +45,17 @@ void GhostView::updateSprite() {
             float blinkTime = 3.0f - timeRemaining;
             int blinkPhase = static_cast<int>(blinkTime / blinkSpeed) % 2;
 
-            spriteId = blinkPhase == 0 ? "ghost_scared_1" : "ghost_blink_scared_1";
+            // Animate between frames based on timer
+            int frameIndex = static_cast<int>(m_animationTimer / 0.2f) % 2; // 0.2 seconds per frame
+
+            std::string ghost_scared = frameIndex == 0 ? "ghost_scared_1" : "ghost_scared_2";
+            std::string ghost_blink_scared = frameIndex == 0 ? "ghost_blink_scared_1" : "ghost_blink_scared_2";
+
+            spriteId = blinkPhase == 0 ? ghost_scared : ghost_blink_scared;
         } else {
-            if (spriteId == "ghost_scared_1")
-                spriteId = "ghost_scared_2";
-            else {
-                spriteId = "ghost_scared_1";
-            }
-            // Normal scared animation
+            // Normal scared animation (not blinking yet)
+            int frameIndex = static_cast<int>(m_animationTimer / 0.2f) % 2;
+            spriteId = frameIndex == 0 ? "ghost_scared_1" : "ghost_scared_2";
         }
     } else {
         // Normal ghost - select sprite based on direction
@@ -89,7 +92,6 @@ void GhostView::updateSprite() {
     m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
     m_sprite.setPosition(pixelPos.x, pixelPos.y);
 }
-
 std::string GhostView::getGhostColor() const {
     return "red"; // Default, wordt overridden door derived classes
 }
