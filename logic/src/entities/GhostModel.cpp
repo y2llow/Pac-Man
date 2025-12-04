@@ -47,7 +47,7 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
 
 //todo maybe lower this or make this dependant on speed
     // Check 10 punten langs de beweging
-    const int numChecks = 10 ;
+    const int numChecks = 100 ;
     for (int i = 0; i <= numChecks; i++) {
         float t = static_cast<float>(i) / numChecks;
         Vector2f checkPos;

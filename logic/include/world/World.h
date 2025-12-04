@@ -64,6 +64,7 @@ public:
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
     void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+    void PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     static float getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos);
 
     void handleBlueGhostLogic(BlueGhostModel& ghost) ;

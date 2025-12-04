@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
         attachScoreObservers(); // ADD THIS LINE
     }
@@ -149,8 +149,17 @@ void World::update(float deltaTime) {
                 ghost->updateMovement(deltaTime);
                 // ghost->update(deltaTime);
             } else {
+                bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
+
+                if (crossingIntersection) {
+                    Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
+                    ghost->setPosition(intersectionPoint);
+                    std::cout << "PinkLogic" << std::endl;
+                    PinkGhostMovement(ghost, deltaTime);
+                }else {
+                 handlePredictiveRedGhostMovement(ghost, deltaTime);
+                }
                 // handlePredictiveRedGhostMovement(ghost, deltaTime);
-                BlueGhostMovement(ghost, deltaTime);
             }
             ghost->update(deltaTime); // Alleen update voor scared timer etc.
 
@@ -313,6 +322,7 @@ void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float 
     else if (ghost->canMoveInDirection(3,*this, deltaTime)) {
         ghost->SetDirection(3);
     }
+    ghost->updateMovement(deltaTime);
 }
 
 void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
@@ -348,84 +358,293 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
     // distance to Pac-Man would have been if the ghost had taken one step in that particular
     // direction. Ties between the best actions are broken at random.
 
+    // todo only do this on intersections
     int pacmanDirection = getPacman()->getDirection();
-    Vector2f pacmanNextPos = getPacman()->calculateNextPosition(deltaTime);
-    if (PacmanWouldCollideWithWalls(*m_pacman, pacmanNextPos)) {
-        pacmanNextPos = m_pacman->getPosition();
+    Vector2f pacmanPos = getPacman()->getPosition();
+
+    // Calculate the position "in front of" Pac-Man (multiple steps ahead for better targeting)
+    Vector2f targetPos = pacmanPos;
+    float lookAheadDistance = 0.3f; // How far ahead to look (adjust as needed)
+
+    switch (pacmanDirection) {
+    case 0: targetPos.x -= lookAheadDistance; break; // Left
+    case 1: targetPos.y += lookAheadDistance; break; // Down
+    case 2: targetPos.x += lookAheadDistance; break; // Right
+    case 3: targetPos.y -= lookAheadDistance; break; // Up
     }
 
-    std::vector Directions = {0,1,2,3};
-    float bestDistance = 1000;
-    int bestDirection = -1;
+    // Get all viable directions (0=left, 1=down, 2=right, 3=up)
+    std::vector<int> viableDirections;
+    std::vector<float> distances;
+    float bestDistance = std::numeric_limits<float>::max();
 
-    for (int dir : Directions) {
-        Vector2f ghostTempPos = ghost->calculateNextPositionInDirection(ghost->getPosition(),dir,deltaTime);
+    for (int dir = 0; dir < 4; dir++) {
+        // Calculate where ghost would be if it moved in this direction
+        Vector2f ghostNextPos = ghost->calculateNextPositionInDirection(
+            ghost->getPosition(), dir, deltaTime);
 
-        if (GhostWouldCollideWithWalls(*ghost, ghostTempPos)) {
-            continue;
+        // Check if this move is viable (doesn't collide with walls)
+        if (GhostWouldCollideWithWalls(*ghost, ghostNextPos)) {
+            continue; // Skip invalid directions
         }
 
-        float dist = getManhattanDistance(ghostTempPos, pacmanNextPos);
+        // Calculate Manhattan distance from this potential position to target
+        float dist = getManhattanDistance(ghostNextPos, targetPos);
+
+        viableDirections.push_back(dir);
+        distances.push_back(dist);
 
         if (dist < bestDistance) {
-            bestDirection = dir;
             bestDistance = dist;
         }
-        else if (dist == bestDistance) {
-            // break ties at random
-            // if (randomChance(50%)) {
-            //     bestDirection = dir;
-            // }
-        }
     }
-        ghost->SetDirection(bestDirection);
 
+    // If no viable directions, keep current direction (shouldn't happen)
+    if (viableDirections.empty()) {
         handlePredictiveGhostMovement(ghost, deltaTime);
+        return;
+    }
 
-
-
-/*  //first
-    getPacmanDirection();
-    NextPosInCurrentDirectionPacman();
-    // NextPosInDirectionsGhost(); this directions gets priority
-
-    vector <int> Directions {0,1,2,3};
-    Vector2f ShortestDistance;
-    int ShortestDirection;
-
-
-    for i in Directions[i]{
-
-        if (!isMoveViable(ghostPos, dir))
-                    continue;
-
-        NextPosInCurrentDirectionGhost();
-
-        GetManhattenDistance(ghostPosTemp, pacmanNextPos)
-
-        if (dist < bestDistance) {
-            bestDistance = dist;
-            bestDirection = dir;
+    // Find all directions that have the best distance (for tie-breaking)
+    std::vector<int> bestDirections;
+    for (size_t i = 0; i < viableDirections.size(); i++) {
+        if (std::abs(distances[i] - bestDistance) < 0.001f) { // Float comparison with epsilon
+            bestDirections.push_back(viableDirections[i]);
         }
-        else if (dist == bestDistance) {
-            // break ties at random
-            if (randomChance(50%)) {
+    }
+
+    // Choose direction: if tie, break randomly
+    int chosenDirection;
+    if (bestDirections.size() > 1) {
+        // Tie - break randomly
+        auto& rng = Random::getInstance();
+        chosenDirection = rng.getRandomElement(bestDirections);
+    } else {
+        chosenDirection = bestDirections[0];
+    }
+
+    // Set the chosen direction
+    ghost->SetDirection(chosenDirection);
+
+    // Now use the standard predictive movement with the new direction
+    handlePredictiveGhostMovement(ghost, deltaTime);
+
+
+    // int pacmanDirection = getPacman()->getDirection();
+    // Vector2f pacmanNextPos = getPacman()->calculateNextPosition(deltaTime);
+    // if (PacmanWouldCollideWithWalls(*m_pacman, pacmanNextPos)) {
+    //     pacmanNextPos = m_pacman->getPosition();
+    // }
+    //
+    // std::vector Directions = {0,1,2,3};
+    // float bestDistance = 1000;
+    // int bestDirection = -1;
+    //
+    // for (int dir : Directions) {
+    //     Vector2f ghostTempPos = ghost->calculateNextPositionInDirection(ghost->getPosition(),dir,deltaTime);
+    //
+    //     if (GhostWouldCollideWithWalls(*ghost, ghostTempPos)) {
+    //         continue;
+    //     }
+    //
+    //     float dist = getManhattanDistance(ghostTempPos, pacmanNextPos);
+    //
+    //     if (dist < bestDistance) {
+    //         bestDirection = dir;
+    //         bestDistance = dist;
+    //     }
+    //     else if (dist == bestDistance) {
+    //         // break ties at random
+    //         // if (randomChance(50%)) {
+    //         //     bestDirection = dir;
+    //         // }
+    //     }
+    // }
+    //     ghost->SetDirection(bestDirection);
+    //
+    //     handlePredictiveGhostMovement(ghost, deltaTime);
+
+
+
+    /*  //first
+        getPacmanDirection();
+        NextPosInCurrentDirectionPacman();
+        // NextPosInDirectionsGhost(); this directions gets priority
+
+        vector <int> Directions {0,1,2,3};
+        Vector2f ShortestDistance;
+        int ShortestDirection;
+
+
+        for i in Directions[i]{
+
+            if (!isMoveViable(ghostPos, dir))
+                        continue;
+
+            NextPosInCurrentDirectionGhost();
+
+            GetManhattenDistance(ghostPosTemp, pacmanNextPos)
+
+            if (dist < bestDistance) {
+                bestDistance = dist;
                 bestDirection = dir;
             }
-        }
-     }
+            else if (dist == bestDistance) {
+                // break ties at random
+                if (randomChance(50%)) {
+                    bestDirection = dir;
+                }
+            }
+         }
 
-     setDirectionGhost(ShortestDirection);
+         setDirectionGhost(ShortestDirection);
 
-     handlepredictiveghostmovement();
+         handlepredictiveghostmovement();
 
-*/
+    */
 }
-
 float World::getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos) {
     float dx = std::fabs(ghostPos.x - pacmanNextPos.x);
     float dy = std::fabs(ghostPos.y - pacmanNextPos.y);
     return dx + dy;
+}
+
+void World::PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+    // The last ghost, when in chasing mode, moves after Pac-Man effectively chasing him by
+    // trying to minimize the Manhattan distance to its location.
+
+    // todo only do this on intersections
+    Vector2f pacmanPos = getPacman()->getPosition();
+
+    // Get all viable directions (0=left, 1=down, 2=right, 3=up)
+    std::vector<int> viableDirections;
+    std::vector<float> distances;
+    float bestDistance = std::numeric_limits<float>::max();
+
+    for (int dir = 0; dir < 4; dir++) {
+        // Calculate where ghost would be if it moved in this direction
+        Vector2f ghostNextPos = ghost->calculateNextPositionInDirection(
+            ghost->getPosition(), dir, deltaTime);
+
+        // Check if this move is viable (doesn't collide with walls)
+        if (GhostWouldCollideWithWalls(*ghost, ghostNextPos)) {
+            continue; // Skip invalid directions
+        }
+
+        // Calculate Manhattan distance from this potential position to target
+        float dist = getManhattanDistance(ghostNextPos, pacmanPos);
+
+        viableDirections.push_back(dir);
+        distances.push_back(dist);
+
+        if (dist < bestDistance) {
+            bestDistance = dist;
+        }
+    }
+
+    // If no viable directions, keep current direction (shouldn't happen)
+    if (viableDirections.empty()) {
+        handlePredictiveGhostMovement(ghost, deltaTime);
+        return;
+    }
+
+    // Find all directions that have the best distance (for tie-breaking)
+    std::vector<int> bestDirections;
+    for (size_t i = 0; i < viableDirections.size(); i++) {
+        if (std::abs(distances[i] - bestDistance) < 0.001f) { // Float comparison with epsilon
+            bestDirections.push_back(viableDirections[i]);
+        }
+    }
+
+    // Choose direction: if tie, break randomly
+    int chosenDirection;
+    if (bestDirections.size() > 1) {
+        // Tie - break randomly
+        auto& rng = Random::getInstance();
+        chosenDirection = rng.getRandomElement(bestDirections);
+    } else {
+        chosenDirection = bestDirections[0];
+    }
+
+    // Set the chosen direction
+    ghost->SetDirection(chosenDirection);
+
+    // Now use the standard predictive movement with the new direction
+    handlePredictiveGhostMovement(ghost, deltaTime);
+
+
+    // int pacmanDirection = getPacman()->getDirection();
+    // Vector2f pacmanNextPos = getPacman()->calculateNextPosition(deltaTime);
+    // if (PacmanWouldCollideWithWalls(*m_pacman, pacmanNextPos)) {
+    //     pacmanNextPos = m_pacman->getPosition();
+    // }
+    //
+    // std::vector Directions = {0,1,2,3};
+    // float bestDistance = 1000;
+    // int bestDirection = -1;
+    //
+    // for (int dir : Directions) {
+    //     Vector2f ghostTempPos = ghost->calculateNextPositionInDirection(ghost->getPosition(),dir,deltaTime);
+    //
+    //     if (GhostWouldCollideWithWalls(*ghost, ghostTempPos)) {
+    //         continue;
+    //     }
+    //
+    //     float dist = getManhattanDistance(ghostTempPos, pacmanNextPos);
+    //
+    //     if (dist < bestDistance) {
+    //         bestDirection = dir;
+    //         bestDistance = dist;
+    //     }
+    //     else if (dist == bestDistance) {
+    //         // break ties at random
+    //         // if (randomChance(50%)) {
+    //         //     bestDirection = dir;
+    //         // }
+    //     }
+    // }
+    //     ghost->SetDirection(bestDirection);
+    //
+    //     handlePredictiveGhostMovement(ghost, deltaTime);
+
+
+
+    /*  //first
+        getPacmanDirection();
+        NextPosInCurrentDirectionPacman();
+        // NextPosInDirectionsGhost(); this directions gets priority
+
+        vector <int> Directions {0,1,2,3};
+        Vector2f ShortestDistance;
+        int ShortestDirection;
+
+
+        for i in Directions[i]{
+
+            if (!isMoveViable(ghostPos, dir))
+                        continue;
+
+            NextPosInCurrentDirectionGhost();
+
+            GetManhattenDistance(ghostPosTemp, pacmanNextPos)
+
+            if (dist < bestDistance) {
+                bestDistance = dist;
+                bestDirection = dir;
+            }
+            else if (dist == bestDistance) {
+                // break ties at random
+                if (randomChance(50%)) {
+                    bestDirection = dir;
+                }
+            }
+         }
+
+         setDirectionGhost(ShortestDirection);
+
+         handlepredictiveghostmovement();
+
+    */
 }
 
 
