@@ -57,7 +57,7 @@ private:
     float PACMAN_SPEED = 0.5;
     float m_lastMove{};
 
-    unsigned int m_lives = 2;
+    unsigned int m_lives = 10;
     Vector2f m_spawnpoint;
 
     // Death animation state

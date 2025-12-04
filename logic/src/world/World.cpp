@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
         attachScoreObservers(); // ADD THIS LINE
     }
@@ -137,64 +137,70 @@ void World::update(float deltaTime) {
         handlePredictivePacmanMovement(deltaTime);
 
         for (auto& ghost : m_ghosts) {
-
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
                 ghost->updateMovement(deltaTime);
                 if (ghost->GetOutsideStart()) {
                     ghost->setPosition(m_startPosition);
                 }
-                // ghost->update(deltaTime); // Alleen update voor scared timer etc.
             } else if (!ghost->GetOutsideStart()) {
                 TrappedGhostMovement(ghost, deltaTime);
                 ghost->updateMovement(deltaTime);
-                // ghost->update(deltaTime);
-            }else if (ghost->isScared()) {
-                // ghost->reverseDirection();
-
+            } else if (ghost->isScared()) {
                 bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
                 if (crossingIntersection) {
                     Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
                     ghost->setPosition(intersectionPoint);
                     ScaredGhostMovement(ghost, deltaTime);
-                }else {
+                } else {
                     handlePredictiveRedGhostMovement(ghost, deltaTime);
                 }
-
             } else {
                 bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
                 if (crossingIntersection) {
                     Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
                     ghost->setPosition(intersectionPoint);
-                    PinkGhostMovement(ghost, deltaTime);
-                }else {
-                 handlePredictiveRedGhostMovement(ghost, deltaTime);
-                }
-                // handlePredictiveRedGhostMovement(ghost, deltaTime);
-            }
-            ghost->update(deltaTime); // Alleen update voor scared timer etc.
 
-            // ghost->updateMovement(deltaTime);
+                    // Gebruik het type om de juiste movement te kiezen
+                    switch (ghost->getType()) {
+                        case GhostType::RED:
+                            handlePredictiveRedGhostMovement(ghost, deltaTime);
+                            break;
+                        case GhostType::BLUE:
+                            BlueGhostMovement(ghost, deltaTime);
+                            break;
+                        case GhostType::ORANGE:
+                            BlueGhostMovement(ghost, deltaTime);  // Orange gebruikt ook Blue logic volgens je specificatie
+                            break;
+                        case GhostType::PINK:
+                            PinkGhostMovement(ghost, deltaTime);
+                            break;
+                        default:
+                            // Fallback naar red movement
+                            handlePredictiveRedGhostMovement(ghost, deltaTime);
+                            break;
+                    }
+                } else {
+                    handlePredictiveRedGhostMovement(ghost, deltaTime);
+                }
+            }
+            ghost->update(deltaTime);
         }
 
         // DERDE: Collectible collisions (na movement)
         handleCollectibleCollisions();
 
-        // Check for level completion - maar DON'T call advanceToNextLevel hier!
-        // Dat wordt nu gedaan vanuit LevelState na de overlay
+        // Check for level completion
         if (areAllCoinsCollected()) {
             m_score->onLevelCleared();
-            // VERWIJDERD: advanceToNextLevel();
-            // Dit wordt nu vanuit LevelState gedaan
         }
     } else {
-        // Only update Pac-Man during death animation (for animation timing)
         m_pacman->update(deltaTime);
     }
 
-    // Always update these (they might have their own animations)
+    // Always update these
     for (auto& wall : m_walls) {
         wall->update(deltaTime);
     }
@@ -1112,7 +1118,7 @@ void World::advanceToNextLevel() {
     m_factory->clearNonPacmanViews();
 
     // Load the appropriate map based on level
-    std::string mapFile = "assets/maps/map1.txt";
+    std::string mapFile = "assets/maps/map2.txt";
     if (LEVEL == 2) {
         mapFile = "assets/maps/map2.txt";
     } else if (LEVEL == 3) {

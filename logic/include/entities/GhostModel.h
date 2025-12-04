@@ -7,6 +7,14 @@
 class PacmanModel;
 class World;
 
+// Voeg deze enum toe bovenaan het bestand
+enum class GhostType {
+    RED,
+    BLUE,
+    ORANGE,
+    PINK
+};
+
 class GhostModel : public EntityModel {
 public:
     GhostModel(const Vector2f& position, const Vector2f& size, std::string textureId = "");
@@ -21,6 +29,7 @@ public:
     int SetDirection( int direction )  { return m_direction = direction; }
     [[nodiscard]] int getLastDirection() const { return m_lastDirection; }
     int SetLastDirection( int direction )  { return m_lastDirection = direction; }
+    [[nodiscard]]GhostType getType() const {return m_type;}
 
     // Ghost specific functions
     Vector2f checkTunneling(Vector2f position) const;
@@ -72,7 +81,7 @@ protected:
     int m_lastDirection{};
 
     // Ghost specific
-    float GHOST_SPEED = 0.25;
+    float GHOST_SPEED = 0.5/3*2;
     float m_speed{} ;
     int m_scaredTimerInc = 1;
     float m_scaredTimer = 0.0f;
@@ -83,25 +92,27 @@ protected:
 
     bool m_outsideStart = false;
     bool m_MovingToStart = false;
+
+    GhostType m_type;  // Het type ghost
+
 };
 
 class RedGhostModel : public GhostModel {
 public:
     RedGhostModel(const Vector2f& position, const Vector2f& size, const std::string& textureId = "")
-        : GhostModel(position, size, textureId) { m_direction = 0; } // Left
+        : GhostModel(position, size, textureId) {m_direction = 0; m_type = GhostType::RED;}  // Zet type Left
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
 
 private:
     float m_MovingToStartTimer = 0;
-
 };
 
 class BlueGhostModel : public GhostModel {
 public:
     BlueGhostModel(const Vector2f& position, const Vector2f& size, const std::string& textureId = "")
-        : GhostModel(position, size, textureId) { m_direction = 2; } // Right
+        : GhostModel(position, size, textureId) { m_direction = 2; m_type = GhostType::BLUE; } // Right
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
@@ -112,7 +123,7 @@ private:
 class OrangeGhostModel : public GhostModel {
 public:
     OrangeGhostModel(const Vector2f& position, const Vector2f& size, const std::string& textureId = "")
-        : GhostModel(position, size, textureId) { m_direction = 1; } // Down
+        : GhostModel(position, size, textureId) { m_direction = 1; m_type = GhostType::ORANGE; } // Down
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
@@ -124,7 +135,7 @@ private:
 class PinkGhostModel : public GhostModel {
 public:
     PinkGhostModel(const Vector2f& position, const Vector2f& size, const std::string& textureId = "")
-        : GhostModel(position, size, textureId) { m_direction = 3; } // Up
+        : GhostModel(position, size, textureId) { m_direction = 3;  m_type = GhostType::PINK;} // Up
 
     void updateMovement(float deltaTime) override;
     void resetMovingToStartTimer(float TimeWaiting) override;
