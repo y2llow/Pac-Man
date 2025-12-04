@@ -72,7 +72,7 @@ protected:
     int m_lastDirection{};
 
     // Ghost specific
-    float GHOST_SPEED = 0.18888;
+    float GHOST_SPEED = 0.2;
     float m_speed{} ;
     int m_scaredTimerInc = 1;
     float m_scaredTimer = 0.0f;

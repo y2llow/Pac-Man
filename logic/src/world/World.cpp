@@ -17,7 +17,7 @@ World::World(LogicFactory& factory)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
         createEntitiesFromMap();
         attachScoreObservers(); // ADD THIS LINE
     }
@@ -149,7 +149,7 @@ void World::update(float deltaTime) {
                 ghost->updateMovement(deltaTime);
                 // ghost->update(deltaTime);
             } else {
-                handlePredictiveRedGhostMovement(ghost, deltaTime);
+                // handlePredictiveRedGhostMovement(ghost, deltaTime);
                 BlueGhostMovement(ghost, deltaTime);
             }
             ghost->update(deltaTime); // Alleen update voor scared timer etc.
@@ -348,10 +348,46 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
     // distance to Pac-Man would have been if the ghost had taken one step in that particular
     // direction. Ties between the best actions are broken at random.
 
+    int pacmanDirection = getPacman()->getDirection();
+    Vector2f pacmanNextPos = getPacman()->calculateNextPosition(deltaTime);
+    if (PacmanWouldCollideWithWalls(*m_pacman, pacmanNextPos)) {
+        pacmanNextPos = m_pacman->getPosition();
+    }
+
+    std::vector Directions = {0,1,2,3};
+    float bestDistance = 1000;
+    int bestDirection = -1;
+
+    for (int dir : Directions) {
+        Vector2f ghostTempPos = ghost->calculateNextPositionInDirection(ghost->getPosition(),dir,deltaTime);
+
+        if (GhostWouldCollideWithWalls(*ghost, ghostTempPos)) {
+            continue;
+        }
+
+        float dist = getManhattanDistance(ghostTempPos, pacmanNextPos);
+
+        if (dist < bestDistance) {
+            bestDirection = dir;
+            bestDistance = dist;
+        }
+        else if (dist == bestDistance) {
+            // break ties at random
+            // if (randomChance(50%)) {
+            //     bestDirection = dir;
+            // }
+        }
+    }
+        ghost->SetDirection(bestDirection);
+
+        handlePredictiveGhostMovement(ghost, deltaTime);
+
+
+
 /*  //first
     getPacmanDirection();
     NextPosInCurrentDirectionPacman();
-    NextPosInDirectionsGhost(); this directions gets priority
+    // NextPosInDirectionsGhost(); this directions gets priority
 
     vector <int> Directions {0,1,2,3};
     Vector2f ShortestDistance;
@@ -359,12 +395,23 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
 
 
     for i in Directions[i]{
+
+        if (!isMoveViable(ghostPos, dir))
+                    continue;
+
         NextPosInCurrentDirectionGhost();
+
         GetManhattenDistance(ghostPosTemp, pacmanNextPos)
 
-        if GetManhattenDistance < ShortestDistance {
-            ShortestDistance = getManhattenDistance;
-            ShortestDirection = Directions[i]
+        if (dist < bestDistance) {
+            bestDistance = dist;
+            bestDirection = dir;
+        }
+        else if (dist == bestDistance) {
+            // break ties at random
+            if (randomChance(50%)) {
+                bestDirection = dir;
+            }
         }
      }
 
@@ -375,10 +422,10 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
 */
 }
 
-Vector2f World::getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos) {
-    float dx = abs(ghostPos.x - pacmanNextPos.x);
-    float dy = abs(ghostPos.y - pacmanNextPos.y);
-    return {dx,dy};
+float World::getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos) {
+    float dx = std::fabs(ghostPos.x - pacmanNextPos.x);
+    float dy = std::fabs(ghostPos.y - pacmanNextPos.y);
+    return dx + dy;
 }
 
 
@@ -619,6 +666,7 @@ Vector2f World::tryPositionCorrection(const Vector2f& currentPos,
 }
 
 bool World::PacmanWouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const {
+    if (newPosition.x > 1 || newPosition.y > 1 || newPosition.x < -1 || newPosition.y < -1) { return false; }
     PacmanModel tempPacman = pacman;
     tempPacman.setPosition(newPosition);
 

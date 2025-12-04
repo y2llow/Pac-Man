@@ -41,7 +41,7 @@ public:
 
     // Ghost movement
     void handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
-    [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& pacman, const Vector2f& newPosition) const ;
+    [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& newPosition) const ;
     void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
 
     // Nieuwe predictive collision methodes
@@ -64,7 +64,7 @@ public:
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
     void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
-    static Vector2f getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos);
+    static float getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos);
 
     void handleBlueGhostLogic(BlueGhostModel& ghost) ;
     void handleOrangeGhostLogic(OrangeGhostModel& ghost) ;

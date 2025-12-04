@@ -1,4 +1,7 @@
-xxxxxxxx
-#S##r#.#####
-xxxxxxxxxxxx
-xxxxxPxxxxxx
+xxxxxxxxxxx
+x...S.....x
+x.xxdxx.x.x
+x.x b x...x
+x.xxxxx.xdx
+x........Px
+xxxxxxxxxxx
