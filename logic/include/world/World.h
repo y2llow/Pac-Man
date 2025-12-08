@@ -17,7 +17,7 @@
 
 // Forward declarations for classes that don't need full definition
 class LogicFactory;
-class Vector2f;
+struct Vector2f;
 
 class World {
 public:
@@ -35,12 +35,11 @@ public:
     static bool checkCollision(const T1& entity1, const T2& entity2);
 
     void handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost);
-    void handlePacmanCoinCollision(CoinModel& coin);
+    static void handlePacmanCoinCollision(CoinModel& coin);
     void handlePacmanFruitCollision(FruitModel& fruit);
     void cleanupCollectedItems();
 
     // Ghost movement
-    void handleGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& newPosition) const ;
     void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
 
@@ -63,15 +62,13 @@ public:
     // Add this method to fix the LevelState error
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
     void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+    void standardGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void ScaredGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
 
     static float getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos);
 
-    void handleBlueGhostLogic(BlueGhostModel& ghost) ;
-    void handleOrangeGhostLogic(OrangeGhostModel& ghost) ;
-    void handlePinkGhostLogic(PinkGhostModel& ghost) ;
     void TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const;
 
 private:
