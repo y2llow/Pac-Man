@@ -256,28 +256,17 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
             auto& rng = Random::getInstance();
             bool willChangeDirection = rng.getBool(0.5);
 
-            // DEBUG OUTPUT
-            // std::cout << "🔴 INTERSECTION! Pos: (" << intersectionPoint.x << ", "
-            //           << intersectionPoint.y << ") | Roll: "
-            //           << (willChangeDirection ? "CHANGE" : "KEEP") << " | Options: ";
-            // for (int dir : validDirs) {
-            //     std::cout << dir << " ";
-            // }
 
             if (willChangeDirection) {
-                std::cout << "willChangeDirection YES" << std::endl;
                 int chosenDirection = rng.getRandomElement(validDirs);
 
                 while (chosenDirection == ghost->getDirection()) {
                     chosenDirection = rng.getRandomElement(validDirs);
+                    std::cout << chosenDirection << std::endl;
                 }
 
-                // std::cout << "| Chose: " << chosenDirection << std::endl;
                 ghost->SetDirection(chosenDirection);
             } else {
-                std::cout << "willChangeDirection NOT" << std::endl;
-
-                // std::cout << "| Keep: " << ghost->getDirection() << std::endl;
                 bool currentDirValid = false;
                 for (int dir : validDirs) {
                     if (dir == ghost->getDirection()) {
@@ -921,7 +910,8 @@ void World::handlePacmanCoinCollision(CoinModel& coin) {
 
 void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
     if (ghost.isScared() && !ghost.wasEaten()) {
-        // m_score->onGhostEaten();  // Score ONCE at collision
+        // todo add this to observers
+        m_score->onGhostEaten();  // Score ONCE at collision
         ghost.SetWasEaten(true);   // Mark as eaten
         ghost.respawn();           // This will notify observers for view updates
     } else if (!ghost.isScared()) {
