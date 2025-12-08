@@ -161,7 +161,7 @@ void World::update(float deltaTime) {
                             BlueGhostMovement(ghost, deltaTime);
                             break;
                         case GhostType::ORANGE:
-                            BlueGhostMovement(ghost, deltaTime);  // Orange gebruikt ook Blue logic volgens je specificatie
+                            BlueGhostMovement(ghost, deltaTime);  // Orange gebruikt ook Blue logic volgens de specificatie
                             break;
                         case GhostType::PINK:
                             PinkGhostMovement(ghost, deltaTime);
