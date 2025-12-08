@@ -257,7 +257,7 @@ void PinkGhostModel::updateMovement(float deltaTime) {
 }
 
 void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {
-    Vector2f GhostPosition = this->getPosition();
+    Vector2f GhostPosition = getPosition();
     if (GhostPosition.x < startposition.x) {
         m_direction = 2;
     }
@@ -275,6 +275,12 @@ void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {
         SetOutsideStart(true);
         SetMovingToStart(false);
     }
+    if (GetOutsideStart()) {
+        setPosition(startposition);
+    }else {
+        updateMovement(deltaTime);
+    }
+
 }
 
 Vector2f GhostModel::calculateNextPosition(float deltaTime) const {

@@ -137,16 +137,16 @@ void World::update(float deltaTime) {
         handlePredictivePacmanMovement(deltaTime);
 
         for (auto& ghost : m_ghosts) {
+
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
-                ghost->updateMovement(deltaTime);
-                if (ghost->GetOutsideStart()) {
-                    ghost->setPosition(m_startPosition);
-                }
-            } else if (!ghost->GetOutsideStart()) {
+            }
+
+            else if (!ghost->GetOutsideStart()) {
                 TrappedGhostMovement(ghost, deltaTime);
-                ghost->updateMovement(deltaTime);
-            } else if (ghost->isScared()) {
+            }
+
+            else if (ghost->isScared()) {
                 bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
                 if (crossingIntersection) {
@@ -156,7 +156,9 @@ void World::update(float deltaTime) {
                 } else {
                     handlePredictiveRedGhostMovement(ghost, deltaTime);
                 }
-            } else {
+            }
+
+            else {
                 bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
                 if (crossingIntersection) {
