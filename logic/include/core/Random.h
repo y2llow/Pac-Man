@@ -55,7 +55,7 @@ T Random::getRandomElement(const std::vector<T>& elements) {
     if (elements.empty()) {
         throw std::invalid_argument("Cannot select from empty vector");
     }
-    std::uniform_int_distribution<size_t> dist(0, elements.size() - 1);
+    std::uniform_int_distribution<size_t> dist(0, elements.size() -1);
     return elements[dist(m_generator)];
 }
 

@@ -212,12 +212,11 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
-
-void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+bool World::willTunnel(const std::shared_ptr<GhostModel>& ghost, float deltaTime) const {
     Vector2f startPos = ghost->getPosition();
     Vector2f nextPos = ghost->calculateNextPosition(deltaTime);
 
-    // NEW: Check for tunneling first
+    // Check for tunneling first
     float distance = std::abs(nextPos.x - startPos.x) + std::abs(nextPos.y - startPos.y);
     float moveAmount = ghost->GetSpeed() * deltaTime;
 
@@ -229,13 +228,23 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
             ghost->setPosition(nextPos);
         }
         ghost->notifyObservers();
-        return;
+        return true;
     }
+    return false;
 
-    // Rest of existing intersection logic...
+}
+
+void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+
+    if (willTunnel(ghost, deltaTime))
+        return;
+
+    // intersection logic
     bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
 
     if (crossingIntersection) {
+        std::cout << "crossingIntersection 2" << std::endl;
+
         // Beweeg naar het intersection punt
         Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
         ghost->setPosition(intersectionPoint);
@@ -256,10 +265,18 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
             // }
 
             if (willChangeDirection) {
+                std::cout << "willChangeDirection YES" << std::endl;
                 int chosenDirection = rng.getRandomElement(validDirs);
+
+                while (chosenDirection == ghost->getDirection()) {
+                    chosenDirection = rng.getRandomElement(validDirs);
+                }
+
                 // std::cout << "| Chose: " << chosenDirection << std::endl;
                 ghost->SetDirection(chosenDirection);
             } else {
+                std::cout << "willChangeDirection NOT" << std::endl;
+
                 // std::cout << "| Keep: " << ghost->getDirection() << std::endl;
                 bool currentDirValid = false;
                 for (int dir : validDirs) {
@@ -324,9 +341,7 @@ void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& gho
 }
 
 void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const {
-    if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {
-
-    }
+    if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {}
     else if (ghost->canMoveInDirection(0,*this, deltaTime)) {
         ghost->SetDirection(0);
     }
@@ -379,29 +394,27 @@ void World::standardGhostMovement(const std::shared_ptr<GhostModel>& ghost, floa
     }
 }
 
-
-
 void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
     // Gebruik dezelfde ray-casting logic
-    bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
-
-    if (crossingIntersection) {
-        Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
-        ghost->setPosition(intersectionPoint);
-        std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
-
-        if (!validDirs.empty()) {
-            auto& rng = Random::getInstance();
-            bool willChangeDirection = rng.getBool(0.5);
-
-            if (willChangeDirection) {
-                int chosenDirection = rng.getRandomElement(validDirs);
-                ghost->SetDirection(chosenDirection);
-            }
-        }
-    }
-
-
+    // bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
+    //
+    // if (crossingIntersection) {
+    //     std::cout << "crossingIntersection 1" << std::endl;
+    //     Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
+    //     ghost->setPosition(intersectionPoint);
+    //     std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
+    //
+    //     if (!validDirs.empty()) {
+    //         auto& rng = Random::getInstance();
+    //         bool willChangeDirection = rng.getBool(0.5);
+    //
+    //         if (willChangeDirection) {
+    //             int chosenDirection = rng.getRandomElement(validDirs);
+    //             ghost->SetDirection(chosenDirection);
+    //         }
+    //     }
+    // }
+    //
     // Normale movement
     handlePredictiveGhostMovement(ghost, deltaTime);
 }
@@ -457,7 +470,7 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
 
     // If no viable directions, keep current direction (shouldn't happen)
     if (viableDirections.empty()) {
-        handlePredictiveGhostMovement(ghost, deltaTime);
+        TrappedGhostMovement(ghost, deltaTime);
         return;
     }
 
@@ -495,7 +508,7 @@ void World::ScaredGhostMovement(const std::shared_ptr<GhostModel>& ghost, float 
         std::vector<int> viableDirections = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
 
         if (viableDirections.empty()) {
-            handlePredictiveGhostMovement(ghost, deltaTime);
+            TrappedGhostMovement(ghost, deltaTime);
             return;
         }
 
@@ -535,7 +548,7 @@ void World::ScaredGhostMovement(const std::shared_ptr<GhostModel>& ghost, float 
     }
 
     // Always move in the current direction
-    handlePredictiveGhostMovement(ghost, deltaTime);
+    standardGhostMovement(ghost, deltaTime);
 }
 float World::getManhattanDistance(Vector2f pos1, Vector2f pos2) {
     float dx = std::abs(pos1.x - pos2.x);
@@ -566,7 +579,7 @@ void World::PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
         std::vector<int> viableDirections = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
 
         if (viableDirections.empty()) {
-            handlePredictiveGhostMovement(ghost, deltaTime);
+            TrappedGhostMovement(ghost, deltaTime);
             return;
         }
 
@@ -606,8 +619,8 @@ void World::PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
     }
 
     // Always move in the current direction
-    // standardGhostMovement(ghost, deltaTime);
-    ghost->updateMovement( deltaTime);
+    standardGhostMovement(ghost, deltaTime);
+    // ghost->updateMovement( deltaTime);
 
 }
 

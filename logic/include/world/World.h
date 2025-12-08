@@ -33,6 +33,7 @@ public:
     // Template collision detection - works with any entity type
     template<typename T1, typename T2>
     static bool checkCollision(const T1& entity1, const T2& entity2);
+    bool willTunnel(const std::shared_ptr<GhostModel>& ghost, float deltaTime) const;
 
     void handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost);
     static void handlePacmanCoinCollision(CoinModel& coin);
