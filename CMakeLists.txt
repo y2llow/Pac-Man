@@ -34,7 +34,7 @@ target_link_libraries(Pac-Man
 
 # Set output directory (optional, for cleaner builds)
 set_target_properties(Pac-Man PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
 )
 
 # Copy the resources folder (which includes your .txt files) to the build directory
