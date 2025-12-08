@@ -164,7 +164,7 @@ void World::update(float deltaTime) {
                     // Gebruik het type om de juiste movement te kiezen
                     switch (ghost->getType()) {
                         case GhostType::RED:
-                            handlePredictiveRedGhostMovement(ghost, deltaTime);
+                            RedGhostMovement(ghost, deltaTime);
                             break;
                         case GhostType::BLUE:
                             BlueGhostMovement(ghost, deltaTime);
@@ -234,101 +234,6 @@ bool World::willTunnel(const std::shared_ptr<GhostModel>& ghost, float deltaTime
 
 }
 
-void World::handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
-
-    if (willTunnel(ghost, deltaTime))
-        return;
-
-    // intersection logic
-    bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
-
-    if (crossingIntersection) {
-        std::cout << "crossingIntersection 2" << std::endl;
-
-        // Beweeg naar het intersection punt
-        Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
-        ghost->setPosition(intersectionPoint);
-
-        // Nu zijn we bij de intersection - check valid directions
-        std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
-
-        if (!validDirs.empty()) {
-            auto& rng = Random::getInstance();
-            bool willChangeDirection = rng.getBool(0.5);
-
-
-            if (willChangeDirection) {
-                int chosenDirection = rng.getRandomElement(validDirs);
-
-                while (chosenDirection == ghost->getDirection()) {
-                    chosenDirection = rng.getRandomElement(validDirs);
-                    std::cout << chosenDirection << std::endl;
-                }
-
-                ghost->SetDirection(chosenDirection);
-            } else {
-                bool currentDirValid = false;
-                for (int dir : validDirs) {
-                    if (dir == ghost->getDirection()) {
-                        currentDirValid = true;
-                        break;
-                    }
-                }
-
-                if (!currentDirValid) {
-                    int newDirection = rng.getRandomElement(validDirs);
-                    // std::cout << "| Forced: " << newDirection << std::endl;
-                    ghost->SetDirection(newDirection);
-                }
-            }
-        }
-
-        // Beweeg de rest van de distance in nieuwe richting
-        Vector2f remainingMovement = ghost->calculateNextPosition(deltaTime);
-        if (!GhostWouldCollideWithWalls(*ghost, remainingMovement)) {
-            ghost->setPosition(remainingMovement);
-        }
-    } else {
-        // Geen intersection - normale movement
-        Vector2f nextPosition = ghost->calculateNextPosition(deltaTime);
-
-        if (!GhostWouldCollideWithWalls(*ghost, nextPosition)) {
-            ghost->setPosition(nextPosition);
-        } else {
-            // Kan niet vooruit - vind dichtste positie tot muur
-            Vector2f closestPos = findClosestPositionToWallForGhost(
-                ghost->getPosition(),
-                ghost->getDirection(),
-                deltaTime,
-                *ghost
-            );
-
-            if (closestPos.x != ghost->getPosition().x ||
-                closestPos.y != ghost->getPosition().y) {
-                ghost->setPosition(closestPos);
-            } else {
-                // Volledig vast - kies nieuwe richting
-                std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
-                if (!validDirs.empty()) {
-                    auto& rng = Random::getInstance();
-                    int newDirection = rng.getRandomElement(validDirs);
-
-                    // std::cout << "*** STUCK - Forcing direction: " << newDirection << " ***" << std::endl;
-
-                    ghost->SetDirection(newDirection);
-
-                    nextPosition = ghost->calculateNextPosition(deltaTime);
-                    if (!GhostWouldCollideWithWalls(*ghost, nextPosition)) {
-                        ghost->setPosition(nextPosition);
-                    }
-                }
-            }
-        }
-    }
-
-    // ghost->notifyObservers();
-}
-
 void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const {
     if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {}
     else if (ghost->canMoveInDirection(0,*this, deltaTime)) {
@@ -383,29 +288,50 @@ void World::standardGhostMovement(const std::shared_ptr<GhostModel>& ghost, floa
     }
 }
 
-void World::handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
-    // Gebruik dezelfde ray-casting logic
-    // bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
-    //
-    // if (crossingIntersection) {
-    //     std::cout << "crossingIntersection 1" << std::endl;
-    //     Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
-    //     ghost->setPosition(intersectionPoint);
-    //     std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
-    //
-    //     if (!validDirs.empty()) {
-    //         auto& rng = Random::getInstance();
-    //         bool willChangeDirection = rng.getBool(0.5);
-    //
-    //         if (willChangeDirection) {
-    //             int chosenDirection = rng.getRandomElement(validDirs);
-    //             ghost->SetDirection(chosenDirection);
-    //         }
-    //     }
-    // }
-    //
-    // Normale movement
-    handlePredictiveGhostMovement(ghost, deltaTime);
+void World::RedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+    if (willTunnel(ghost, deltaTime))
+        return;
+
+    // intersection logic
+    bool crossingIntersection = ghost->willCrossIntersection(*this, deltaTime);
+
+    if (crossingIntersection) {
+        // Beweeg naar het intersection punt
+        Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
+        ghost->setPosition(intersectionPoint);
+
+        // Nu zijn we bij de intersection - check valid directions
+        std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
+
+        if (!validDirs.empty()) {
+            auto& rng = Random::getInstance();
+            bool willChangeDirection = rng.getBool(0.5);
+
+            if (willChangeDirection) {
+                int chosenDirection = rng.getRandomElement(validDirs);
+
+                while (chosenDirection == ghost->getDirection()) {
+                    chosenDirection = rng.getRandomElement(validDirs);
+                }
+                ghost->SetDirection(chosenDirection);
+            } else {
+                bool currentDirValid = false;
+                for (int dir : validDirs) {
+                    if (dir == ghost->getDirection()) {
+                        currentDirValid = true;
+                        break;
+                    }
+                }
+                if (!currentDirValid) {
+                    int newDirection = rng.getRandomElement(validDirs);
+                    ghost->SetDirection(newDirection);
+                }
+            }
+        }
+     }
+
+    standardGhostMovement(ghost, deltaTime);
+
 }
 
 void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {

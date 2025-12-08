@@ -42,7 +42,6 @@ public:
 
     // Ghost movement
     [[nodiscard]] bool GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& newPosition) const ;
-    void handlePredictiveGhostMovement(const std::shared_ptr<GhostModel>&ghost, float deltaTime);
 
     // Nieuwe predictive collision methodes
     [[nodiscard]] bool PacmanWouldCollideWithWalls(const PacmanModel& pacman, const Vector2f& newPosition) const;
@@ -62,7 +61,7 @@ public:
 
     // Add this method to fix the LevelState error
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
-    void handlePredictiveRedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
+    void RedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void standardGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
     void PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
