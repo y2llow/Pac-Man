@@ -24,7 +24,6 @@ public:
 
     // Pacman specific funcitons
     Vector2f CheckTunneling(Vector2f position) const;
-    [[nodiscard]]unsigned int getLives() const {return m_lives;}
     void loseLife();
 
     [[nodiscard]] Vector2f calculateNextPosition(float deltaTime) const;
@@ -57,7 +56,6 @@ private:
     float PACMAN_SPEED = 0.5;
     float m_lastMove{};
 
-    unsigned int m_lives = 10;
     Vector2f m_spawnpoint;
 
     // Death animation state

@@ -27,6 +27,10 @@ public:
     void onLevelCleared();
 
     [[nodiscard]] int getCurrentScore() const { return m_currentScore; }
+    [[nodiscard]]int getLives() const {return m_lives;}
+    void setLives(int lives) {m_lives = lives;}
+
+    void loseLife();
     void reset();
 
     // High score management
@@ -47,6 +51,7 @@ private:
     // Time-based scoring variables
     float m_timeSinceLastCoin;
     float m_scoreDecreaseTimer;
+    int m_lives = 5;
     static constexpr int SCORE_DECREASE_RATE = 5.0f; // Points per second
     static constexpr float MAX_COIN_CHAIN_TIME = 3.0f; // Max time for chain bonus
     static constexpr int BASE_COIN_SCORE = 10;

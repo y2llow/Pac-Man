@@ -89,7 +89,7 @@ void LevelState::updateLayout() {
 
     // Update text content to get proper bounds
     int currentScore = m_world ? m_world->Getscore()->getCurrentScore() : 0;
-    int currentLives = m_world ? m_world->getPacman()->getLives() : 3;
+    int currentLives = m_world ? m_world->Getscore()->getLives() : 5;
 
     m_scoreText.setString("SCORE: " + std::to_string(currentScore));
     m_livesText.setString("Lives: " + std::to_string(currentLives));
@@ -160,7 +160,7 @@ void LevelState::updateLayout() {
 
 void LevelState::update(float deltaTime) {
     // Check for game over first
-    if (m_world && m_world->getPacman()->getLives() <= 0 && !m_isGameOver) {
+    if (m_world && m_world->getScore().getLives() <= 0 && !m_isGameOver) {
         // Trigger game over
         m_isGameOver = true;
         m_gameOverTimer = 0.0f;
@@ -244,7 +244,7 @@ void LevelState::update(float deltaTime) {
     // Update text content
     if (m_world) {
         int scoreValue = m_world->Getscore()->getCurrentScore();
-        int livesValue = m_world->getPacman()->getLives();
+        int livesValue = m_world->Getscore()->getLives();
 
         m_scoreText.setString("SCORE: " + std::to_string(scoreValue));
         m_livesText.setString("Lives: " + std::to_string(livesValue));

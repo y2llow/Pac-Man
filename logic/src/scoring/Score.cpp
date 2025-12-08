@@ -56,6 +56,11 @@ void Score::onPacManDied() {
     std::cout << "Pac-Man died! Current score: " << m_currentScore << std::endl;
 }
 
+void Score::loseLife() {
+    m_lives = m_lives - 1;
+}
+
+
 void Score::reset() {
     m_currentScore = 0;
     m_timeSinceLastCoin = 0.0f;

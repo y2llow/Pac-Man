@@ -841,6 +841,7 @@ void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
         ghost.SetWasEaten(true);   // Mark as eaten
         ghost.respawn();           // This will notify observers for view updates
     } else if (!ghost.isScared()) {
+        m_score->loseLife();
         pacman.loseLife();  // This calls startDeathAnimation, which notifies
     }
 }
@@ -903,7 +904,7 @@ void World::advanceToNextLevel() {
     if (LEVEL == 2) {
         mapFile = "assets/maps/map2.txt";
     } else if (LEVEL == 3) {
-        mapFile = "assets/maps/map3.txt";
+        mapFile = "assets/maps/map2.txt";
     }
 
     if (m_mapModel.loadFromFile(mapFile)) {

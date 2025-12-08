@@ -63,10 +63,7 @@ void PacmanModel::resetDeathAnimation() {
 }
 
 void PacmanModel::loseLife() {
-    if (m_lives > 0) {
-        m_lives -= 1;
-        startDeathAnimation(); // Start death animation instead of immediate reset
-    }
+    startDeathAnimation(); // Start death animation instead of immediate reset
 }
 
 Vector2f PacmanModel::CheckTunneling(Vector2f position) const {
