@@ -5,8 +5,8 @@
 
 #include <utility>
 
-GhostModel::GhostModel(const Vector2f& position, const Vector2f& size, std::string textureId)
-    : m_position(position), m_textureId(std::move(textureId)), m_size(size), m_spawnPoint(position) {
+GhostModel::GhostModel(const Vector2f& position, const Vector2f& size)
+    : m_position(position), m_size(size), m_spawnPoint(position) {
     // m_type wordt geïnitialiseerd in de afgeleide klassen
     // We initialiseren het hier met een default waarde
     m_type = GhostType::RED; // Default, wordt overschreven door afgeleide klassen

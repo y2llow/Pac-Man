@@ -21,9 +21,9 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
 }
 
 template<typename ModelType, typename ViewType>
-std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
+std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, const Vector2f& size) {
     // 1. Create model with shared ownership
-    auto model = std::make_shared<ModelType>(position, size, textureId);
+    auto model = std::make_shared<ModelType>(position, size);
 
     // 2. Create view with shared model reference
     auto view = std::make_unique<ViewType>(model, m_camera);
@@ -42,41 +42,41 @@ std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, c
     return model;
 }
 
-std::shared_ptr<WallModel> SFMLFactory::createWall(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<WallModel, WallView>(position, size, textureId);
+std::shared_ptr<WallModel> SFMLFactory::createWall(const Vector2f& position, const Vector2f& size) {
+    return createEntity<WallModel, WallView>(position, size);
 }
 
-std::shared_ptr<DoorModel> SFMLFactory::createDoor(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<DoorModel, DoorView>(position, size, textureId);
+std::shared_ptr<DoorModel> SFMLFactory::createDoor(const Vector2f& position, const Vector2f& size) {
+    return createEntity<DoorModel, DoorView>(position, size);
 }
 
-std::shared_ptr<CoinModel> SFMLFactory::createCoin(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<CoinModel, CoinView>(position, size, textureId);
+std::shared_ptr<CoinModel> SFMLFactory::createCoin(const Vector2f& position, const Vector2f& size) {
+    return createEntity<CoinModel, CoinView>(position, size);
 }
 
-std::shared_ptr<PacmanModel> SFMLFactory::createPacman(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<PacmanModel, PacmanView>(position, size, textureId);
+std::shared_ptr<PacmanModel> SFMLFactory::createPacman(const Vector2f& position, const Vector2f& size) {
+    return createEntity<PacmanModel, PacmanView>(position, size);
 }
 
-std::shared_ptr<RedGhostModel> SFMLFactory::createRedGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
+std::shared_ptr<RedGhostModel> SFMLFactory::createRedGhost(const Vector2f& position, const Vector2f& size) {
     m_camera.updateWindowSize();
-    return createEntity<RedGhostModel, RedGhostView>(position, size, textureId);
+    return createEntity<RedGhostModel, RedGhostView>(position, size);
 }
 
-std::shared_ptr<BlueGhostModel> SFMLFactory::createBlueGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<BlueGhostModel, BlueGhostView>(position, size, textureId);
+std::shared_ptr<BlueGhostModel> SFMLFactory::createBlueGhost(const Vector2f& position, const Vector2f& size) {
+    return createEntity<BlueGhostModel, BlueGhostView>(position, size);
 }
 
-std::shared_ptr<OrangeGhostModel> SFMLFactory::createOrangeGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<OrangeGhostModel, OrangeGhostView>(position, size, textureId);
+std::shared_ptr<OrangeGhostModel> SFMLFactory::createOrangeGhost(const Vector2f& position, const Vector2f& size) {
+    return createEntity<OrangeGhostModel, OrangeGhostView>(position, size);
 }
 
-std::shared_ptr<PinkGhostModel> SFMLFactory::createPinkGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<PinkGhostModel, PinkGhostView>(position, size, textureId);
+std::shared_ptr<PinkGhostModel> SFMLFactory::createPinkGhost(const Vector2f& position, const Vector2f& size) {
+    return createEntity<PinkGhostModel, PinkGhostView>(position, size);
 }
 
-std::shared_ptr<FruitModel> SFMLFactory::createFruit(const Vector2f& position, const Vector2f& size, const std::string& textureId) {
-    return createEntity<FruitModel, FruitView>(position, size, textureId);
+std::shared_ptr<FruitModel> SFMLFactory::createFruit(const Vector2f& position, const Vector2f& size) {
+    return createEntity<FruitModel, FruitView>(position, size);
 }
 
 void SFMLFactory::handleResize(const Vector2f& newSize) {

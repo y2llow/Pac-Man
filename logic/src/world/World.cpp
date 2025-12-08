@@ -11,8 +11,9 @@
 #include <cmath>
 #include <iostream>
 
-World::World(LogicFactory& factory)
-    : m_factory(&factory) {
+
+World::World(LogicFactory& factory, Camera& camera)
+    : m_factory(&factory), m_camera(camera) {
     m_score = std::make_unique<Score>();
 }
 
@@ -24,104 +25,94 @@ void World::initialize() {
 }
 
 void World::createEntitiesFromMap() {
-    //todo use -1,1 here for teh coordinates for camera instead of the sez conversions
     const auto& grid = m_mapModel.getGrid();
     Vector2f gridSize = m_mapModel.getGridSize();
 
     if (grid.empty()) return;
 
+    // Use normalized coordinates directly (no camera needed for logic)
     float tileWidth = 2.0f / gridSize.x;
     float tileHeight = 2.0f / gridSize.y;
 
     for (unsigned int y = 0; y < gridSize.y; ++y) {
         for (unsigned int x = 0; x < gridSize.x; ++x) {
+            // Calculate normalized position [-1, 1]
             float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
             float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
+            Vector2f position(posX, posY);
 
             if (grid[y][x] == 'x') {
                 auto wall = m_factory->createWall(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth , tileHeight),
-                    "wall_basic"
+                    position,
+                    Vector2f(tileWidth, tileHeight)
                 );
                 m_walls.push_back(wall);
             }
-            else if (grid[y][x] == '.') {
+            else if (grid[y][x] == '.' || grid[y][x] == 'S') {
                 auto coin = m_factory->createCoin(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * COIN_SIZE, tileHeight * COIN_SIZE),
-                    "Coin"
+                    position,
+                    Vector2f(tileWidth * COIN_SIZE, tileHeight * COIN_SIZE)  
                 );
                 m_coins.push_back(coin);
-            }
-            else if (grid[y][x] == 'S') {
-                auto coin = m_factory->createCoin(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * COIN_SIZE, tileHeight * COIN_SIZE),
-                    "Coin"
-                );
-                m_startPosition = Vector2f(posX, posY);
-                m_coins.push_back(coin);
+
+                if (grid[y][x] == 'S') {
+                    m_startPosition = position;
+                }
             }
             else if (grid[y][x] == 'P') {
-                auto pacman = m_factory->createPacman(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE),
-                    "Pacman"
+                m_pacman = m_factory->createPacman(
+                    position,
+                    Vector2f(tileWidth * PACMAN_SIZE, tileHeight * PACMAN_SIZE)  
                 );
-                m_pacman = pacman;
             }
             else if (grid[y][x] == 'f') {
                 auto fruit = m_factory->createFruit(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * FRUIT_SIZE, tileHeight * FRUIT_SIZE),
-                    "fruit"
+                    position,
+                    Vector2f(tileWidth * FRUIT_SIZE, tileHeight * FRUIT_SIZE)  
                 );
                 m_fruits.push_back(fruit);
             }
             else if (grid[y][x] == 'r') {
                 auto ghost = m_factory->createRedGhost(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "red_ghost"
+                    position,
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE)
                 );
                 m_ghosts.push_back(ghost);
             }
             else if (grid[y][x] == 'b') {
                 auto ghost = m_factory->createBlueGhost(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "blue_ghost"
+                    position,
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE)
                 );
                 m_ghosts.push_back(ghost);
             }
             else if (grid[y][x] == 'o') {
                 auto ghost = m_factory->createOrangeGhost(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "orange_ghost"
+                    position,
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE)
                 );
                 m_ghosts.push_back(ghost);
             }
             else if (grid[y][x] == 'p') {
                 auto ghost = m_factory->createPinkGhost(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE),
-                    "pink_ghost"
+                    position,
+                    Vector2f(tileWidth * GHOST_SIZE, tileHeight * GHOST_SIZE)
                 );
                 m_ghosts.push_back(ghost);
             }
             else if (grid[y][x] == 'd') {
                 auto door = m_factory->createDoor(
-                    Vector2f(posX, posY),
-                    Vector2f(tileWidth , tileHeight),
-                    "wall"
+                    position,
+                    Vector2f(tileWidth, tileHeight)
                 );
                 m_doors.push_back(door);
             }
         }
     }
-    std::cout << "World: Created " << m_walls.size() << " walls and " << m_coins.size() << " coins" << std::endl;
+
+    std::cout << "World: Created " << m_walls.size() << " walls, "
+              << m_coins.size() << " coins, and "
+              << m_ghosts.size() << " ghosts" << std::endl;
 }
 
 void World::update(float deltaTime) {

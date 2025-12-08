@@ -26,7 +26,7 @@ void LevelState::initialize() {
     m_camera.updateWindowSize();
 
     // Initialize world without window size
-    m_world = std::make_unique<World>(*m_factory);
+    m_world = std::make_unique<World>(*m_factory, m_camera);
     m_world->initialize();
 
     if (m_font.loadFromFile("assets/fonts/arial.ttf")) {

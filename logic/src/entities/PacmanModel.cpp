@@ -2,8 +2,8 @@
 
 #include <utility>
 
-PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size, std::string  textureId )
-    : m_position(position), m_textureId(std::move(textureId)), m_spawnpoint(position) { m_size = size; }
+PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size)
+    : m_position(position), m_spawnpoint(position) { m_size = size; }
 
 Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
     if (m_isDying) return m_position; // Don't move during death animation

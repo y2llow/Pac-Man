@@ -1,7 +1,7 @@
 #include "entities/WallModel.h"
 
-WallModel::WallModel(const Vector2f& position, const Vector2f& size, const std::string& textureId)
-    : m_position(position), m_size(size), m_textureId(textureId) {
+WallModel::WallModel(const Vector2f& position, const Vector2f& size)
+    : m_position(position), m_size(size){
     // Proper initialization in initializer list
 }
 

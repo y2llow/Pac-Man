@@ -22,15 +22,15 @@ class LogicFactory {
 public:
     virtual ~LogicFactory() = default;
 
-    virtual std::shared_ptr<WallModel> createWall(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<DoorModel> createDoor(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<CoinModel> createCoin(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<PacmanModel> createPacman(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<RedGhostModel> createRedGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<BlueGhostModel> createBlueGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<OrangeGhostModel> createOrangeGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<PinkGhostModel> createPinkGhost(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
-    virtual std::shared_ptr<FruitModel> createFruit(const Vector2f& position, const Vector2f& size, const std::string& textureId) = 0;
+    virtual std::shared_ptr<WallModel> createWall(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<DoorModel> createDoor(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<CoinModel> createCoin(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<PacmanModel> createPacman(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<RedGhostModel> createRedGhost(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<BlueGhostModel> createBlueGhost(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<OrangeGhostModel> createOrangeGhost(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<PinkGhostModel> createPinkGhost(const Vector2f& position, const Vector2f& size) = 0;
+    virtual std::shared_ptr<FruitModel> createFruit(const Vector2f& position, const Vector2f& size) = 0;
     virtual void clearNonPacmanViews() = 0;
 
 };

@@ -1,6 +1,6 @@
 #include "entities/FruitModel.h"
 
-FruitModel::FruitModel(const Vector2f& position, const Vector2f& size, const std::string& textureId){
+FruitModel::FruitModel(const Vector2f& position, const Vector2f& size){
 m_position = position;{m_size = size;}
 }
 

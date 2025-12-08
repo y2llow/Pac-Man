@@ -6,7 +6,7 @@
 
 class WallModel : public EntityModel {
 public:
-    WallModel(const Vector2f& position, const Vector2f& size, const std::string& textureId = "");
+    WallModel(const Vector2f& position, const Vector2f& size);
 
     // EntityModel interface implementation
     void update(float deltaTime) override;

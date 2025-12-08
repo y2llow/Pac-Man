@@ -17,11 +17,12 @@
 
 // Forward declarations for classes that don't need full definition
 class LogicFactory;
+class Camera;
 struct Vector2f;
 
 class World {
 public:
-    explicit World(LogicFactory& factory);
+    explicit World(LogicFactory& factory, Camera& camera);
 
     void initialize();
     void update(float deltaTime);
@@ -75,6 +76,7 @@ private:
     MapModel m_mapModel;
     LogicFactory* m_factory;
     std::shared_ptr<Score> m_score;
+    Camera& m_camera;
 
     // Entity storage
     std::vector<std::shared_ptr<WallModel>> m_walls;

@@ -8,7 +8,7 @@ class World;
 
 class PacmanModel : public EntityModel {
 public:
-     PacmanModel(const Vector2f& position, const Vector2f& size,std::string  textureId = "") ;
+     PacmanModel(const Vector2f& position, const Vector2f& size) ;
 
     // overwritten functiosn from entityModel
      void update(float deltaTime) override ;

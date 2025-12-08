@@ -6,7 +6,7 @@
 
 class CoinModel : public EntityModel {
 public:
-    CoinModel(const Vector2f& position, const Vector2f& size, const std::string& textureId = "");
+    CoinModel(const Vector2f& position, const Vector2f& size);
 
     // Entity interface implementation
     void update(float deltaTime) override;

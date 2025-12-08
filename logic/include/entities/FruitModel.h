@@ -8,7 +8,7 @@
 
 class FruitModel : public EntityModel {
 public:
-    FruitModel(const Vector2f& position, const Vector2f& size,const std::string& textureId = "") ;
+    FruitModel(const Vector2f& position, const Vector2f& size) ;
 
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;

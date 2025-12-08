@@ -1,7 +1,7 @@
 #include "../../include/entities/CoinModel.h"
 
-CoinModel::CoinModel(const Vector2f& position, const Vector2f& size, const std::string& textureId)
-    : m_position(position), m_textureId(textureId) {
+CoinModel::CoinModel(const Vector2f& position, const Vector2f& size)
+    : m_position(position) {
     m_size = size;
 }
 
