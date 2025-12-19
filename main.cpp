@@ -5,3 +5,5 @@ int main(){
     game.run();
     return 0;
 }
+
+// tijdens de 3 min video moet je niet de duidleijke dingen zeggen zeg de deingen die een probleem waren en hoe je die hebt gefixt
