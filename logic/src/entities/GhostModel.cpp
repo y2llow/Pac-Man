@@ -49,7 +49,6 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
         return false;
     }
 
-//todo maybe lower this or make this dependant on speed
     // Check 10 punten langs de beweging
     const int numChecks = 10 ;
     for (int i = 0; i <= numChecks; i++) {
@@ -137,7 +136,6 @@ void GhostModel::setPosition(const Vector2f& position) {
 
 void GhostModel::setScared(bool scared) {
     if (scared && !m_scared) {
-        // todo add scared function
         // Just became scared - reverse direction
         reverseDirection();
         m_wasEaten = false;  // Reset eaten flag

@@ -29,7 +29,6 @@ void Window::Destroy() {
     m_window.close();
 }
 
-//TODO update this function
 void Window::Update() {
     sf::Event event;
     while(m_window.pollEvent(event)) {

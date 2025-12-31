@@ -136,23 +136,15 @@ void World::update(float deltaTime) {
             else if (!ghost->GetOutsideStart()) {
                 TrappedGhostMovement(ghost, deltaTime);
             }
-            // Scared ghost movement
-            else if (ghost->isScared()) {
-                if (ghost->willCrossIntersection(*this, deltaTime)) {
-                    Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
-                    ghost->setPosition(intersectionPoint);
-                    ScaredGhostMovement(ghost, deltaTime);
-                } else {
-                    standardGhostMovement(ghost, deltaTime);
-                }
-            }
 
             else {
                 if (ghost->willCrossIntersection(*this, deltaTime)) {
                     Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
                     ghost->setPosition(intersectionPoint);
-
-                    // Gebruik het type om de juiste movement te kiezen
+                    // Als ghost bang is doe max Manhatetn dsitance
+                    if (ghost->isScared()) {ScaredGhostMovement(ghost, deltaTime);}
+                    else { // anders gwn normale movement
+                     // Gebruik het type om de juiste movement te kiezen
                     switch (ghost->getType()) {
                         case GhostType::RED:
                             RedGhostMovement(ghost, deltaTime);
@@ -170,7 +162,7 @@ void World::update(float deltaTime) {
                             // Fallback naar red movement
                             standardGhostMovement(ghost, deltaTime);
                             break;
-                    }
+                    }}
                 } else {
                     standardGhostMovement(ghost, deltaTime);
                 }
@@ -333,7 +325,6 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
     // distance to Pac-Man would have been if the ghost had taken one step in that particular
     // direction. Ties between the best actions are broken at random.
 
-    // todo only do this on intersections
     int pacmanDirection = getPacman()->getDirection();
     Vector2f pacmanPos = getPacman()->getPosition();
 
@@ -827,7 +818,6 @@ void World::handlePacmanCoinCollision(CoinModel& coin) {
 
 void World::handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost) {
     if (ghost.isScared() && !ghost.wasEaten()) {
-        // todo add this to observers
         m_score->onGhostEaten();  // Score ONCE at collision
         ghost.SetWasEaten(true);   // Mark as eaten
         ghost.respawn();           // This will notify observers for view updates
