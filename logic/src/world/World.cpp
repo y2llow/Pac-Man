@@ -337,6 +337,7 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
     case 1: targetPos.y += lookAheadDistance; break; // Down
     case 2: targetPos.x += lookAheadDistance; break; // Right
     case 3: targetPos.y -= lookAheadDistance; break; // Up
+default: ;
     }
 
     // Get all viable directions (0=left, 1=down, 2=right, 3=up)
@@ -537,7 +538,7 @@ Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos, in
         case 0: testPos.x -= testDistance; break;
         case 1: testPos.y += testDistance; break;
         case 2: testPos.x += testDistance; break;
-        case 3: testPos.y -= testDistance; break;
+        case 3: testPos.y -= testDistance; break;default: ;
         }
 
         testPos = ghost.checkTunneling(testPos);
@@ -575,7 +576,7 @@ Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos, in
     case 0: closestPos.x -= bestDistance; break;
     case 1: closestPos.y += bestDistance; break;
     case 2: closestPos.x += bestDistance; break;
-    case 3: closestPos.y -= bestDistance; break;
+    case 3: closestPos.y -= bestDistance; break;default: ;
     }
 
     return ghost.checkTunneling(closestPos);
@@ -659,6 +660,7 @@ Vector2f World::findClosestPositionToWall(const Vector2f& currentPos,
             case 1: testPos.y += testDistance; break; // Down
             case 2: testPos.x += testDistance; break; // Right
             case 3: testPos.y -= testDistance; break; // Up
+default: ;
         }
 
         testPos = m_pacman->CheckTunneling(testPos);
@@ -700,6 +702,7 @@ Vector2f World::findClosestPositionToWall(const Vector2f& currentPos,
         case 1: closestPos.y += bestDistance; break; // Down
         case 2: closestPos.x += bestDistance; break; // Right
         case 3: closestPos.y -= bestDistance; break; // Up
+default: ;
     }
 
     return m_pacman->CheckTunneling(closestPos);
@@ -726,6 +729,7 @@ Vector2f World::tryPositionCorrection(const Vector2f& currentPos,int currentDir,
         case 1: testPos.y += correction; break; // Down
         case 2: testPos.x += correction; break; // Right
         case 3: testPos.y -= correction; break; // Up
+default: ;
         }
 
         // Test if buffered direction would work from this corrected position
