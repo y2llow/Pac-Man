@@ -69,7 +69,6 @@ public:
     // In GhostModel class, voeg toe bij de public methods:
     [[nodiscard]] bool isAtIntersection(const World& world, float deltaTime) const;
     [[nodiscard]] std::vector<int> getValidDirectionsAtIntersection(const World& world, float deltaTime) const;
-    [[nodiscard]] Vector2f findClosestPositionToWall(const Vector2f& currentPos, int direction, float deltaTime) const;
 
      bool willCrossIntersection(const World& world, float deltaTime) const;
     [[nodiscard]] Vector2f getIntersectionPoint(const World& world, float deltaTime) const;
