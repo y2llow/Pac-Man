@@ -1,17 +1,17 @@
 #include "patterns/Subject.h"
 #include <algorithm>
 
-void Subject::attachObserver(Callback callback) {
+void pacman::logic::patterns::Subject::attachObserver(Callback callback) {
     if (callback) {
         m_observers.push_back(std::move(callback));
     }
 }
 
-void Subject::detachAllObservers() {
+void pacman::logic::patterns::Subject::detachAllObservers() {
     m_observers.clear();
 }
 
-void Subject::notifyObservers() {
+void pacman::logic::patterns::Subject::notifyObservers() {
     for (const auto& observer : m_observers) {
         if (observer) {
             observer();

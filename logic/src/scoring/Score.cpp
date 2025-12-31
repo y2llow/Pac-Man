@@ -3,19 +3,19 @@
 #include <cmath>
 #include <algorithm>
 
-Score::Score()
+pacman::logic::scoring::Score::Score()
     : m_currentScore(0),
       m_timeSinceLastCoin(0.0f),
       m_scoreDecreaseTimer(0.0f) {
     loadHighScores();
 }
 
-void Score::update() {
+void pacman::logic::scoring::Score::update() {
     // This method can be used for periodic updates if needed
     // Currently handled by updateScoreOverTime
 }
 
-void Score::updateScoreOverTime(float deltaTime) {
+void pacman::logic::scoring::Score::updateScoreOverTime(float deltaTime) {
     // Decrease score over time (every second)
     m_scoreDecreaseTimer += deltaTime;
     if (m_scoreDecreaseTimer >= 1.0f) {
@@ -27,7 +27,7 @@ void Score::updateScoreOverTime(float deltaTime) {
     m_timeSinceLastCoin += deltaTime;
 }
 
-void Score::onCoinCollected() {
+void pacman::logic::scoring::Score::onCoinCollected() {
     // Calculate bonus based on time since last coin
     int timeBonus = 1 + m_timeSinceLastCoin;
     int coinValue = std::min(BASE_COIN_SCORE * timeBonus, 250); // can max be 500
@@ -37,41 +37,41 @@ void Score::onCoinCollected() {
     m_timeSinceLastCoin = 0.0f;
 }
 
-void Score::onGhostEaten() {
+void pacman::logic::scoring::Score::onGhostEaten() {
     m_currentScore += BASE_GHOST_SCORE;
 }
 
-void Score::onFruitCollected() {
+void pacman::logic::scoring::Score::onFruitCollected() {
     m_currentScore += BASE_FRUIT_SCORE;
 }
 
-void Score::onLevelCleared() {
+void pacman::logic::scoring::Score::onLevelCleared() {
     m_currentScore += LEVEL_CLEAR_BONUS;
 }
 
-void Score::onPacManDied() {
+void pacman::logic::scoring::Score::onPacManDied() {
     // Optional: Penalty for death or just notification
     m_currentScore += PACMAN_DEATH_BONUS;
 
     std::cout << "Pac-Man died! Current score: " << m_currentScore << std::endl;
 }
 
-void Score::loseLife() {
+void pacman::logic::scoring::Score::loseLife() {
     m_lives = m_lives - 1;
 }
 
 
-void Score::reset() {
+void pacman::logic::scoring::Score::reset() {
     m_currentScore = 0;
     m_timeSinceLastCoin = 0.0f;
     m_scoreDecreaseTimer = 0.0f;
 }
 
-void Score::resetCoinChain() {
+void pacman::logic::scoring::Score::resetCoinChain() {
     m_timeSinceLastCoin = 0.0f;
 }
 
-void Score::saveHighScores() {
+void pacman::logic::scoring::Score::saveHighScores() {
     // Add current score to high scores if it qualifies
     addHighScore(m_currentScore);
 
@@ -84,7 +84,7 @@ void Score::saveHighScores() {
     }
 }
 
-void Score::loadHighScores() {
+void pacman::logic::scoring::Score::loadHighScores() {
     m_highScores.clear();
 
     std::ifstream file(m_highScoresFile);
@@ -105,7 +105,7 @@ void Score::loadHighScores() {
     std::sort(m_highScores.rbegin(), m_highScores.rend());
 }
 
-void Score::addHighScore(int score) {
+void pacman::logic::scoring::Score::addHighScore(int score) {
     m_highScores.push_back(score);
     // Sort in descending order and keep only top 5
     std::sort(m_highScores.rbegin(), m_highScores.rend());

@@ -14,7 +14,7 @@
 
 World::World(LogicFactory& factory, Camera& camera)
     : m_factory(&factory), m_camera(camera) {
-    m_score = std::make_unique<Score>();
+    m_score = std::make_unique<pacman::logic::scoring::Score>();
 }
 
 void World::initialize() {

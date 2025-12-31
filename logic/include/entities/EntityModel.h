@@ -4,12 +4,15 @@
 #include "patterns/Subject.h"
 #include <string>
 
+namespace pacman::logic {
 struct Vector2f {
     float x, y;
     Vector2f(float x = 0, float y = 0) : x(x), y(y) {}
 };
 
-class EntityModel : public Subject {
+namespace entities {
+
+class EntityModel : public patterns::Subject {
 public:
     ~EntityModel() override = default;
 
@@ -18,12 +21,11 @@ public:
     virtual void setPosition(const Vector2f& position) = 0;
     [[nodiscard]] virtual Vector2f getSize() const = 0;
 
-    // Other common properties that might trigger notifications
-    // virtual void setActive(bool active);
-
 protected:
-    // Helper method for derived classes
     void notifyPositionChanged() { notifyObservers(); }
 };
+
+} // namespace entities
+}
 
 #endif

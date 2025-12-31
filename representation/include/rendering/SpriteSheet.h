@@ -4,7 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 #include <string>
-#include <iostream>
+
+namespace pacman::representation::rendering {
 
 class SpriteSheet {
 public:
@@ -22,5 +23,7 @@ private:
     sf::Texture m_texture;
     std::unordered_map<std::string, sf::IntRect> spriteRects;
 };
+
+} // namespace pacman::representation::rendering
 
 #endif

@@ -6,15 +6,15 @@
 #define FRUIT_H
 #include "EntityModel.h"
 
-class FruitModel : public EntityModel {
+class FruitModel : public pacman::logic::entities::EntityModel {
 public:
-    FruitModel(const Vector2f& position, const Vector2f& size) ;
+    FruitModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size) ;
 
     // overwritten functiosn from entityModel
     void update(float deltaTime) override ;
-    [[nodiscard]]  Vector2f getPosition() const override {return m_position;}
-    void setPosition(const Vector2f& position) override;
-    [[nodiscard]]  Vector2f getSize() const override{return m_size;}
+    [[nodiscard]]  pacman::logic::Vector2f getPosition() const override {return m_position;}
+    void setPosition(const pacman::logic::Vector2f& position) override;
+    [[nodiscard]]  pacman::logic::Vector2f getSize() const override{return m_size;}
     [[nodiscard]] bool getScoreAwarded() const {return m_scoreAwarded; }
     void setScoreAwarded(bool scoreAwarded) {m_scoreAwarded = scoreAwarded; }
 
@@ -26,8 +26,8 @@ public:
 
 private:
     //default privates
-    Vector2f m_position;
-    Vector2f m_size;
+    pacman::logic::Vector2f m_position;
+    pacman::logic::Vector2f m_size;
 
     //FruitModel specific privates
     bool m_collected = false;

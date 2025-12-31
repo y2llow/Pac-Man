@@ -7,43 +7,45 @@
 #include <memory>
 #include <vector>
 
+namespace pacman::representation {
 class Camera;
-
+namespace factory {
 /**
  * @brief SFML implementation of Abstract Factory pattern
  *
  * Creates Model-View pairs: each entity gets a logic model + visual view.
  * Bridges logic layer (platform-independent) with representation layer (SFML).
  */
-class SFMLFactory : public LogicFactory {
+class SFMLFactory : public logic::patterns::LogicFactory {
 public:
     SFMLFactory(sf::RenderWindow& window, Camera& camera);
 
     // Factory methods - create models and automatically create matching views
-    std::shared_ptr<WallModel> createWall(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<DoorModel> createDoor(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<CoinModel> createCoin(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<PacmanModel> createPacman(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<RedGhostModel> createRedGhost(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<BlueGhostModel> createBlueGhost(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<OrangeGhostModel> createOrangeGhost(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<PinkGhostModel> createPinkGhost(const Vector2f& position, const Vector2f& size) override;
-    std::shared_ptr<FruitModel> createFruit(const Vector2f& position, const Vector2f& size) override;
+    std::shared_ptr<logic::entities::WallModel> createWall(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::DoorModel> createDoor(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::CoinModel> createCoin(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::PacmanModel> createPacman(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::RedGhostModel> createRedGhost(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::BlueGhostModel> createBlueGhost(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::OrangeGhostModel> createOrangeGhost(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::PinkGhostModel> createPinkGhost(const logic::Vector2f& position, const logic::Vector2f& size) override;
+    std::shared_ptr<logic::entities::FruitModel> createFruit(const logic::Vector2f& position, const logic::Vector2f& size) override;
 
     // View management
-    const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
-    void handleResize(const Vector2f& newSize);
+    [[nodiscard]] const std::vector<std::unique_ptr<views::EntityView>>& getViews() const { return m_views; }
+    void handleResize(const logic::Vector2f& newSize);
     void cleanupCollectedViews();  // Remove views for collected coins/fruits
     void clearNonPacmanViews() override;  // Used when advancing to next level
 
 private:
     sf::RenderWindow& m_window;
     Camera& m_camera;
-    std::vector<std::unique_ptr<EntityView>> m_views;  // Factory owns all views
+    std::vector<std::unique_ptr<views::EntityView>> m_views;  // Factory owns all views
 
     // Template helper - creates model + view pair, attaches observer
     template<typename ModelType, typename ViewType>
-    std::shared_ptr<ModelType> createEntity(const Vector2f& position, const Vector2f& size);
+    std::shared_ptr<ModelType> createEntity(const logic::Vector2f& position, const logic::Vector2f& size);
 };
-
+}
+}
 #endif

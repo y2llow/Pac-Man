@@ -1,6 +1,6 @@
 #include "../../include/entities/CoinModel.h"
 
-CoinModel::CoinModel(const Vector2f& position, const Vector2f& size)
+CoinModel::CoinModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
     : m_position(position) {
     m_size = size;
 }
@@ -9,7 +9,7 @@ void CoinModel::update(float deltaTime) {
     // Coins are static - no update logic needed unless animated
 }
 
-void CoinModel::setPosition(const Vector2f& position) {
+void CoinModel::setPosition(const pacman::logic::Vector2f& position) {
     m_position = position;
     // notifyObservers();  // Notify view when position changes
 }

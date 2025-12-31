@@ -12,6 +12,9 @@
  * DESIGN PATTERN: Observer Pattern (Modern C++ Style)
  * Purpose: Allow models to notify views when state changes, without tight coupling.
  */
+
+
+namespace pacman::logic::patterns {
 class Subject {
 public:
     /**
@@ -114,5 +117,7 @@ protected:
      */
     std::vector<Callback> m_observers;
 };
+}
+
 
 #endif

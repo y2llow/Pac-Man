@@ -6,15 +6,15 @@
 
 class World;
 
-class PacmanModel : public EntityModel {
+class PacmanModel : public pacman::logic::entities::EntityModel {
 public:
-     PacmanModel(const Vector2f& position, const Vector2f& size) ;
+     PacmanModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size) ;
 
     // overwritten functiosn from entityModel
      void update(float deltaTime) override ;
-    [[nodiscard]]  Vector2f getPosition() const override {return m_position;}
-     void setPosition(const Vector2f& position) override;
-    [[nodiscard]]  Vector2f getSize() const override{return m_size;}
+    [[nodiscard]]  pacman::logic::Vector2f getPosition() const override {return m_position;}
+     void setPosition(const pacman::logic::Vector2f& position) override;
+    [[nodiscard]]  pacman::logic::Vector2f getSize() const override{return m_size;}
 
     // Death animation methods
     void startDeathAnimation();
@@ -23,12 +23,12 @@ public:
     void resetDeathAnimation();
 
     // Pacman specific funcitons
-    Vector2f CheckTunneling(Vector2f position) const;
+    pacman::logic::Vector2f CheckTunneling(pacman::logic::Vector2f position) const;
     void loseLife();
 
-    [[nodiscard]] Vector2f calculateNextPosition(float deltaTime) const;
+    [[nodiscard]] pacman::logic::Vector2f calculateNextPosition(float deltaTime) const;
     void setDirection(int newDirection);
-    void applyMovement(const Vector2f& newPosition);
+    void applyMovement(const pacman::logic::Vector2f& newPosition);
     int getDirection() const { return m_direction; }
 
     // Input buffering methodes
@@ -43,12 +43,12 @@ public:
     [[nodiscard]] bool getDeathScoreAwarded() const {return m_deathScoreAwarded; }
     void setDeathScoreAwarded(bool scoreAwarded) {m_deathScoreAwarded = scoreAwarded; }
 
-    [[nodiscard]]Vector2f getSpawnPoint() const {return m_spawnpoint;}
+    [[nodiscard]]pacman::logic::Vector2f getSpawnPoint() const {return m_spawnpoint;}
 private:
     //default privates
-    Vector2f m_position;
+    pacman::logic::Vector2f m_position;
     std::string m_textureId;
-    Vector2f m_size;
+    pacman::logic::Vector2f m_size;
 
     //pacman specific privates
     int m_direction = 3;        // Huidige bewegingrichting
@@ -56,7 +56,7 @@ private:
     float PACMAN_SPEED = 0.5;
     float m_lastMove{};
 
-    Vector2f m_spawnpoint;
+    pacman::logic::Vector2f m_spawnpoint;
 
     // Death animation state
     bool m_isDying = false;

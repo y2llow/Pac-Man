@@ -1,21 +1,23 @@
 #ifndef PACMANVIEW_H
 #define PACMANVIEW_H
+
 #include "Camera.h"
 #include "entities/PacmanModel.h"
 #include "views/EntityView.h"
 #include <SFML/Graphics/View.hpp>
 
-class PacmanView : public EntityView {
-    public:
+namespace pacman::representation::views {
 
-    PacmanView(std::shared_ptr<PacmanModel>  pacmanModel,  Camera& camera);
-    ~PacmanView()override  = default;
+class PacmanView : public EntityView {
+public:
+    PacmanView(std::shared_ptr<logic::entities::PacmanModel> pacmanModel, Camera& camera);
+    ~PacmanView() override = default;
 
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
 
-    private:
-    std::shared_ptr<PacmanModel>  m_pacmanmodel;
+private:
+    std::shared_ptr<logic::entities::PacmanModel> m_pacmanmodel;
     Camera& m_camera;
     sf::Sprite m_sprite;
     float m_animationTimer = 0.0f;
@@ -25,5 +27,5 @@ class PacmanView : public EntityView {
     std::string getDeathAnimationSprite() const;
 };
 
-
-#endif //PACMANVIEW_H
+} // namespace views
+#endif

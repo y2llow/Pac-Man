@@ -5,7 +5,7 @@
 
 #include <utility>
 
-GhostModel::GhostModel(const Vector2f& position, const Vector2f& size)
+GhostModel::GhostModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
     : m_position(position), m_size(size), m_spawnPoint(position) {
     // m_type wordt geïnitialiseerd in de afgeleide klassen
     // We initialiseren het hier met een default waarde
@@ -38,8 +38,8 @@ void GhostModel::update(float deltaTime) {
 
 bool GhostModel::willCrossIntersection(const World& world, float deltaTime) const {
     // Check meerdere punten langs het pad
-    Vector2f startPos = m_position;
-    Vector2f endPos = calculateNextPosition(deltaTime);
+    pacman::logic::Vector2f startPos = m_position;
+    pacman::logic::Vector2f endPos = calculateNextPosition(deltaTime);
 
     float distance = std::abs(endPos.x - startPos.x) + std::abs(endPos.y - startPos.y);
     float moveAmount = m_speed * deltaTime;
@@ -53,7 +53,7 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
     const int numChecks = 10 ;
     for (int i = 0; i <= numChecks; i++) {
         float t = static_cast<float>(i) / numChecks;
-        Vector2f checkPos;
+        pacman::logic::Vector2f checkPos;
         checkPos.x = startPos.x + (endPos.x - startPos.x) * t;
         checkPos.y = startPos.y + (endPos.y - startPos.y) * t;
         // NEW: Skip intersections outside the visible field [-1, 1]
@@ -71,7 +71,7 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
         for (int dir = 0; dir < 4; dir++) {
             if (dir == oppositeDirection) continue;
 
-            Vector2f testPos = tempGhost.calculateNextPositionInDirection(checkPos, dir, deltaTime);
+            pacman::logic::Vector2f testPos = tempGhost.calculateNextPositionInDirection(checkPos, dir, deltaTime);
             if (!world.GhostWouldCollideWithWalls(tempGhost, testPos)) {
                 validDirections++;
             }
@@ -85,9 +85,9 @@ bool GhostModel::willCrossIntersection(const World& world, float deltaTime) cons
     return false;
 }
 
-Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) const {
-    Vector2f startPos = m_position;
-    Vector2f endPos = calculateNextPosition(deltaTime);
+pacman::logic::Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) const {
+    pacman::logic::Vector2f startPos = m_position;
+    pacman::logic::Vector2f endPos = calculateNextPosition(deltaTime);
 
     float distance = std::abs(endPos.x - startPos.x) + std::abs(endPos.y - startPos.y);
     float moveAmount = m_speed * deltaTime;
@@ -100,7 +100,7 @@ Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) c
     const int numChecks = 10 ;
     for (int i = 0; i <= numChecks; i++) {
         float t = static_cast<float>(i) / numChecks;
-        Vector2f checkPos;
+        pacman::logic::Vector2f checkPos;
         checkPos.x = startPos.x + (endPos.x - startPos.x) * t;
         checkPos.y = startPos.y + (endPos.y - startPos.y) * t;
 
@@ -116,7 +116,7 @@ Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) c
         for (int dir = 0; dir < 4; dir++) {
             if (dir == oppositeDirection) continue;
 
-            Vector2f testPos = tempGhost.calculateNextPositionInDirection(checkPos, dir, deltaTime);
+            pacman::logic::Vector2f testPos = tempGhost.calculateNextPositionInDirection(checkPos, dir, deltaTime);
             if (!world.GhostWouldCollideWithWalls(tempGhost, testPos)) {
                 validDirections++;
             }
@@ -130,7 +130,7 @@ Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) c
     return m_position; // Geen intersection gevonden
 }
 
-void GhostModel::setPosition(const Vector2f& position) {
+void GhostModel::setPosition(const pacman::logic::Vector2f& position) {
     m_position = position;
 }
 
@@ -197,7 +197,7 @@ void GhostModel::reverseDirection() {
     }
 }
 
-Vector2f GhostModel::checkTunneling(Vector2f position) const {
+pacman::logic::Vector2f GhostModel::checkTunneling(pacman::logic::Vector2f position) const {
     float edge = 1.0f + m_size.x / 2.0f;
     if (position.x < -edge) {
         position.x = edge;
@@ -254,8 +254,8 @@ void PinkGhostModel::updateMovement(float deltaTime) {
     GhostModel::updateMovement(deltaTime);
 }
 
-void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {
-    Vector2f GhostPosition = getPosition();
+void GhostModel::MoveToStartPosition(pacman::logic::Vector2f startposition, float deltaTime ) {
+    pacman::logic::Vector2f GhostPosition = getPosition();
     if (GhostPosition.x < startposition.x) {
         m_direction = 2;
     }
@@ -281,8 +281,8 @@ void GhostModel::MoveToStartPosition(Vector2f startposition, float deltaTime ) {
 
 }
 
-Vector2f GhostModel::calculateNextPosition(float deltaTime) const {
-    Vector2f newPosition = m_position;
+pacman::logic::Vector2f GhostModel::calculateNextPosition(float deltaTime) const {
+    pacman::logic::Vector2f newPosition = m_position;
     float moveAmount = m_speed * deltaTime;
 
     switch (m_direction) {
@@ -295,13 +295,13 @@ Vector2f GhostModel::calculateNextPosition(float deltaTime) const {
     return checkTunneling(newPosition);
 }
 
-bool GhostModel::canMoveInDirection(int direction, const World& world, float deltaTime) const {
-    Vector2f testPosition = calculateNextPositionInDirection(m_position, direction, deltaTime); // 60fps
+bool GhostModel::canMoveInDirection(int direction, const pacman::logic::world::World& world, float deltaTime) const {
+    pacman::logic::Vector2f testPosition = calculateNextPositionInDirection(m_position, direction, deltaTime); // 60fps
     return !world.GhostWouldCollideWithWalls(*this, testPosition);
 }
 
-Vector2f GhostModel::calculateNextPositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const {
-        Vector2f newPosition = startPos;
+pacman::logic::Vector2f GhostModel::calculateNextPositionInDirection(const pacman::logic::Vector2f& startPos, int direction, float deltaTime) const {
+        pacman::logic::Vector2f newPosition = startPos;
         float moveAmount = m_speed * deltaTime;
 
         switch (direction) {

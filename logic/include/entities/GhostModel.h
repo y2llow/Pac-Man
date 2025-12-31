@@ -14,17 +14,17 @@ enum class GhostType {
     ORANGE,
     PINK
 };
-
-class GhostModel : public EntityModel {
+namespace entities {
+class GhostModel : public pacman::logic::entities::EntityModel {
 public:
-    GhostModel(const Vector2f& position, const Vector2f& size);
+    GhostModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size);
     virtual ~GhostModel() = default;
     // Overwritten functions from EntityModel
     void update(float deltaTime) override;
 
-    [[nodiscard]] Vector2f getPosition() const override { return m_position; }
-    void setPosition(const Vector2f& position) override;
-    [[nodiscard]] Vector2f getSize() const override { return m_size; }
+    [[nodiscard]] pacman::logic::Vector2f getPosition() const override { return m_position; }
+    void setPosition(const pacman::logic::Vector2f& position) override;
+    [[nodiscard]] pacman::logic::Vector2f getSize() const override { return m_size; }
     [[nodiscard]] int getDirection() const { return m_direction; }
     int SetDirection( int direction )  { return m_direction = direction; }
     [[nodiscard]] int getLastDirection() const { return m_lastDirection; }
@@ -32,7 +32,7 @@ public:
     [[nodiscard]]GhostType getType() const {return m_type;}
 
     // Ghost specific functions
-    Vector2f checkTunneling(Vector2f position) const;
+    pacman::logic::Vector2f checkTunneling(pacman::logic::Vector2f position) const;
     [[nodiscard]] bool isScared() const { return m_scared; }
     void setScared(bool scared);
     void setScaredTimer(float time) { m_scaredTimer = time; m_scared = true; }
@@ -40,9 +40,9 @@ public:
     [[nodiscard]] float getScaredTimer() const { return m_scaredTimer; }
 
     // ai movement
-    void MoveToStartPosition(Vector2f startposition , float deltaTime );
-    Vector2f calculateNextPosition(float deltaTime) const;
-    Vector2f calculateNextPositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
+    void MoveToStartPosition(pacman::logic::Vector2f startposition , float deltaTime );
+    pacman::logic::Vector2f calculateNextPosition(float deltaTime) const;
+    pacman::logic::Vector2f calculateNextPositionInDirection(const pacman::logic::Vector2f& startPos, int direction, float deltaTime) const;
     bool canMoveInDirection(int direction, const World& world, float deltaTime) const ;
 
     // Simple movement
@@ -70,12 +70,12 @@ public:
     [[nodiscard]] bool isAtIntersection(const World& world, float deltaTime) const;
     [[nodiscard]] std::vector<int> getValidDirectionsAtIntersection(const World& world, float deltaTime) const;
 
-     bool willCrossIntersection(const World& world, float deltaTime) const;
-    [[nodiscard]] Vector2f getIntersectionPoint(const World& world, float deltaTime) const;
+    bool willCrossIntersection(const World& world, float deltaTime) const;
+    [[nodiscard]] pacman::logic::Vector2f getIntersectionPoint(const World& world, float deltaTime) const;
 protected:
-    Vector2f m_position;
+    pacman::logic::Vector2f m_position;
     std::string m_textureId;
-    Vector2f m_size;
+    pacman::logic::Vector2f m_size;
     int m_direction = 2; // 0=left, 1=down, 2=right, 3=up
     int m_lastDirection{};
 
@@ -84,7 +84,7 @@ protected:
     float m_speed{} ;
     int m_scaredTimerInc = 1;
     float m_scaredTimer = 0.0f;
-    Vector2f m_spawnPoint;
+    pacman::logic::Vector2f m_spawnPoint;
     bool m_scared = false;
     bool m_wasEaten = false;
     bool m_canMove = true;
@@ -98,7 +98,7 @@ protected:
 
 class RedGhostModel : public GhostModel {
 public:
-    RedGhostModel(const Vector2f& position, const Vector2f& size)
+    RedGhostModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
         : GhostModel(position, size) {m_direction = 0; m_type = GhostType::RED;}  // Zet type Left
 
     void updateMovement(float deltaTime) override;
@@ -110,7 +110,7 @@ private:
 
 class BlueGhostModel : public GhostModel {
 public:
-    BlueGhostModel(const Vector2f& position, const Vector2f& size)
+    BlueGhostModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
         : GhostModel(position, size) { m_direction = 2; m_type = GhostType::BLUE; } // Right
 
     void updateMovement(float deltaTime) override;
@@ -121,7 +121,7 @@ private:
 
 class OrangeGhostModel : public GhostModel {
 public:
-    OrangeGhostModel(const Vector2f& position, const Vector2f& size)
+    OrangeGhostModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
         : GhostModel(position, size) { m_direction = 1; m_type = GhostType::ORANGE; } // Down
 
     void updateMovement(float deltaTime) override;
@@ -133,7 +133,7 @@ private:
 
 class PinkGhostModel : public GhostModel {
 public:
-    PinkGhostModel(const Vector2f& position, const Vector2f& size)
+    PinkGhostModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
         : GhostModel(position, size) { m_direction = 3;  m_type = GhostType::PINK;} // Up
 
     void updateMovement(float deltaTime) override;
@@ -142,5 +142,6 @@ public:
 private:
     float m_MovingToStartTimer = 10;
 };
+}
 
 #endif // GHOST_H

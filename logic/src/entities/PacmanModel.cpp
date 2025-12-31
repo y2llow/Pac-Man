@@ -2,13 +2,13 @@
 
 #include <utility>
 
-PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size)
+PacmanModel::PacmanModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
     : m_position(position), m_spawnpoint(position) { m_size = size; }
 
-Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
+pacman::logic::Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
     if (m_isDying) return m_position; // Don't move during death animation
 
-    Vector2f newPosition = m_position;
+    pacman::logic::Vector2f newPosition = m_position;
     float moveAmount = PACMAN_SPEED * deltaTime;
 
     switch (m_direction) {
@@ -66,7 +66,7 @@ void PacmanModel::loseLife() {
     startDeathAnimation(); // Start death animation instead of immediate reset
 }
 
-Vector2f PacmanModel::CheckTunneling(Vector2f position) const {
+pacman::logic::Vector2f PacmanModel::CheckTunneling(pacman::logic::Vector2f position) const {
     float edge = 1 + m_size.x / 2;
     if (-edge >= position.x){
         position.x = edge ;

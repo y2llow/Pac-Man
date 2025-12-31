@@ -1,11 +1,15 @@
 #include "core/Stopwatch.h"
 
+
+
+namespace pacman::logic::core {
+
 Stopwatch::Stopwatch() {
     start();
 }
 
 Stopwatch& Stopwatch::getInstance() {
-    static Stopwatch instance; // Meyer's singleton - thread-safe in C++11+
+    static Stopwatch instance;
     return instance;
 }
 
@@ -19,7 +23,7 @@ float Stopwatch::getElapsedTime() const {
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
         currentTime - m_startTime
     );
-    return duration.count() / 1000000.0f; // Convert to seconds
+    return duration.count() / 1000000.0f;
 }
 
 float Stopwatch::tick() {
@@ -28,7 +32,7 @@ float Stopwatch::tick() {
         currentTime - m_lastTickTime
     );
 
-    float deltaTime = duration.count() / 1000000.0f; // Convert to seconds
+    float deltaTime = duration.count() / 1000000.0f;
     m_lastTickTime = currentTime;
 
     return deltaTime;
@@ -39,5 +43,8 @@ float Stopwatch::peek() const {
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
         currentTime - m_lastTickTime
     );
-    return duration.count() / 1000000.0f; // Convert to seconds
+    return duration.count() / 1000000.0f;
 }
+
+} // namespace pacman::logic::core
+

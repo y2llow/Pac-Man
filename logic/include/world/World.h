@@ -51,10 +51,10 @@
 #include "entities/FruitModel.h"
 #include "entities/DoorModel.h"
 
-// Forward declarations (vermindert compile-tijd)
-class LogicFactory;
+// Forward declaration
 class Camera;
-struct Vector2f;
+
+namespace pacman::logic {
 
 class World {
 public:
@@ -88,7 +88,7 @@ public:
     void attachScoreObservers();
 
     /// Geeft referentie naar score-object
-    Score& getScore() { return *m_score; }
+    scoring::Score& getScore() { return *m_score; }
 
     /// Laat toe om factory te vervangen (bv. bij reset)
     void setFactory(LogicFactory& factory) { m_factory = &factory; }
@@ -106,12 +106,12 @@ public:
      * Detecteert tunneling bij snelle ghost-beweging.
      * Verplaatst ghost onmiddellijk indien nodig.
      */
-    bool willTunnel(const std::shared_ptr<GhostModel>& ghost, float deltaTime) const;
+    bool willTunnel(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) const;
 
     /// Collision handlers
-    void handlePacmanGhostCollision(PacmanModel& pacman, GhostModel& ghost);
-    static void handlePacmanCoinCollision(CoinModel& coin);
-    void handlePacmanFruitCollision(FruitModel& fruit);
+    void handlePacmanGhostCollision(entities::PacmanModel& pacman, entities::GhostModel& ghost);
+    static void handlePacmanCoinCollision(entities::CoinModel& coin);
+    void handlePacmanFruitCollision(entities::FruitModel& fruit);
 
     /// Verwijdert verzamelde coins en fruits
     void cleanupCollectedItems();
@@ -121,14 +121,9 @@ public:
     // -----------------
 
     /// Controleert of een ghost tegen muren zou botsen
-    [[nodiscard]] bool GhostWouldCollideWithWalls(
-        const GhostModel& ghost,
-        const Vector2f& newPosition) const;
+    [[nodiscard]] bool GhostWouldCollideWithWalls(const entities::GhostModel& ghost, const Vector2f& newPosition) const;
+    [[nodiscard]] bool PacmanWouldCollideWithWalls(const entities::PacmanModel& pacman, const Vector2f& newPosition) const;
 
-    /// Predictive collision check voor Pac-Man
-    [[nodiscard]] bool PacmanWouldCollideWithWalls(
-        const PacmanModel& pacman,
-        const Vector2f& newPosition) const;
 
     // -----------------
     // GAME FLOW
@@ -152,26 +147,25 @@ public:
     // GETTERS (voor rendering)
     // -----------------
 
-    [[nodiscard]] const std::vector<std::shared_ptr<WallModel>>& getWalls() const { return m_walls; }
-    [[nodiscard]] const std::vector<std::shared_ptr<CoinModel>>& getCoins() const { return m_coins; }
-    [[nodiscard]] const std::vector<std::shared_ptr<GhostModel>>& getGhosts() const { return m_ghosts; }
-    [[nodiscard]] const std::vector<std::shared_ptr<FruitModel>>& getFruit() const { return m_fruits; }
-    [[nodiscard]] const std::vector<std::shared_ptr<DoorModel>>& getDoors() const { return m_doors; }
-    [[nodiscard]] const std::shared_ptr<PacmanModel>& getPacman() const { return m_pacman; }
-
-    [[nodiscard]] std::shared_ptr<Score> Getscore() const { return m_score; }
+    [[nodiscard]] const std::vector<std::shared_ptr<entities::WallModel>>& getWalls() const { return m_walls; }
+    [[nodiscard]] const std::vector<std::shared_ptr<entities::CoinModel>>& getCoins() const { return m_coins; }
+    [[nodiscard]] const std::vector<std::shared_ptr<entities::GhostModel>>& getGhosts() const { return m_ghosts; }
+    [[nodiscard]] const std::vector<std::shared_ptr<entities::FruitModel>>& getFruit() const { return m_fruits; }
+    [[nodiscard]] const std::vector<std::shared_ptr<entities::DoorModel>>& getDoors() const { return m_doors; }
+    [[nodiscard]] const std::shared_ptr<entities::PacmanModel>& getPacman() const { return m_pacman; }
+    [[nodiscard]] std::shared_ptr<scoring::Score> Getscore() const { return m_score; }
     [[nodiscard]] int getCurrentLevel() const { return LEVEL; }
 
     // -----------------
     // GHOST AI (Strategy)
     // -----------------
 
-    void RedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
-    void BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
-    void PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
-    void ScaredGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
-    void standardGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime);
-    void TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) const;
+    void RedGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
+    void BlueGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
+    void PinkGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
+    void ScaredGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
+    void standardGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
+    void TrappedGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) const;
 
     /// Hulpfunctie voor Manhattan-afstand (ghost AI)
     static float getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos);
@@ -182,20 +176,20 @@ private:
     // -----------------
 
     MapModel m_mapModel;
-    LogicFactory* m_factory;
-    std::shared_ptr<Score> m_score;
+    patterns::LogicFactory* m_factory;
+    std::shared_ptr<scoring::Score> m_score;
     Camera& m_camera;
 
     // -----------------
     // ENTITIES
     // -----------------
 
-    std::vector<std::shared_ptr<WallModel>>  m_walls;
-    std::vector<std::shared_ptr<CoinModel>>  m_coins;
-    std::vector<std::shared_ptr<GhostModel>> m_ghosts;
-    std::vector<std::shared_ptr<FruitModel>> m_fruits;
-    std::vector<std::shared_ptr<DoorModel>>  m_doors;
-    std::shared_ptr<PacmanModel> m_pacman;
+    std::vector<std::shared_ptr<entities::WallModel>> m_walls;
+    std::vector<std::shared_ptr<entities::CoinModel>> m_coins;
+    std::vector<std::shared_ptr<entities::GhostModel>> m_ghosts;
+    std::vector<std::shared_ptr<entities::FruitModel>> m_fruits;
+    std::vector<std::shared_ptr<entities::DoorModel>> m_doors;
+    std::shared_ptr<entities::PacmanModel> m_pacman;
 
     // -----------------
     // CONFIG & STATE
@@ -232,11 +226,7 @@ private:
         float deltaTime) const;
 
     /// Zelfde als hierboven maar voor ghosts
-    [[nodiscard]] Vector2f findClosestPositionToWallForGhost(
-        const Vector2f& currentPos,
-        int direction,
-        float deltaTime,
-        GhostModel& ghost) const;
+    [[nodiscard]] Vector2f findClosestPositionToWallForGhost(const Vector2f& currentPos, int direction, float deltaTime, entities::GhostModel& ghost) const;
 
     /// Controleert of death-animatie klaar is
     void checkDeathAnimationState();
@@ -265,3 +255,5 @@ bool World::checkCollision(const T1& entity1, const T2& entity2) {
 }
 
 #endif
+}
+

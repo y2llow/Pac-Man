@@ -5,10 +5,12 @@
 #include "State.h"
 #include <SFML/Graphics.hpp>
 
+namespace pacman::representation::states {
+
 class MenuState : public State {
 public:
     MenuState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera);
-    
+
     void initialize() override;
     void update(float deltaTime) override;
     void render() override;
@@ -25,15 +27,17 @@ private:
     std::vector<sf::Text> m_highScoreTexts;
     std::vector<int> m_highScores;
     sf::RectangleShape m_highScoreBackground;
-
     bool m_isButtonHovered;
 
     void loadHighScores();
     void updateHighScoreDisplay();
-    void updateLayout();  // Updates positions when window resizes
+    void updateLayout();
     bool isMouseOverButton(const sf::Vector2i& mousePos) const;
     void startGame();
-
 };
+
+} // namespace pacman::representation::states
+
+
 
 #endif
