@@ -18,7 +18,7 @@ World::World(LogicFactory& factory, Camera& camera)
 }
 
 void World::initialize() {
-    if (m_mapModel.loadFromFile("assets/maps/map2.txt")) {
+    if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
         attachScoreObservers();
     }
@@ -881,6 +881,7 @@ void World::advanceToNextLevel() {
     m_coins.clear();
     m_fruits.clear();
     m_ghosts.clear();
+    m_doors.clear();
 
     // Reset Pacman position to spawn
     if (m_pacman) {
@@ -892,9 +893,7 @@ void World::advanceToNextLevel() {
 
     // Load the appropriate map based on level
     std::string mapFile;
-    if (LEVEL == 2) {
-        mapFile = "assets/maps/map2.txt";
-    } else if (LEVEL == 3) {
+    if (LEVEL > 1) {
         mapFile = "assets/maps/map2.txt";
     }
 
