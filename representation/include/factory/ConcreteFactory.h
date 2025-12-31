@@ -9,11 +9,17 @@
 
 class Camera;
 
+/**
+ * @brief SFML implementation of Abstract Factory pattern
+ *
+ * Creates Model-View pairs: each entity gets a logic model + visual view.
+ * Bridges logic layer (platform-independent) with representation layer (SFML).
+ */
 class SFMLFactory : public LogicFactory {
 public:
     SFMLFactory(sf::RenderWindow& window, Camera& camera);
 
-    // Change return types to shared_ptr
+    // Factory methods - create models and automatically create matching views
     std::shared_ptr<WallModel> createWall(const Vector2f& position, const Vector2f& size) override;
     std::shared_ptr<DoorModel> createDoor(const Vector2f& position, const Vector2f& size) override;
     std::shared_ptr<CoinModel> createCoin(const Vector2f& position, const Vector2f& size) override;
@@ -27,16 +33,15 @@ public:
     // View management
     const std::vector<std::unique_ptr<EntityView>>& getViews() const { return m_views; }
     void handleResize(const Vector2f& newSize);
-    void cleanupCollectedViews();
-    void clearNonPacmanViews() override;
-
+    void cleanupCollectedViews();  // Remove views for collected coins/fruits
+    void clearNonPacmanViews() override;  // Used when advancing to next level
 
 private:
     sf::RenderWindow& m_window;
     Camera& m_camera;
-    std::vector<std::unique_ptr<EntityView>> m_views;
+    std::vector<std::unique_ptr<EntityView>> m_views;  // Factory owns all views
 
-    // Template helper - return shared_ptr
+    // Template helper - creates model + view pair, attaches observer
     template<typename ModelType, typename ViewType>
     std::shared_ptr<ModelType> createEntity(const Vector2f& position, const Vector2f& size);
 };
