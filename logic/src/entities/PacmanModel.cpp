@@ -1,8 +1,9 @@
 #include "entities/PacmanModel.h"
 
 #include <utility>
+namespace pacman::logic::entities {
 
-PacmanModel::PacmanModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size)
+PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size)
     : m_position(position), m_spawnpoint(position) { m_size = size; }
 
 pacman::logic::Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
@@ -110,5 +111,4 @@ Vector2f PacmanModel::calculatePositionInDirection(const Vector2f& startPos, int
 
     return CheckTunneling(newPosition);
 }
-
-
+}

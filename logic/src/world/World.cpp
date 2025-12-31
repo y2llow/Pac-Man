@@ -12,19 +12,19 @@
 #include <iostream>
 
 
-World::World(LogicFactory& factory, Camera& camera)
+pacman::logic::World::World(pacman::logic::patterns::LogicFactory& factory, Camera& camera)
     : m_factory(&factory), m_camera(camera) {
     m_score = std::make_unique<pacman::logic::scoring::Score>();
 }
 
-void World::initialize() {
+void pacman::logic::World::initialize() {
     if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
         attachScoreObservers();
     }
 }
 
-void World::createEntitiesFromMap() {
+void pacman::logic::World::createEntitiesFromMap() {
     const auto& grid = m_mapModel.getGrid();
     Vector2f gridSize = m_mapModel.getGridSize();
 
@@ -115,7 +115,7 @@ void World::createEntitiesFromMap() {
               << m_ghosts.size() << " ghosts" << std::endl;
 }
 
-void World::update(float deltaTime) {
+void pacman::logic::World::update(float deltaTime) {
     // Update score over time (decreases score)
     m_score->updateScoreOverTime(deltaTime);
 
@@ -146,16 +146,16 @@ void World::update(float deltaTime) {
                     else { // anders gwn normale movement
                      // Gebruik het type om de juiste movement te kiezen
                     switch (ghost->getType()) {
-                        case GhostType::RED:
+                        case entities::GhostType::RED:
                             RedGhostMovement(ghost, deltaTime);
                             break;
-                        case GhostType::BLUE:
+                        case entities::GhostType::BLUE:
                             BlueGhostMovement(ghost, deltaTime);
                             break;
-                        case GhostType::ORANGE:
+                        case entities::GhostType::ORANGE:
                             BlueGhostMovement(ghost, deltaTime);  // Orange gebruikt ook Blue logic volgens de specificatie
                             break;
-                        case GhostType::PINK:
+                        case entities::GhostType::PINK:
                             PinkGhostMovement(ghost, deltaTime);
                             break;
                         default:
@@ -195,7 +195,7 @@ void World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
-bool World::willTunnel(const std::shared_ptr<GhostModel>& ghost, float deltaTime) const {
+bool pacman::logic::World::willTunnel(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) const {
     Vector2f startPos = ghost->getPosition();
     Vector2f nextPos = ghost->calculateNextPosition(deltaTime);
 
@@ -217,7 +217,7 @@ bool World::willTunnel(const std::shared_ptr<GhostModel>& ghost, float deltaTime
 
 }
 
-void World::TrappedGhostMovement(const std::shared_ptr<GhostModel>& ghost,float deltaTime) const {
+void pacman::logic::World::TrappedGhostMovement(const std::shared_ptr<pacman::logic::entities::GhostModel>& ghost,float deltaTime) const {
     if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {}
     else if (ghost->canMoveInDirection(0,*this, deltaTime)) {
         ghost->SetDirection(0);

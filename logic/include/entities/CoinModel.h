@@ -4,15 +4,16 @@
 #include "entities/EntityModel.h"
 #include <string>
 
-class CoinModel : public pacman::logic::entities::EntityModel {
+namespace pacman::logic::entities {
+class CoinModel : public EntityModel {
 public:
-    CoinModel(const pacman::logic::Vector2f& position, const pacman::logic::Vector2f& size);
+    CoinModel(const Vector2f& position, const Vector2f& size);
 
     // Entity interface implementation
     void update(float deltaTime) override;
-    [[nodiscard]] pacman::logic::Vector2f getPosition() const override { return m_position; }
-    void setPosition(const pacman::logic::Vector2f& position) override;
-    [[nodiscard]] pacman::logic::Vector2f getSize() const override { return m_size; }
+    [[nodiscard]] Vector2f getPosition() const override { return m_position; }
+    void setPosition(const Vector2f& position) override;
+    [[nodiscard]] Vector2f getSize() const override { return m_size; }
     [[nodiscard]] bool getScoreAwarded() const {return m_scoreAwarded; }
     void setScoreAwarded(bool scoreAwarded) {m_scoreAwarded = scoreAwarded; }
 
@@ -23,13 +24,14 @@ public:
     [[nodiscard]] const std::string& getTextureId() const { return m_textureId; }
 
 private:
-    pacman::logic::Vector2f m_position;
+    Vector2f m_position;
     std::string m_textureId;
-    pacman::logic::Vector2f m_size;
+    Vector2f m_size;
 
     // Coin Specific privates
     bool m_collected = false;
     bool m_scoreAwarded = false;
 };
+}
 
 #endif

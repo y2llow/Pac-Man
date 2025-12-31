@@ -63,7 +63,7 @@ public:
      * @param factory  Abstract factory voor het aanmaken van entiteiten
      * @param camera   Referentie naar de camera (voor consistentie met view-laag)
      */
-    explicit World(LogicFactory& factory, Camera& camera);
+    explicit World(patterns::LogicFactory& factory, Camera& camera);
 
     /**
      * Initialiseert de wereld:
@@ -91,7 +91,7 @@ public:
     scoring::Score& getScore() { return *m_score; }
 
     /// Laat toe om factory te vervangen (bv. bij reset)
-    void setFactory(LogicFactory& factory) { m_factory = &factory; }
+    void setFactory(patterns::LogicFactory& factory) { m_factory = &factory; }
 
     /**
      * Algemene AABB collision detection tussen twee entiteiten.
