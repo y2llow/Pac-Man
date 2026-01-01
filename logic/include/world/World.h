@@ -54,7 +54,14 @@
 // Forward declaration
 class Camera;
 
-namespace pacman::logic {
+namespace pacman::logic::world {
+// Import commonly used types from entities namespace
+using entities::WallModel;
+using entities::CoinModel;
+using entities::PacmanModel;
+using entities::GhostModel;
+using entities::FruitModel;
+using entities::DoorModel;
 
 class World {
 public:
@@ -165,7 +172,7 @@ public:
     void PinkGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
     void ScaredGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
     void standardGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime);
-    void TrappedGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) const;
+    void TrappedGhostMovement(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) ;
 
     /// Hulpfunctie voor Manhattan-afstand (ghost AI)
     static float getManhattanDistance(Vector2f ghostPos, Vector2f pacmanNextPos);

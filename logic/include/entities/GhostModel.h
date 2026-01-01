@@ -5,14 +5,9 @@
 #include <memory>
 #include <vector>
 
-class World;
-// Forward declarations
-namespace pacman::logic::entities {
-    class PacmanModel;
-}
-
+// Forward declarations - correctly namespaced
 namespace pacman::logic::world {
-    class World;
+    class World;  // World is in pacman::logic::world namespace
 }
 
 namespace pacman::logic::entities {
@@ -54,7 +49,7 @@ public:
     void MoveToStartPosition(Vector2f startposition, float deltaTime);
     [[nodiscard]] Vector2f calculateNextPosition(float deltaTime) const;
     [[nodiscard]] Vector2f calculateNextPositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
-    bool canMoveInDirection(int direction, const  pacman::logic::World& world, float deltaTime) const;
+    bool canMoveInDirection(int direction, const world::World& world, float deltaTime) const;  // Use world:: since we're in entities namespace
     virtual void updateMovement(float deltaTime);
     void reverseDirection();
 
@@ -74,7 +69,7 @@ public:
     [[nodiscard]] bool wasEaten() const { return m_wasEaten; }
     void SetWasEaten(bool wasEaten) { m_wasEaten = wasEaten; }
 
-    // Intersection detection
+    // Intersection detection - use world:: prefix
     [[nodiscard]] bool isAtIntersection(const world::World& world, float deltaTime) const;
     [[nodiscard]] std::vector<int> getValidDirectionsAtIntersection(const world::World& world, float deltaTime) const;
     bool willCrossIntersection(const world::World& world, float deltaTime) const;

@@ -11,20 +11,30 @@
 #include <cmath>
 #include <iostream>
 
+// BELANGRIJK: We zitten nu in pacman::logic::world namespace
+namespace pacman::logic::world {
+// Import types we vaak gebruiken
+using entities::GhostModel;
+using entities::PacmanModel;
+using entities::CoinModel;
+using entities::FruitModel;
+using entities::WallModel;
+using entities::DoorModel;
 
-pacman::logic::World::World(pacman::logic::patterns::LogicFactory& factory, Camera& camera)
+World::World(patterns::LogicFactory& factory, Camera& camera)
     : m_factory(&factory), m_camera(camera) {
-    m_score = std::make_unique<pacman::logic::scoring::Score>();
+    m_score = std::make_unique<scoring::Score>();
 }
 
-void pacman::logic::World::initialize() {
+
+void World::initialize() {
     if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
         attachScoreObservers();
     }
 }
 
-void pacman::logic::World::createEntitiesFromMap() {
+void World::createEntitiesFromMap() {
     const auto& grid = m_mapModel.getGrid();
     Vector2f gridSize = m_mapModel.getGridSize();
 
@@ -115,7 +125,7 @@ void pacman::logic::World::createEntitiesFromMap() {
               << m_ghosts.size() << " ghosts" << std::endl;
 }
 
-void pacman::logic::World::update(float deltaTime) {
+void World::update(float deltaTime) {
     // Update score over time (decreases score)
     m_score->updateScoreOverTime(deltaTime);
 
@@ -144,8 +154,8 @@ void pacman::logic::World::update(float deltaTime) {
                     // Als ghost bang is doe max Manhatetn dsitance
                     if (ghost->isScared()) {ScaredGhostMovement(ghost, deltaTime);}
                     else { // anders gwn normale movement
-                     // Gebruik het type om de juiste movement te kiezen
-                    switch (ghost->getType()) {
+                        // Gebruik het type om de juiste movement te kiezen
+                        switch (ghost->getType()) {
                         case entities::GhostType::RED:
                             RedGhostMovement(ghost, deltaTime);
                             break;
@@ -162,7 +172,7 @@ void pacman::logic::World::update(float deltaTime) {
                             // Fallback naar red movement
                             standardGhostMovement(ghost, deltaTime);
                             break;
-                    }}
+                        }}
                 } else {
                     standardGhostMovement(ghost, deltaTime);
                 }
@@ -195,7 +205,7 @@ void pacman::logic::World::update(float deltaTime) {
     // VIERDE: Cleanup
     cleanupCollectedItems();
 }
-bool pacman::logic::World::willTunnel(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) const {
+bool World::willTunnel(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) const {
     Vector2f startPos = ghost->getPosition();
     Vector2f nextPos = ghost->calculateNextPosition(deltaTime);
 
@@ -217,7 +227,7 @@ bool pacman::logic::World::willTunnel(const std::shared_ptr<entities::GhostModel
 
 }
 
-void pacman::logic::World::TrappedGhostMovement(const std::shared_ptr<pacman::logic::entities::GhostModel>& ghost,float deltaTime) const {
+void World::TrappedGhostMovement(const std::shared_ptr<pacman::logic::entities::GhostModel>& ghost,float deltaTime) {
     if (ghost->canMoveInDirection(ghost->getDirection(),*this, deltaTime)) {}
     else if (ghost->canMoveInDirection(0,*this, deltaTime)) {
         ghost->SetDirection(0);
@@ -233,7 +243,7 @@ void pacman::logic::World::TrappedGhostMovement(const std::shared_ptr<pacman::lo
     }
     ghost->updateMovement(deltaTime);
 }
-void World::standardGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
+void World::standardGhostMovement(const std::shared_ptr<pacman::logic::entities::GhostModel>& ghost, float deltaTime) {
     // Geen intersection - normale movement
     Vector2f nextPosition = ghost->calculateNextPosition(deltaTime);
 
@@ -255,7 +265,7 @@ void World::standardGhostMovement(const std::shared_ptr<GhostModel>& ghost, floa
                 // Volledig vast - kies nieuwe richting
                 std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
                 if (!validDirs.empty()) {
-                    auto& rng = Random::getInstance();
+                    auto& rng = core::Random::getInstance();
                     int newDirection = rng.getRandomElement(validDirs);
 
                     // std::cout << "*** STUCK - Forcing direction: " << newDirection << " ***" << std::endl;
@@ -287,7 +297,7 @@ void World::RedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float del
         std::vector<int> validDirs = ghost->getValidDirectionsAtIntersection(*this, deltaTime);
 
         if (!validDirs.empty()) {
-            auto& rng = Random::getInstance();
+            auto& rng = core::Random::getInstance();
             bool willChangeDirection = rng.getBool(0.5);
 
             if (willChangeDirection) {
@@ -311,7 +321,7 @@ void World::RedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float del
                 }
             }
         }
-     }
+    }
 
     standardGhostMovement(ghost, deltaTime);
 
@@ -337,7 +347,7 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
     case 1: targetPos.y += lookAheadDistance; break; // Down
     case 2: targetPos.x += lookAheadDistance; break; // Right
     case 3: targetPos.y -= lookAheadDistance; break; // Up
-default: ;
+    default: ;
     }
 
     // Get all viable directions (0=left, 1=down, 2=right, 3=up)
@@ -384,7 +394,7 @@ default: ;
     int chosenDirection;
     if (bestDirections.size() > 1) {
         // Tie - break randomly
-        auto& rng = Random::getInstance();
+        auto& rng = core::Random::getInstance();
         chosenDirection = rng.getRandomElement(bestDirections);
     } else {
         chosenDirection = bestDirections[0];
@@ -435,7 +445,7 @@ void World::ScaredGhostMovement(const std::shared_ptr<GhostModel>& ghost, float 
         // Choose direction: if tie, break randomly
         int chosenDirection;
         if (bestDirections.size() > 1) {
-            auto& rng = Random::getInstance();
+            auto& rng = core::Random::getInstance();
             chosenDirection = rng.getRandomElement(bestDirections);
         } else {
             chosenDirection = bestDirections[0];
@@ -506,7 +516,7 @@ void World::PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
         // Choose direction: if tie, break randomly
         int chosenDirection;
         if (bestDirections.size() > 1) {
-            auto& rng = Random::getInstance();
+            auto& rng = core::Random::getInstance();
             chosenDirection = rng.getRandomElement(bestDirections);
         } else {
             chosenDirection = bestDirections[0];
@@ -615,7 +625,7 @@ void World::handlePredictivePacmanMovement(float deltaTime) {
                 m_pacman->setPosition(correctedPos);
                 m_pacman->setDirection(bufferedDir);
                 m_pacman->clearBufferedDirection();
-            }
+                }
         }
     }
 
@@ -635,7 +645,7 @@ void World::handlePredictivePacmanMovement(float deltaTime) {
         if (closestPos.x != m_pacman->getPosition().x ||
             closestPos.y != m_pacman->getPosition().y) {
             m_pacman->setPosition(closestPos);
-        }
+            }
     }
 }
 
@@ -656,11 +666,11 @@ Vector2f World::findClosestPositionToWall(const Vector2f& currentPos,
 
         // Apply movement in current direction
         switch (direction) {
-            case 0: testPos.x -= testDistance; break; // Left
-            case 1: testPos.y += testDistance; break; // Down
-            case 2: testPos.x += testDistance; break; // Right
-            case 3: testPos.y -= testDistance; break; // Up
-default: ;
+        case 0: testPos.x -= testDistance; break; // Left
+        case 1: testPos.y += testDistance; break; // Down
+        case 2: testPos.x += testDistance; break; // Right
+        case 3: testPos.y -= testDistance; break; // Up
+        default: ;
         }
 
         testPos = m_pacman->CheckTunneling(testPos);
@@ -698,11 +708,11 @@ default: ;
     // Apply the best distance found
     Vector2f closestPos = currentPos;
     switch (direction) {
-        case 0: closestPos.x -= bestDistance; break; // Left
-        case 1: closestPos.y += bestDistance; break; // Down
-        case 2: closestPos.x += bestDistance; break; // Right
-        case 3: closestPos.y -= bestDistance; break; // Up
-default: ;
+    case 0: closestPos.x -= bestDistance; break; // Left
+    case 1: closestPos.y += bestDistance; break; // Down
+    case 2: closestPos.x += bestDistance; break; // Right
+    case 3: closestPos.y -= bestDistance; break; // Up
+    default: ;
     }
 
     return m_pacman->CheckTunneling(closestPos);
@@ -729,7 +739,7 @@ Vector2f World::tryPositionCorrection(const Vector2f& currentPos,int currentDir,
         case 1: testPos.y += correction; break; // Down
         case 2: testPos.x += correction; break; // Right
         case 3: testPos.y -= correction; break; // Up
-default: ;
+        default: ;
         }
 
         // Test if buffered direction would work from this corrected position
@@ -967,4 +977,5 @@ void World::attachScoreObservers() {
             }
         });
     }
+}
 }
