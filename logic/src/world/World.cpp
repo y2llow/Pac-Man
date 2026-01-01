@@ -28,6 +28,7 @@ World::World(patterns::LogicFactory& factory, representation::Camera& camera)
 
 
 void World::initialize() {
+    // inlezen van een dynamische map
     if (m_mapModel.loadFromFile("assets/maps/map1.txt")) {
         createEntitiesFromMap();
         attachScoreObservers();
@@ -136,8 +137,15 @@ void World::update(float deltaTime) {
     if (!m_pacman->isDying()) {
         // EERST: Predictive movement voor Pacman
         handlePredictivePacmanMovement(deltaTime);
+        // todo 1) Probleem: extra functie (input buffer) gebruik stack om laatste input elke stap te proberen en allen direciton te veranderen als er geldige move is
+        // todo 2) Probleem: Pacman zit vast in hoeken -> Oplossing: functie pos closed to wall
 
+        // Ghost movement
         for (auto& ghost : m_ghosts) {
+            //todo 3) Problem: How to get ghosts out of the spawn room -> (als ik direct de ghostmobvment dee bleven ze vaak gewoon in de box zitetn want de manhatten distance was het kortste als pacman in de onderste helft van de field was)
+            // Oplossing: We gebruiken een nieuwe tile de S = startpositie voor ghosts als hun gegeven tijd
+            // op is dan zetten ze hun path finding naar de coordinaten van die tile en vanaf ze op die tile zijn starten ze hun normale movement
+
             // Ghost moves to starting position outside door
             if (!ghost->GetOutsideStart() && ghost->GetMovingToStart()) {
                 ghost->MoveToStartPosition(m_startPosition, deltaTime);
@@ -147,10 +155,15 @@ void World::update(float deltaTime) {
                 TrappedGhostMovement(ghost, deltaTime);
             }
 
+            // Alleen ghost movement op intersections
             else {
+                //todo 4) Probleem: Ghost skipt over kruispunt als ze te snel gaan in latere levels
+                // oplossing: we chekken kleinere movement van de ghost om te zien of het dan toch over de kruispunt gaat
+                // en als het er over gaat zetteen we de psositie gewoon op het punt waar het naar boven kan gaan
                 if (ghost->willCrossIntersection(*this, deltaTime)) {
                     Vector2f intersectionPoint = ghost->getIntersectionPoint(*this, deltaTime);
                     ghost->setPosition(intersectionPoint);
+
                     // Als ghost bang is doe max Manhatetn dsitance
                     if (ghost->isScared()) {ScaredGhostMovement(ghost, deltaTime);}
                     else { // anders gwn normale movement
@@ -177,34 +190,26 @@ void World::update(float deltaTime) {
                     standardGhostMovement(ghost, deltaTime);
                 }
             }
+            // voor de snleheid van de ghosts aan te passen als ze bang zijn
             ghost->update(deltaTime);
         }
 
         // DERDE: Collectible collisions (na movement)
-        handleCollectibleCollisions();
+        handleCollectibleCollisions(); // hiervoor gebruik ik een template om de collsion met alle soorten objecte te chekken
 
         // Check for level completion
         if (areAllCoinsCollected()) {
             m_score->onLevelCleared();
         }
     } else {
+        // voor de death animation
         m_pacman->update(deltaTime);
     }
 
-    // Always update these
-    for (auto& wall : m_walls) {
-        wall->update(deltaTime);
-    }
-    for (auto& coin : m_coins) {
-        coin->update(deltaTime);
-    }
-    for (auto& fruit : m_fruits) {
-        fruit->update(deltaTime);
-    }
-
     // VIERDE: Cleanup
-    cleanupCollectedItems();
+    cleanupCollectedItems(); // shared ptrs verwijderen
 }
+
 bool World::willTunnel(const std::shared_ptr<entities::GhostModel>& ghost, float deltaTime) const {
     Vector2f startPos = ghost->getPosition();
     Vector2f nextPos = ghost->calculateNextPosition(deltaTime);
@@ -797,6 +802,7 @@ bool World::GhostWouldCollideWithWalls(const GhostModel& ghost, const Vector2f& 
     }
     return false;
 }
+
 void World::handleCollectibleCollisions() {
     // Pacman vs Coins
     for (auto it = m_coins.begin(); it != m_coins.end(); ) {

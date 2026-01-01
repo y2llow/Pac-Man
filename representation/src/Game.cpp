@@ -28,14 +28,15 @@ void Game::run() {
     stopwatch.start();
 
     // Push MenuState so Menu can be shown on screen
+    // Hier worden de states ook ineens geinitialiseerd
     m_stateManager.pushState(std::make_unique<states::MenuState>(m_stateManager, *m_window, m_camera));
 
     while (m_window->isOpen()) {
         float deltaTime = stopwatch.tick();
 
         processEvents();
-        update(deltaTime); // Now using actual delta time
-        render();
+        update(deltaTime); // logic
+        render(); // representation
     }
 }
 
