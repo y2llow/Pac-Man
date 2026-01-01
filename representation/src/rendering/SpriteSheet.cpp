@@ -1,6 +1,8 @@
 #include "rendering/SpriteSheet.h"
 #include <iostream>
 
+using namespace pacman::representation::rendering;
+
 SpriteSheet& SpriteSheet::getInstance() {
     static SpriteSheet instance;
     return instance;

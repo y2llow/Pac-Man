@@ -6,6 +6,8 @@
 #include <vector>
 #include "world/MapModel.h"
 
+using namespace pacman::logic::world ;
+
 class MapView {
 public:
     MapView();

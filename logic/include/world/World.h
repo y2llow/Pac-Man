@@ -52,8 +52,9 @@
 #include "entities/DoorModel.h"
 
 // Forward declaration
+namespace pacman::representation {
 class Camera;
-
+}
 namespace pacman::logic::world {
 // Import commonly used types from entities namespace
 using entities::WallModel;
@@ -70,7 +71,7 @@ public:
      * @param factory  Abstract factory voor het aanmaken van entiteiten
      * @param camera   Referentie naar de camera (voor consistentie met view-laag)
      */
-    explicit World(patterns::LogicFactory& factory, Camera& camera);
+    explicit World(patterns::LogicFactory& factory, representation::Camera& camera);
 
     /**
      * Initialiseert de wereld:
@@ -185,7 +186,7 @@ private:
     MapModel m_mapModel;
     patterns::LogicFactory* m_factory;
     std::shared_ptr<scoring::Score> m_score;
-    Camera& m_camera;
+    representation::Camera& m_camera;
 
     // -----------------
     // ENTITIES

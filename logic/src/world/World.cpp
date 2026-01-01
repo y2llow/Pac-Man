@@ -21,7 +21,7 @@ using entities::FruitModel;
 using entities::WallModel;
 using entities::DoorModel;
 
-World::World(patterns::LogicFactory& factory, Camera& camera)
+World::World(patterns::LogicFactory& factory, representation::Camera& camera)
     : m_factory(&factory), m_camera(camera) {
     m_score = std::make_unique<scoring::Score>();
 }

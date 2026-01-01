@@ -2,6 +2,7 @@
 #define CONCRETE_FACTORY_H
 
 #include "patterns/AbstractFactory.h"
+#include "views/EntityView.h"
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <vector>
@@ -9,10 +10,6 @@
 // Forward declarations
 namespace pacman::representation {
     class Camera;
-
-    namespace views {
-        class EntityView;
-    }
 }
 
 namespace pacman::representation::factory {

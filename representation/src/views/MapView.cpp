@@ -30,7 +30,7 @@ bool MapView::loadTextures() {
 void MapView::createWallShapes(const MapModel& mapModel, const sf::Vector2u& windowSize) {
     m_wallShapes.clear();
 
-    Vector2f mapSize = mapModel.getGridSize();
+    pacman::logic::Vector2f mapSize = mapModel.getGridSize();
     const auto& walls = mapModel.getWalls(); // Get the actual wall entities
 
     if (mapSize.x == 0 || mapSize.y == 0) return;
@@ -45,7 +45,7 @@ void MapView::createWallShapes(const MapModel& mapModel, const sf::Vector2u& win
         sf::RectangleShape wallShape(sf::Vector2f(tileWidth - 2, tileHeight - 2));
 
         // Convert normalized coordinates to pixel coordinates
-        Vector2f logicPos = wall->getPosition();
+        pacman::logic::Vector2f logicPos = wall->getPosition();
         float pixelX = (logicPos.x + 1.0f) * (windowSize.x / 2.0f);
         float pixelY = (logicPos.y + 1.0f) * (windowSize.y / 2.0f);
 
@@ -73,7 +73,7 @@ void MapView::createWallShapes(const MapModel& mapModel, const sf::Vector2u& win
 void MapView::createCoinShapes(const MapModel& mapModel, const sf::Vector2u& windowSize) {
     m_coinShapes.clear();
 
-    Vector2f mapSize = mapModel.getGridSize();
+    pacman::logic::Vector2f mapSize = mapModel.getGridSize();
     const auto& coins = mapModel.getCoins(); // Get the actual wall entities
 
     if (mapSize.x == 0 || mapSize.y == 0) return;
@@ -88,7 +88,7 @@ void MapView::createCoinShapes(const MapModel& mapModel, const sf::Vector2u& win
         sf::RectangleShape wallShape(sf::Vector2f(tileWidth - 35, tileHeight - 50));
 
         // Convert normalized coordinates to pixel coordinates
-        Vector2f logicPos = coin->getPosition();
+        pacman::logic::Vector2f logicPos = coin->getPosition();
         float pixelX = (logicPos.x + 1.0f) * (windowSize.x / 2.0f);
         float pixelY = (logicPos.y + 1.0f) * (windowSize.y / 2.0f);
 
