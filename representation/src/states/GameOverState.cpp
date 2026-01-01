@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+using namespace  pacman::representation::states ;
+
 GameOverState::GameOverState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
     : State(stateManager), m_window(window), m_camera(camera) {
 }
@@ -131,7 +133,7 @@ void GameOverState::handleEvent(const sf::Event& event) {
         case sf::Keyboard::Enter:
         case sf::Keyboard::Space:
             // Restart the game
-            m_stateManager.switchToState(std::make_unique<LevelState>(m_stateManager, m_window, m_camera));
+            m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
             break;
         case sf::Keyboard::M:
         case sf::Keyboard::Escape:

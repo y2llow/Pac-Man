@@ -5,17 +5,17 @@
 #include "Camera.h"
 #include "views/EntityView.h"
 #include <SFML/Graphics.hpp>
-
+namespace pacman::representation::views {
 class GhostView : public EntityView {
 public:
-    GhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera);
+    GhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     virtual ~GhostView() = default;
 
     void update(float deltaTime) override;  // UPDATED
     void draw(sf::RenderWindow& window) override;
 
 protected:
-    std::shared_ptr<GhostModel> m_ghostmodel;
+    std::shared_ptr<logic::entities::GhostModel> m_ghostmodel;
     Camera& m_camera;
     sf::Sprite m_sprite;  // CHANGED: gebruik sprite ipv circle
     sf::Color m_normalColor;
@@ -29,7 +29,7 @@ protected:
 // Red Ghost View
 class RedGhostView : public GhostView {
 public:
-    RedGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera);
+    RedGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
 
@@ -42,7 +42,7 @@ protected:
 // Blue Ghost View
 class BlueGhostView : public GhostView {
 public:
-    BlueGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera);
+    BlueGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
 
@@ -55,7 +55,7 @@ protected:
 // Orange Ghost View
 class OrangeGhostView : public GhostView {
 public:
-    OrangeGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera);
+    OrangeGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
 
@@ -68,7 +68,7 @@ protected:
 // Pink Ghost View
 class PinkGhostView : public GhostView {
 public:
-    PinkGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera);
+    PinkGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
 
@@ -77,6 +77,6 @@ protected:
     std::string getGhostColor() const override;
 
 };
-
+}
 #endif // GHOSTVIEW_H
 

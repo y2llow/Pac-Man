@@ -3,12 +3,14 @@
 #include <utility>
 #include "Game.h"
 #include "rendering/SpriteSheet.h"
-
+using namespace pacman::representation::views;
+using namespace pacman::representation::views;
+using namespace pacman::logic::entities;
 // Base GhostView implementation
 GhostView::GhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     : m_ghostmodel(std::move(ghostmodel)), m_camera(camera), m_animationTimer(0.0f) {
 
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
     m_sprite.setTexture(spriteSheet.getTexture());
 
     // GhostView::setupSprite();
@@ -31,7 +33,7 @@ void GhostView::draw(sf::RenderWindow& window) {
 }
 
 void GhostView::updateSprite() {
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
 
     std::string spriteId;
 

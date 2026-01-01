@@ -1,11 +1,16 @@
-#pragma once
+#ifndef GAME_OVER_STATE_H
+#define GAME_OVER_STATE_H
+
 #include "Camera.h"
 #include "State.h"
 #include <SFML/Graphics.hpp>
 
+namespace pacman::representation::states {
+
 class GameOverState : public State {
 public:
     GameOverState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera);
+
     void initialize() override;
     void update(float deltaTime) override;
     void render() override;
@@ -26,3 +31,7 @@ private:
 
     float m_blinkTimer = 0.0f;
 };
+
+} // namespace pacman::representation::states
+
+#endif

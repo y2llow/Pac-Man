@@ -2,7 +2,7 @@
 #define STATE_H
 
 #include <SFML/Graphics.hpp>
-
+namespace pacman::representation {
 class StateManager;  // Forward declaration
 
 /**
@@ -116,5 +116,5 @@ protected:
      */
     StateManager& m_stateManager;
 };
-
+}
 #endif

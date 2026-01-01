@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "entities/PacmanModel.h"
 #include "views/EntityView.h"
-#include <SFML/Graphics/View.hpp>
+#include <SFML/Graphics.hpp>
 
 namespace pacman::representation::views {
 
@@ -27,5 +27,6 @@ private:
     std::string getDeathAnimationSprite() const;
 };
 
-} // namespace views
+} // namespace pacman::representation::views
+
 #endif

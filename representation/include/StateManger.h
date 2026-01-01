@@ -5,6 +5,9 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
+namespace pacman::representation {
+
+// Forward declaration
 class State;
 
 class StateManager {
@@ -14,7 +17,7 @@ public:
     // State stack management
     void pushState(std::unique_ptr<State> state);
     void popState();
-    void switchToState(std::unique_ptr<State>state);
+    void switchToState(std::unique_ptr<State> state);
     void clearStates();
 
     // Check if stack is empty (for quitting)
@@ -29,5 +32,7 @@ private:
     std::vector<std::unique_ptr<State>> m_states;
     sf::RenderWindow& m_window;
 };
+
+} // namespace pacman::representation
 
 #endif

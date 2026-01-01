@@ -3,9 +3,10 @@
 
 #include "Camera.h"
 #include "State.h"
-
 #include <memory>
 #include <SFML/Graphics.hpp>
+
+namespace pacman::representation::states {
 
 class PausedState : public State {
 public:
@@ -17,7 +18,6 @@ public:
     void handleEvent(const sf::Event& event) override;
     void updateLayout();
 
-
 private:
     sf::RenderWindow& m_window;
     Camera& m_camera;
@@ -28,5 +28,7 @@ private:
     sf::RectangleShape m_overlay;
     sf::RectangleShape m_backgroundPanel;
 };
+
+} // namespace pacman::representation::states
 
 #endif

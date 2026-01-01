@@ -62,7 +62,6 @@ add_library(PacMan-representation STATIC
         include/views/MapView.h
         src/views/MapView.cpp
         include/states/State.h
-        src/states/State.cpp
         include/rendering/SpriteSheet.h
         src/rendering/SpriteSheet.cpp
         include/views/DoorView.h

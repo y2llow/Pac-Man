@@ -38,6 +38,4 @@ private:
 
 } // namespace pacman::representation::states
 
-
-
 #endif

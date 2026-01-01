@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "StateManger.h"
 #include "states/MenuState.h"
+using namespace  pacman::representation::states ;
 
 PausedState::PausedState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
     : State(stateManager), m_window(window), m_camera(camera) {

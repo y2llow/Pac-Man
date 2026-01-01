@@ -13,7 +13,7 @@ Game::Game()
 
     m_window->setFramerateLimit(FPS_LIMIT);
 
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
     if (!spriteSheet.loadSpriteSheet("assets/textures/pacman_sprites.png")) {
         throw std::runtime_error("Failed to load sprite sheet!");
     }
@@ -24,11 +24,11 @@ Game::Game()
  */
 void Game::run() {
     // Get the singleton instance and start it
-    Stopwatch& stopwatch = Stopwatch::getInstance();
+    logic::core::Stopwatch& stopwatch = logic::core::Stopwatch::getInstance();
     stopwatch.start();
 
     // Push MenuState so Menu can be shown on screen
-    m_stateManager.pushState(std::make_unique<MenuState>(m_stateManager, *m_window, m_camera));
+    m_stateManager.pushState(std::make_unique<states::MenuState>(m_stateManager, *m_window, m_camera));
 
     while (m_window->isOpen()) {
         float deltaTime = stopwatch.tick();

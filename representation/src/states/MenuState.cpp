@@ -10,6 +10,7 @@
 #include <sstream>
 
 class LevelState;
+using namespace  pacman::representation::states ;
 
 MenuState::MenuState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
     : State(stateManager), m_window(window), m_isButtonHovered(false), m_camera(camera) {

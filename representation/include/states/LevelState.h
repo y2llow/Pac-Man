@@ -5,8 +5,9 @@
 #include "State.h"
 #include "factory/ConcreteFactory.h"
 #include "world/World.h"
-
 #include <SFML/Graphics.hpp>
+
+namespace pacman::representation::states {
 
 class LevelState : public State {
 public:
@@ -15,18 +16,15 @@ public:
     void initialize() override;
     void update(float deltaTime) override;
     void render() override;
-
     void handleEvent(const sf::Event& event) override;
     void handleInput();
     void updateLayout();
 
 private:
     sf::RenderWindow& m_window;
-    std::unique_ptr<SFMLFactory> m_factory;
-    std::unique_ptr<World> m_world;
+    std::unique_ptr<factory::SFMLFactory> m_factory;
+    std::unique_ptr<logic::world::World> m_world;
     Camera& m_camera;
-    std::vector<std::unique_ptr<Observer>> m_entityViews;
-    MapModel m_mapModel;
 
     // UI text elements
     sf::Font m_font;
@@ -48,5 +46,7 @@ private:
     sf::RectangleShape m_levelCompleteOverlay;
     int m_completedLevel = 1;
 };
+
+} // namespace pacman::representation::states
 
 #endif

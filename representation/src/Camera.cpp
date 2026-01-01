@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+namespace pacman::representation {
+
 Camera::Camera(sf::RenderWindow& window)
     : m_window(window) {
     updateWindowSize();
@@ -33,3 +35,5 @@ Vector2f Camera::worldToPixelSize(const Vector2f& worldSize) const {
 sf::Vector2f Camera::getWindowSize() const {
     return m_windowSize;
 }
+
+} // namespace pacman::representation

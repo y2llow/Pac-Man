@@ -5,6 +5,7 @@
 #include <memory>
 
 namespace pacman::representation::views {
+
 class EntityView {
 public:
     virtual ~EntityView() = default;
@@ -13,7 +14,5 @@ public:
 };
 
 } // namespace pacman::representation::views
-
-
 
 #endif

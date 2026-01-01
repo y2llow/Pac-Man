@@ -1,6 +1,8 @@
 #include "StateManger.h"
 #include "states/State.h"
 
+namespace pacman::representation {
+
 StateManager::StateManager(sf::RenderWindow& window)
     : m_window(window) {
 }
@@ -17,11 +19,9 @@ void StateManager::popState() {
         m_states.pop_back();
     }
 }
-void StateManager::switchToState(std::unique_ptr<State> state) {
-    // Clear all existing states
-    clearStates();
 
-    // Push the new state
+void StateManager::switchToState(std::unique_ptr<State> state) {
+    clearStates();
     pushState(std::move(state));
 }
 
@@ -41,13 +41,10 @@ void StateManager::render() {
     }
 }
 
-/**
- * Forwards SFML events to the current active state (top of stack)
- * handleEvent depends on *Param event* checked in State class
- * @param event = SFML event to handle
- */
 void StateManager::handleEvent(const sf::Event& event) {
     if (!m_states.empty()) {
         m_states.back()->handleEvent(event);
     }
 }
+
+} // namespace pacman::representation

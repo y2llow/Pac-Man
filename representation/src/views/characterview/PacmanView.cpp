@@ -3,12 +3,15 @@
 #include "entities/PacmanModel.h"
 #include "rendering/SpriteSheet.h"
 #include "core/Stopwatch.h"  // NIEUW
+using namespace pacman::representation::views;
+using namespace pacman::representation::views;
+using namespace pacman::logic::entities;
 
 PacmanView::PacmanView(std::shared_ptr<PacmanModel> pacmanModel, Camera& camera)
     : m_pacmanmodel(std::move(pacmanModel)), m_camera(camera), m_animationTimer(0.0f) {
 
     // Setup sprite met texture van sprite sheet
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
     m_sprite.setTexture(spriteSheet.getTexture());
     updateShape();
 }
@@ -28,7 +31,7 @@ void PacmanView::draw(sf::RenderWindow& window) {
     window.draw(m_sprite);
 }
 void PacmanView::updateShape() {
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
     std::string spriteId;
 
     if (m_pacmanmodel->isDying()) {
