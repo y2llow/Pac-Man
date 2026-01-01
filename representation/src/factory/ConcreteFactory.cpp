@@ -54,7 +54,7 @@ std::shared_ptr<ModelType> SFMLFactory::createEntity(
     // STAP 2: Maak de VIEW
     auto view = std::make_unique<ViewType>(model, m_camera);
 
-    // STAP 3: ✨ NIEUWE CODE - Koppel View aan Model via Observer
+    // STAP 3: Koppel View aan Model via Observer
     // We hebben een raw pointer nodig voor in de lambda
     auto* viewPtr = view.get();
 
