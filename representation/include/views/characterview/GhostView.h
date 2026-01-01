@@ -14,6 +14,7 @@ public:
     virtual ~GhostView() = default;
 
     void update(float deltaTime) override;
+    void onModelChanged() override;
     void draw(sf::RenderWindow& window) override;
 
 protected:
@@ -34,6 +35,7 @@ public:
     RedGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
+    void onModelChanged()override;
 
 protected:
     void setupSprite() override;
@@ -46,6 +48,7 @@ public:
     BlueGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
+    void onModelChanged()override;
 
 protected:
     void setupSprite() override;
@@ -58,6 +61,7 @@ public:
     OrangeGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
+    void onModelChanged()override;
 
 protected:
     void setupSprite() override;
@@ -70,6 +74,7 @@ public:
     PinkGhostView(std::shared_ptr<logic::entities::GhostModel> ghostmodel, Camera& camera);
     void update(float deltaTime) override;
     void draw(sf::RenderWindow& window) override;
+    void onModelChanged()override;
 
 protected:
     void setupSprite() override;

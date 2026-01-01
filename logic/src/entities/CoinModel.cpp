@@ -8,6 +8,7 @@ CoinModel::CoinModel(const Vector2f& position, const Vector2f& size)
 
 void CoinModel::update(float deltaTime) {
     // Coins are static - no update logic needed unless animated
+    notifyObservers();
 }
 
 void CoinModel::setPosition(const Vector2f& position) {

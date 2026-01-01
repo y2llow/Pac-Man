@@ -20,7 +20,10 @@ FruitView::FruitView(std::shared_ptr<FruitModel> fruitmodel, Camera& camera)
 }
 
 void FruitView::update(float deltaTime) {
-    // Fruits don't animate, but we still need the signature
+    // Animaties kunnen hier
+}
+
+void FruitView::onModelChanged() {
     updateSprite();
 }
 

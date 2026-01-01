@@ -44,19 +44,31 @@ SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
 }
 
 template<typename ModelType, typename ViewType>
-std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, const Vector2f& size) {
-    // 1. Create model with shared ownership
+std::shared_ptr<ModelType> SFMLFactory::createEntity(
+    const Vector2f& position,
+    const Vector2f& size
+) {
+    // STAP 1: Maak het MODEL
     auto model = std::make_shared<ModelType>(position, size);
 
-    // 2. Create view with shared model reference
+    // STAP 2: Maak de VIEW
     auto view = std::make_unique<ViewType>(model, m_camera);
 
-    // 3. Attach view's update callback to model as observer
-    auto viewPtr = view.get(); // Safe - view is stored in m_views
+    // STAP 3: ✨ NIEUWE CODE - Koppel View aan Model via Observer
+    // We hebben een raw pointer nodig voor in de lambda
+    auto* viewPtr = view.get();
 
-    // 4. Store view in factory
+    // Attach observer: wanneer model verandert, update de view
+    model->attachObserver([viewPtr]() {
+        // View wordt genotificeerd bij model changes
+        // Maar we updaten alleen de shape/sprite, geen deltaTime nodig
+        viewPtr->onModelChanged();
+    });
+
+    // STAP 4: Bewaar view in factory
     m_views.push_back(std::move(view));
 
+    // STAP 5: Return model
     return model;
 }
 

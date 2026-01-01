@@ -17,6 +17,7 @@ public:
     ~FruitView() override = default;
 
     void update(float deltaTime) override;
+    void onModelChanged() override;
     void draw(sf::RenderWindow& window) override;
 
     bool shouldRender() const;

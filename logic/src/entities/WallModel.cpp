@@ -8,6 +8,8 @@ WallModel::WallModel(const Vector2f& position, const Vector2f& size)
 
 void WallModel::update(float deltaTime) {
     // Walls are static - no update logic needed
+    notifyObservers();
+
 }
 
 void WallModel::setPosition(const Vector2f& position) {

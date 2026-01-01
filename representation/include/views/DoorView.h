@@ -19,6 +19,7 @@ public:
 
     // EntityView interface
     void update(float deltaTime) override;
+    void onModelChanged() override;
     void draw(sf::RenderWindow& window) override;
 
 private:

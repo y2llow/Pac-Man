@@ -18,7 +18,10 @@ void DoorView::setupRectangle() {
 }
 
 void DoorView::update(float deltaTime) {
-    // Doors don't animate, but we must implement this pure virtual function
+    // Doors don't animate
+}
+
+void DoorView::onModelChanged() {
     updateShape();
 }
 

@@ -20,6 +20,11 @@ CoinView::CoinView(std::shared_ptr<CoinModel> coinModel, Camera& camera)
 }
 
 void CoinView::update(float deltaTime) {
+    // Animaties kunnen hier nog steeds (als je rotating coins wilt bijv.)
+}
+
+void CoinView::onModelChanged() {
+    // Coin is collected of positie is veranderd
     updateSprite();
 }
 

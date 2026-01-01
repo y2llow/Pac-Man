@@ -6,7 +6,7 @@ FruitModel::FruitModel(const Vector2f& position, const Vector2f& size){
 }
 
 void FruitModel::update(float deltaTime)  {
-    // notifyObservers();
+    notifyObservers();
 }
 
 

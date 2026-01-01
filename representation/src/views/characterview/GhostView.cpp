@@ -28,6 +28,11 @@ void GhostView::update(float deltaTime) {
     updateSprite();
 }
 
+void GhostView::onModelChanged() {
+    updateSprite();
+}
+
+
 void GhostView::draw(sf::RenderWindow& window) {
     window.draw(m_sprite);
 }
@@ -182,5 +187,19 @@ void PinkGhostView::update(float deltaTime) {
 void PinkGhostView::draw(sf::RenderWindow& window) {
     GhostView::draw(window);
 }
+void RedGhostView::onModelChanged() {
+    GhostView::onModelChanged();
+}
 
+void BlueGhostView::onModelChanged() {
+    GhostView::onModelChanged();
+}
+
+void OrangeGhostView::onModelChanged() {
+    GhostView::onModelChanged();
+}
+
+void PinkGhostView::onModelChanged() {
+    GhostView::onModelChanged();
+}
 } // namespace pacman::representation::views

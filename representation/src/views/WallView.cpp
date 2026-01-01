@@ -18,7 +18,11 @@ void WallView::setupRectangle() {
 }
 
 void WallView::update(float deltaTime) {
-    // Walls don't animate, but we must implement this pure virtual function
+    // Walls don't animate - nothing to do here anymore
+}
+
+void WallView::onModelChanged() {
+    // Als de wall's positie/size zou veranderen, update de shape
     updateShape();
 }
 

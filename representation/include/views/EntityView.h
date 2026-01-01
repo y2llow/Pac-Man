@@ -10,6 +10,7 @@ class EntityView {
 public:
     virtual ~EntityView() = default;
     virtual void update(float deltaTime) = 0;
+    virtual void onModelChanged() = 0;
     virtual void draw(sf::RenderWindow& window) = 0;
 };
 

@@ -19,6 +19,7 @@ PacmanView::PacmanView(std::shared_ptr<PacmanModel> pacmanModel, Camera& camera)
 }
 
 void PacmanView::update(float deltaTime) {
+    // ✨ AANGEPAST - Alleen animatie timers hier
     m_animationTimer += deltaTime;
 
     if (m_pacmanmodel->isDying()) {
@@ -27,6 +28,13 @@ void PacmanView::update(float deltaTime) {
         m_deathAnimationTimer = 0.0f;
     }
 
+    // Update shape elke frame voor smooth animation
+    updateShape();
+}
+
+void PacmanView::onModelChanged() {
+    // React op model changes (positie, direction, death)
+    // Update shape immediately when model changes
     updateShape();
 }
 

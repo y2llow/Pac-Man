@@ -206,6 +206,20 @@ void World::update(float deltaTime) {
         m_pacman->update(deltaTime);
     }
 
+    // Always update these
+    for (auto& wall : m_walls) {
+        wall->update(deltaTime);
+    }
+    for (auto& door : m_doors) {
+        door->update(deltaTime);
+    }
+    for (auto& coin : m_coins) {
+        coin->update(deltaTime);
+    }
+    for (auto& fruit : m_fruits) {
+        fruit->update(deltaTime);
+    }
+
     // VIERDE: Cleanup
     cleanupCollectedItems(); // shared ptrs verwijderen
 }

@@ -127,6 +127,8 @@ Vector2f GhostModel::getIntersectionPoint(const World& world, float deltaTime) c
 
 void GhostModel::setPosition(const Vector2f& position) {
     m_position = position;
+    notifyObservers();
+
 }
 
 void GhostModel::setScared(bool scared) {

@@ -87,6 +87,7 @@ Vector2f PacmanModel::CheckTunneling(Vector2f position) const {
 
 void PacmanModel::setPosition(const Vector2f& position) {
     m_position = position;
+    notifyObservers();
 }
 
 void PacmanModel::bufferDirection(int newDirection) {
