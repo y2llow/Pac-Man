@@ -2,20 +2,23 @@
 #define PACMAN_H
 
 #include "EntityModel.h"
-#include "world/World.h"
 
-class World;
+// Forward declaration
+namespace pacman::logic::world {
+    class World;
+}
 
 namespace pacman::logic::entities {
+
 class PacmanModel : public EntityModel {
 public:
-    PacmanModel(const Vector2f& position, const Vector2f& size) ;
+    PacmanModel(const Vector2f& position, const Vector2f& size);
 
-    // overwritten functiosn from entityModel
-    void update(float deltaTime) override ;
-    [[nodiscard]]  Vector2f getPosition() const override {return m_position;}
+    // EntityModel interface
+    void update(float deltaTime) override;
+    [[nodiscard]] Vector2f getPosition() const override { return m_position; }
     void setPosition(const Vector2f& position) override;
-    [[nodiscard]]  Vector2f getSize() const override{return m_size;}
+    [[nodiscard]] Vector2f getSize() const override { return m_size; }
 
     // Death animation methods
     void startDeathAnimation();
@@ -23,7 +26,7 @@ public:
     bool isDeathAnimationComplete() const { return m_deathAnimationComplete; }
     void resetDeathAnimation();
 
-    // Pacman specific funcitons
+    // Pacman specific functions
     Vector2f CheckTunneling(Vector2f position) const;
     void loseLife();
 
@@ -32,28 +35,28 @@ public:
     void applyMovement(const Vector2f& newPosition);
     int getDirection() const { return m_direction; }
 
-    // Input buffering methodes
+    // Input buffering methods
     void bufferDirection(int newDirection);
     void clearBufferedDirection();
     [[nodiscard]] int getBufferedDirection() const { return m_bufferedDirection; }
 
-    // Nieuwe methodes voor movement logic
-    [[nodiscard]] bool canMoveInDirection(int direction, const World& world, float deltaTime) const;
+    // Movement logic methods - use world:: prefix since we're in entities namespace
+    [[nodiscard]] bool canMoveInDirection(int direction, const world::World& world, float deltaTime) const;
     [[nodiscard]] Vector2f calculatePositionInDirection(const Vector2f& startPos, int direction, float deltaTime) const;
     [[nodiscard]] float getSpeed() const { return PACMAN_SPEED; }
-    [[nodiscard]] bool getDeathScoreAwarded() const {return m_deathScoreAwarded; }
-    void setDeathScoreAwarded(bool scoreAwarded) {m_deathScoreAwarded = scoreAwarded; }
+    [[nodiscard]] bool getDeathScoreAwarded() const { return m_deathScoreAwarded; }
+    void setDeathScoreAwarded(bool scoreAwarded) { m_deathScoreAwarded = scoreAwarded; }
 
-    [[nodiscard]]Vector2f getSpawnPoint() const {return m_spawnpoint;}
+    [[nodiscard]] Vector2f getSpawnPoint() const { return m_spawnpoint; }
+
 private:
-    //default privates
     Vector2f m_position;
     std::string m_textureId;
     Vector2f m_size;
 
-    //pacman specific privates
-    int m_direction = 3;        // Huidige bewegingrichting
-    int m_bufferedDirection = -1; // -1 = geen buffer, 0-3 = gebufferde richting
+    // Pacman specific privates
+    int m_direction = 3;
+    int m_bufferedDirection = -1;
     float PACMAN_SPEED = 0.5;
     float m_lastMove{};
 
@@ -64,10 +67,9 @@ private:
     bool m_deathAnimationComplete = false;
     bool m_deathScoreAwarded = false;
     float m_deathAnimationTimer = 0.0f;
-    static constexpr float DEATH_ANIMATION_DURATION = 2.0f; // 2 seconds for full death animation
-
-
+    static constexpr float DEATH_ANIMATION_DURATION = 2.0f;
 };
 
+} // namespace pacman::logic::entities
+
 #endif //PACMAN_H
-}

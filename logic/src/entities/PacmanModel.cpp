@@ -1,15 +1,21 @@
 #include "entities/PacmanModel.h"
-
+#include "world/World.h"
 #include <utility>
+
 namespace pacman::logic::entities {
 
+// Namespace alias voor convenience
+using World = world::World;
+
 PacmanModel::PacmanModel(const Vector2f& position, const Vector2f& size)
-    : m_position(position), m_spawnpoint(position) { m_size = size; }
+    : m_position(position), m_spawnpoint(position) {
+    m_size = size;
+}
 
-pacman::logic::Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
-    if (m_isDying) return m_position; // Don't move during death animation
+Vector2f PacmanModel::calculateNextPosition(float deltaTime) const {
+    if (m_isDying) return m_position;
 
-    pacman::logic::Vector2f newPosition = m_position;
+    Vector2f newPosition = m_position;
     float moveAmount = PACMAN_SPEED * deltaTime;
 
     switch (m_direction) {
@@ -31,7 +37,6 @@ void PacmanModel::setDirection(int newDirection) {
 
 void PacmanModel::applyMovement(const Vector2f& newPosition) {
     m_position = newPosition;
-    // De observer wordt aangeroepen door World
 }
 
 void PacmanModel::update(float deltaTime) {
@@ -46,11 +51,11 @@ void PacmanModel::update(float deltaTime) {
 }
 
 void PacmanModel::startDeathAnimation() {
-    if (!m_isDying) {  // Only start once
+    if (!m_isDying) {
         m_isDying = true;
         m_deathAnimationTimer = 0.0f;
         m_deathAnimationComplete = false;
-        m_deathScoreAwarded = false;  // Reset score flag
+        m_deathScoreAwarded = false;
         notifyObservers();
     }
 }
@@ -64,24 +69,23 @@ void PacmanModel::resetDeathAnimation() {
 }
 
 void PacmanModel::loseLife() {
-    startDeathAnimation(); // Start death animation instead of immediate reset
+    startDeathAnimation();
 }
 
-pacman::logic::Vector2f PacmanModel::CheckTunneling(pacman::logic::Vector2f position) const {
+Vector2f PacmanModel::CheckTunneling(Vector2f position) const {
     float edge = 1 + m_size.x / 2;
-    if (-edge >= position.x){
-        position.x = edge ;
+    if (-edge >= position.x) {
+        position.x = edge;
         return position;
-    }if (edge <= position.x){
+    }
+    if (edge <= position.x) {
         position.x = -edge;
         return position;
     }
     return position;
 }
 
-
-
-void PacmanModel::setPosition(const Vector2f& position)  {
+void PacmanModel::setPosition(const Vector2f& position) {
     m_position = position;
 }
 
@@ -111,4 +115,5 @@ Vector2f PacmanModel::calculatePositionInDirection(const Vector2f& startPos, int
 
     return CheckTunneling(newPosition);
 }
-}
+
+} // namespace pacman::logic::entities

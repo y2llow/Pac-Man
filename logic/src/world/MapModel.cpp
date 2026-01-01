@@ -1,8 +1,15 @@
 #include "world/MapModel.h"
-#include "../../include/entities/WallModel.h"
+#include "entities/WallModel.h"
+#include "entities/CoinModel.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+
+namespace pacman::logic::world {
+
+// Type aliases voor leesbaarheid
+using entities::WallModel;
+using entities::CoinModel;
 
 MapModel::MapModel() {
 }
@@ -31,12 +38,11 @@ bool MapModel::loadFromFile(const std::string& filename) {
         return false;
     }
 
-    m_gridSize.y = m_grid.size();
-    m_gridSize.x = m_grid[0].size();
+    m_gridSize.y = static_cast<float>(m_grid.size());
+    m_gridSize.x = static_cast<float>(m_grid[0].size());
 
     createWallsFromGrid();
 
-    //TODO delete this
     std::cout << "Map loaded: " << m_gridSize.x << "x" << m_gridSize.y
               << " with " << m_walls.size() << " walls" << std::endl;
     return true;
@@ -54,9 +60,7 @@ void MapModel::createWallsFromGrid() {
                 float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
-                // Create wall with texture ID - you can customize this based on position or type
-                std::string textureId = "wall_basic"; // Default texture
-
+                std::string textureId = "wall_basic";
 
                 auto wall = std::make_unique<WallModel>(
                     Vector2f(posX, posY),
@@ -70,9 +74,7 @@ void MapModel::createWallsFromGrid() {
                 float posX = -1.0f + (x * tileWidth) + (tileWidth / 2.0f);
                 float posY = -1.0f + (y * tileHeight) + (tileHeight / 2.0f);
 
-                // Create wall with texture ID - you can customize this based on position or type
-                std::string textureId = "Coin"; // Default texture
-
+                std::string textureId = "Coin";
 
                 auto coin = std::make_unique<CoinModel>(
                     Vector2f(posX, posY),
@@ -84,3 +86,5 @@ void MapModel::createWallsFromGrid() {
         }
     }
 }
+
+} // namespace pacman::logic::world
