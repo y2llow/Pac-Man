@@ -1,11 +1,13 @@
 #include "views/characterview/GhostView.h"
-
 #include <utility>
 #include "Game.h"
 #include "rendering/SpriteSheet.h"
-using namespace pacman::representation::views;
-using namespace pacman::representation::views;
-using namespace pacman::logic::entities;
+
+namespace pacman::representation::views {
+
+using logic::entities::GhostModel;
+using logic::Vector2f;
+
 // Base GhostView implementation
 GhostView::GhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     : m_ghostmodel(std::move(ghostmodel)), m_camera(camera), m_animationTimer(0.0f) {
@@ -13,7 +15,6 @@ GhostView::GhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     auto& spriteSheet = rendering::SpriteSheet::getInstance();
     m_sprite.setTexture(spriteSheet.getTexture());
 
-    // GhostView::setupSprite();
     GhostView::updateSprite();
 }
 
@@ -25,7 +26,6 @@ void GhostView::setupSprite() {
 void GhostView::update(float deltaTime) {
     m_animationTimer += deltaTime;
     updateSprite();
-
 }
 
 void GhostView::draw(sf::RenderWindow& window) {
@@ -48,7 +48,7 @@ void GhostView::updateSprite() {
             int blinkPhase = static_cast<int>(blinkTime / blinkSpeed) % 2;
 
             // Animate between frames based on timer
-            int frameIndex = static_cast<int>(m_animationTimer / 0.2f) % 2; // 0.2 seconds per frame
+            int frameIndex = static_cast<int>(m_animationTimer / 0.2f) % 2;
 
             std::string ghost_scared = frameIndex == 0 ? "ghost_scared_1" : "ghost_scared_2";
             std::string ghost_blink_scared = frameIndex == 0 ? "ghost_blink_scared_1" : "ghost_blink_scared_2";
@@ -62,7 +62,7 @@ void GhostView::updateSprite() {
     } else {
         // Normal ghost - select sprite based on direction
         int direction = m_ghostmodel->getDirection();
-        int frameIndex = static_cast<int>(m_animationTimer / 0.2f) % 2; // 0.2 seconds per frame
+        int frameIndex = static_cast<int>(m_animationTimer / 0.2f) % 2;
 
         std::string directionStr;
         switch (direction) {
@@ -94,14 +94,14 @@ void GhostView::updateSprite() {
     m_sprite.setOrigin(textureRect.width / 2.0f, textureRect.height / 2.0f);
     m_sprite.setPosition(pixelPos.x, pixelPos.y);
 }
+
 std::string GhostView::getGhostColor() const {
-    return "red"; // Default, wordt overridden door derived classes
+    return "red"; // Default
 }
 
 // RedGhostView implementation
 RedGhostView::RedGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     : GhostView(std::move(ghostmodel), camera) {
-    // RedGhostView::setupSprite();
 }
 
 void RedGhostView::setupSprite() {
@@ -123,7 +123,6 @@ void RedGhostView::draw(sf::RenderWindow& window) {
 // BlueGhostView implementation
 BlueGhostView::BlueGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     : GhostView(std::move(ghostmodel), camera) {
-    // BlueGhostView::setupSprite();
 }
 
 void BlueGhostView::setupSprite() {
@@ -145,7 +144,6 @@ void BlueGhostView::draw(sf::RenderWindow& window) {
 // OrangeGhostView implementation
 OrangeGhostView::OrangeGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     : GhostView(std::move(ghostmodel), camera) {
-    // OrangeGhostView::setupSprite();
 }
 
 void OrangeGhostView::setupSprite() {
@@ -167,7 +165,6 @@ void OrangeGhostView::draw(sf::RenderWindow& window) {
 // PinkGhostView implementation
 PinkGhostView::PinkGhostView(std::shared_ptr<GhostModel> ghostmodel, Camera& camera)
     : GhostView(std::move(ghostmodel), camera) {
-    // PinkGhostView::setupSprite();
 }
 
 void PinkGhostView::setupSprite() {
@@ -185,3 +182,5 @@ void PinkGhostView::update(float deltaTime) {
 void PinkGhostView::draw(sf::RenderWindow& window) {
     GhostView::draw(window);
 }
+
+} // namespace pacman::representation::views

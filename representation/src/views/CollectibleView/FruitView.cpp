@@ -3,11 +3,16 @@
 #include "entities/FruitModel.h"
 #include "rendering/SpriteSheet.h"
 
+namespace pacman::representation::views {
+
+using logic::entities::FruitModel;
+using logic::Vector2f;
+
 FruitView::FruitView(std::shared_ptr<FruitModel> fruitmodel, Camera& camera)
     : m_fruitmodel(std::move(fruitmodel)), m_camera(camera) {
 
     // Setup sprite met texture van sprite sheet
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
     m_sprite.setTexture(spriteSheet.getTexture());
 
     updateShape();
@@ -26,7 +31,7 @@ void FruitView::updateSprite() {
 
 void FruitView::draw(sf::RenderWindow& window) {
     if (shouldRender()) {
-        window.draw(m_sprite);  // CORRECTIE: gebruik m_sprite ipv m_circle
+        window.draw(m_sprite);
     }
 }
 
@@ -42,20 +47,9 @@ void FruitView::updateShape() {
     }
 
     // Set the fruit sprite
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
 
-    // Kies de juiste fruit sprite op basis van type (als je verschillende fruit types hebt)
     std::string spriteId = "burger"; // default
-
-    // Als je verschillende fruit types ondersteunt:
-    // switch (m_fruitmodel->getType()) {
-    //     case FruitModel::Type::CHERRY: spriteId = "fruit_cherry"; break;
-    //     case FruitModel::Type::STRAWBERRY: spriteId = "fruit_strawberry"; break;
-    //     case FruitModel::Type::ORANGE: spriteId = "fruit_orange"; break;
-    //     case FruitModel::Type::APPLE: spriteId = "fruit_apple"; break;
-    //     case FruitModel::Type::MELON: spriteId = "fruit_melon"; break;
-    //     default: spriteId = "fruit"; break;
-    // }
 
     m_sprite.setTextureRect(spriteSheet.getSpriteRect(spriteId));
 
@@ -79,3 +73,5 @@ void FruitView::updateShape() {
     // Set position
     m_sprite.setPosition(pixelPos.x, pixelPos.y);
 }
+
+} // namespace pacman::representation::views

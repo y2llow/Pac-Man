@@ -1,6 +1,11 @@
 #include "views/DoorView.h"
-#include "entities/DoorModel.h"  // Zorg dat dit pad correct is!
+#include "entities/DoorModel.h"
 #include "Camera.h"
+
+namespace pacman::representation::views {
+
+using logic::entities::DoorModel;
+using logic::Vector2f;
 
 DoorView::DoorView(std::shared_ptr<DoorModel> model, Camera& camera)
     : m_model(std::move(model)), m_camera(camera) {
@@ -32,10 +37,12 @@ void DoorView::updateShape() {
     Vector2f logicSize = m_model->getSize();
     Vector2f pixelSize = m_camera.worldToPixelSize(logicSize);
 
-    pixelSize.x = pixelSize.x *0.9;
-    pixelSize.y = pixelSize.y *0.9;
+    pixelSize.x = pixelSize.x * 0.9f;
+    pixelSize.y = pixelSize.y * 0.9f;
 
-    m_shape.setSize({pixelSize.x , pixelSize.y});
+    m_shape.setSize({pixelSize.x, pixelSize.y});
     m_shape.setOrigin(pixelSize.x / 2.0f, pixelSize.y / 2.0f);
     m_shape.setPosition(pixelPos.x, pixelPos.y);
 }
+
+} // namespace pacman::representation::views

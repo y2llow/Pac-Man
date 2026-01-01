@@ -10,11 +10,34 @@
 #include "views/CollectibleView/FruitView.h"
 #include "views/characterview/GhostView.h"
 #include "views/characterview/PacmanView.h"
-#include "Camera.h"
 #include "views/DoorView.h"
-
+#include "Camera.h"
 
 #include <memory>
+
+namespace pacman::representation::factory {
+
+// Type aliases voor leesbaarheid
+using logic::Vector2f;
+using logic::entities::WallModel;
+using logic::entities::DoorModel;
+using logic::entities::CoinModel;
+using logic::entities::FruitModel;
+using logic::entities::PacmanModel;
+using logic::entities::RedGhostModel;
+using logic::entities::BlueGhostModel;
+using logic::entities::OrangeGhostModel;
+using logic::entities::PinkGhostModel;
+
+using views::WallView;
+using views::DoorView;
+using views::CoinView;
+using views::FruitView;
+using views::PacmanView;
+using views::RedGhostView;
+using views::BlueGhostView;
+using views::OrangeGhostView;
+using views::PinkGhostView;
 
 SFMLFactory::SFMLFactory(sf::RenderWindow& window, Camera& camera)
     : m_window(window), m_camera(camera) {
@@ -28,7 +51,7 @@ std::shared_ptr<ModelType> SFMLFactory::createEntity(const Vector2f& position, c
     // 2. Create view with shared model reference
     auto view = std::make_unique<ViewType>(model, m_camera);
 
-    // 3. **NEW**: Attach view's update callback to model as observer
+    // 3. Attach view's update callback to model as observer
     auto viewPtr = view.get(); // Safe - view is stored in m_views
     model->attachObserver([viewPtr]() {
         // This lambda will be called whenever the model notifies
@@ -85,7 +108,7 @@ void SFMLFactory::handleResize(const Vector2f& newSize) {
 
 void SFMLFactory::cleanupCollectedViews() {
     m_views.erase(std::remove_if(m_views.begin(), m_views.end(),
-        [](const std::unique_ptr<EntityView>& view) {
+        [](const std::unique_ptr<views::EntityView>& view) {
             // Cast to check if it's a collectible view
             if (auto* coinView = dynamic_cast<CoinView*>(view.get())) {
                 return !coinView->shouldRender();
@@ -102,3 +125,5 @@ void SFMLFactory::clearNonPacmanViews() {
     // Remove all views except PacmanView
     m_views.clear();
 }
+
+} // namespace pacman::representation::factory

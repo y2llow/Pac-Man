@@ -1,13 +1,18 @@
 #include "views/CollectibleView/CoinView.h"
 #include "Game.h"
 #include "entities/CoinModel.h"
-#include "rendering/SpriteSheet.h"  // NIEUW: voor sprite support
+#include "rendering/SpriteSheet.h"
+
+namespace pacman::representation::views {
+
+using logic::entities::CoinModel;
+using logic::Vector2f;
 
 CoinView::CoinView(std::shared_ptr<CoinModel> coinModel, Camera& camera)
     : m_coinModel(std::move(coinModel)), m_camera(camera) {
 
     // Setup sprite met texture van sprite sheet
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
     m_sprite.setTexture(spriteSheet.getTexture());
 
     updateShape();
@@ -41,7 +46,7 @@ void CoinView::updateShape() {
     }
 
     // Set the coin sprite
-    auto& spriteSheet = SpriteSheet::getInstance();
+    auto& spriteSheet = rendering::SpriteSheet::getInstance();
     m_sprite.setTextureRect(spriteSheet.getSpriteRect("coin"));
 
     // Convert normalized coordinates to pixel coordinates using camera
@@ -64,3 +69,5 @@ void CoinView::updateShape() {
     // Set position
     m_sprite.setPosition(pixelPos.x, pixelPos.y);
 }
+
+} // namespace pacman::representation::views

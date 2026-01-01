@@ -3,19 +3,18 @@
 #include "states/GameOverState.h"
 #include "states/MenuState.h"
 #include "states/PausedState.h"
+#include "views/EntityView.h"
 
 #include <memory>
 
+namespace pacman::representation::states {
 
 LevelState::LevelState(StateManager& stateManager, sf::RenderWindow& window, Camera& camera)
     : State(stateManager), m_window(window),
-      m_factory(std::make_unique<SFMLFactory>(window, camera)),
+      m_factory(std::make_unique<factory::SFMLFactory>(window, camera)),
       m_camera(camera) {
 }
 
-/**
- * Set window, load in walls, coins, fruits, pac-man and ghosts from map by using factory
- */
 void LevelState::initialize() {
     // Reset the view to match current window size
     sf::Vector2u windowSize = m_window.getSize();
@@ -26,7 +25,7 @@ void LevelState::initialize() {
     m_camera.updateWindowSize();
 
     // Initialize world without window size
-    m_world = std::make_unique<World>(*m_factory, m_camera);
+    m_world = std::make_unique<logic::world::World>(*m_factory, m_camera);
     m_world->initialize();
 
     if (m_font.loadFromFile("assets/fonts/arial.ttf")) {
@@ -50,29 +49,25 @@ void LevelState::initialize() {
         // Setup game over overlay
         m_gameOverOverlay.setFillColor(sf::Color(0, 0, 0, 180));
 
-        // NIEUW: Level Complete text
+        // Level Complete text
         m_levelCompleteText.setFont(m_font);
         m_levelCompleteText.setFillColor(sf::Color::Yellow);
         m_levelCompleteText.setStyle(sf::Text::Bold);
 
         // Setup level complete overlay
-        m_levelCompleteOverlay.setFillColor(sf::Color(255, 255, 0, 120)); // Geel, semi-transparant
+        m_levelCompleteOverlay.setFillColor(sf::Color(255, 255, 0, 120));
     }
 
     updateLayout();
 }
 
-/**
- * Handle window resizing - update all positions based on current window size
- * Follows the same pattern as MenuState::updateLayout()
- */
 void LevelState::updateLayout() {
-    Vector2f windowSize;
+    logic::Vector2f windowSize;
     windowSize.x = m_window.getSize().x;
     windowSize.y = m_window.getSize().y;
 
     // Update camera with new window size
-    m_camera.updateWindowSize(Vector2f(windowSize));
+    m_camera.updateWindowSize(logic::Vector2f(windowSize));
 
     // Reset the view
     sf::FloatRect visibleArea(0, 0, windowSize.x, windowSize.y);
@@ -102,66 +97,59 @@ void LevelState::updateLayout() {
     sf::FloatRect livesBounds = m_livesText.getLocalBounds();
     m_livesText.setPosition(windowSize.x - livesBounds.width - padding, 0);
 
-    // Game Over text - SCALABLE based on window size
-    // Start with height-based size
+    // Game Over text - SCALABLE
     unsigned int gameOverCharSize = static_cast<unsigned int>(windowSize.y * 0.12f);
     m_gameOverText.setCharacterSize(gameOverCharSize);
 
-    // Check if text is too wide for the window
     sf::FloatRect gameOverBounds = m_gameOverText.getLocalBounds();
-    float maxWidthGameOver = windowSize.x * 0.9f; // Use 90% of window width
+    float maxWidthGameOver = windowSize.x * 0.9f;
 
-    // If text is too wide, scale it down to fit
     if (gameOverBounds.width > maxWidthGameOver) {
         float scaleFactor = maxWidthGameOver / gameOverBounds.width;
         gameOverCharSize = static_cast<unsigned int>(gameOverCharSize * scaleFactor);
         m_gameOverText.setCharacterSize(gameOverCharSize);
-
-        // Recalculate bounds after resize
         gameOverBounds = m_gameOverText.getLocalBounds();
     }
 
-    // Center the text
     m_gameOverText.setOrigin(gameOverBounds.width / 2, gameOverBounds.height / 2);
     m_gameOverText.setPosition(windowSize.x / 2, windowSize.y / 2);
-
     m_gameOverOverlay.setSize(sf::Vector2f(windowSize.x, windowSize.y));
 
-    // Level Complete text - SCALABLE based on window size
-    // Start with height-based size
+    // Level Complete text - SCALABLE
     unsigned int levelCompleteCharSize = static_cast<unsigned int>(windowSize.y * 0.12f);
     m_levelCompleteText.setCharacterSize(levelCompleteCharSize);
 
-    // Update the string to ensure bounds are correct
     if (m_isLevelComplete) {
         m_levelCompleteText.setString("LEVEL " + std::to_string(m_completedLevel) + " COMPLETE!");
     }
 
-    // Check if text is too wide for the window
     sf::FloatRect levelCompleteBounds = m_levelCompleteText.getLocalBounds();
-    float maxWidth = windowSize.x * 0.9f; // Use 90% of window width
+    float maxWidth = windowSize.x * 0.9f;
 
-    // If text is too wide, scale it down to fit
     if (levelCompleteBounds.width > maxWidth) {
         float scaleFactor = maxWidth / levelCompleteBounds.width;
         levelCompleteCharSize = static_cast<unsigned int>(levelCompleteCharSize * scaleFactor);
         m_levelCompleteText.setCharacterSize(levelCompleteCharSize);
-
-        // Recalculate bounds after resize
         levelCompleteBounds = m_levelCompleteText.getLocalBounds();
     }
 
-    // Center the text
     m_levelCompleteText.setOrigin(levelCompleteBounds.width / 2, levelCompleteBounds.height / 2);
     m_levelCompleteText.setPosition(windowSize.x / 2, windowSize.y / 2);
-
     m_levelCompleteOverlay.setSize(sf::Vector2f(windowSize.x, windowSize.y));
 }
+
+// Continue in next artifact...
+
+} // namespace pacman::representation::states
+
+// Continuation of LevelState.cpp
+// Add this after updateLayout() in the previous artifact
+
+namespace pacman::representation::states {
 
 void LevelState::update(float deltaTime) {
     // Check for game over first
     if (m_world && m_world->getScore().getLives() <= 0 && !m_isGameOver) {
-        // Trigger game over
         m_isGameOver = true;
         m_gameOverTimer = 0.0f;
         m_world->Getscore()->saveHighScores();
@@ -171,11 +159,10 @@ void LevelState::update(float deltaTime) {
     if (m_isGameOver) {
         m_gameOverTimer += deltaTime;
 
-        // KEEP UPDATING PACMAN AND HIS VIEW DURING GAME OVER
+        // Keep updating Pacman during game over
         if (m_world && m_world->getPacman()) {
             m_world->getPacman()->update(deltaTime);
 
-            // Update PacmanView - find it in factory views
             for (const auto& view : m_factory->getViews()) {
                 if (view) {
                     view->update(deltaTime);
@@ -184,21 +171,17 @@ void LevelState::update(float deltaTime) {
         }
 
         if (m_gameOverTimer >= GAME_OVER_DISPLAY_TIME) {
-            // Time's up - go back to menu
             m_stateManager.switchToState(std::make_unique<MenuState>(m_stateManager, m_window, m_camera));
             return;
         }
-
-        // Don't update anything else during game over
         return;
     }
 
-    // NIEUW: Handle level complete timer
+    // Handle level complete timer
     if (m_isLevelComplete) {
         m_levelCompleteTimer += deltaTime;
 
         if (m_levelCompleteTimer >= LEVEL_COMPLETE_DISPLAY_TIME) {
-            // Time's up - advance to next level
             m_isLevelComplete = false;
             m_levelCompleteTimer = 0.0f;
 
@@ -207,12 +190,10 @@ void LevelState::update(float deltaTime) {
                 m_completedLevel = m_world->getCurrentLevel();
             }
         }
-
-        // Don't update game logic during level complete screen
         return;
     }
 
-    // Normal game updates (only when not game over or level complete)
+    // Normal game updates
     handleInput();
 
     if (m_world) {
@@ -224,10 +205,7 @@ void LevelState::update(float deltaTime) {
             m_levelCompleteTimer = 0.0f;
             m_completedLevel = m_world->getCurrentLevel();
 
-            // Update text with current level
             m_levelCompleteText.setString("LEVEL " + std::to_string(m_completedLevel) + " COMPLETE!");
-
-            // Force a complete layout update to recalculate everything
             updateLayout();
         }
     }
@@ -251,10 +229,9 @@ void LevelState::update(float deltaTime) {
 
         sf::FloatRect livesBounds = m_livesText.getLocalBounds();
         float padding = m_window.getSize().x * 0.005f;
-        m_livesText.setPosition(m_window.getSize().x - livesBounds.width - padding * 3 , padding);
+        m_livesText.setPosition(m_window.getSize().x - livesBounds.width - padding * 3, padding);
     }
 }
-
 
 void LevelState::render() {
     m_window.clear(sf::Color(5, 5, 20));
@@ -304,10 +281,6 @@ void LevelState::handleInput() {
     }
 }
 
-/**
- * stateManager -> PausedState when esc is pressed
- * @param event current SFML event
- */
 void LevelState::handleEvent(const sf::Event& event) {
     // Always handle resize first
     if (event.type == sf::Event::Resized) {
@@ -330,3 +303,5 @@ void LevelState::handleEvent(const sf::Event& event) {
         }
     }
 }
+
+} // namespace pacman::representation::states

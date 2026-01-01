@@ -2,10 +2,12 @@
 #include "Game.h"
 #include "entities/PacmanModel.h"
 #include "rendering/SpriteSheet.h"
-#include "core/Stopwatch.h"  // NIEUW
-using namespace pacman::representation::views;
-using namespace pacman::representation::views;
-using namespace pacman::logic::entities;
+#include "core/Stopwatch.h"
+
+namespace pacman::representation::views {
+
+using logic::entities::PacmanModel;
+using logic::Vector2f;
 
 PacmanView::PacmanView(std::shared_ptr<PacmanModel> pacmanModel, Camera& camera)
     : m_pacmanmodel(std::move(pacmanModel)), m_camera(camera), m_animationTimer(0.0f) {
@@ -27,9 +29,11 @@ void PacmanView::update(float deltaTime) {
 
     updateShape();
 }
+
 void PacmanView::draw(sf::RenderWindow& window) {
     window.draw(m_sprite);
 }
+
 void PacmanView::updateShape() {
     auto& spriteSheet = rendering::SpriteSheet::getInstance();
     std::string spriteId;
@@ -39,8 +43,7 @@ void PacmanView::updateShape() {
         spriteId = getDeathAnimationSprite();
     } else {
         // Normal movement animation
-        int frameIndex = (m_animationTimer / 0.1f) ;
-        frameIndex = frameIndex % 3 ;
+        int frameIndex = static_cast<int>(m_animationTimer / 0.1f) % 3;
         int direction = m_pacmanmodel->getDirection();
 
         switch (direction) {
@@ -98,3 +101,5 @@ std::string PacmanView::getDeathAnimationSprite() const {
 
     return "pacman_death_" + std::to_string(frameIndex);
 }
+
+} // namespace pacman::representation::views
