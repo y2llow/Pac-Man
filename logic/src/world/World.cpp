@@ -867,6 +867,20 @@ void World::checkDeathAnimationState() {
 
         for (auto& ghost : m_ghosts) {
             ghost->respawn();
+            switch (ghost->getType()) {
+            case entities::GhostType::RED:
+                ghost->resetMovingToStartTimer(0.0f);   // Meteen
+                break;
+            case entities::GhostType::BLUE:
+                ghost->resetMovingToStartTimer(0.0f);   // Na 3 sec
+                break;
+            case entities::GhostType::ORANGE:
+                ghost->resetMovingToStartTimer(5.0f);   // Na 5 sec
+                break;
+            case entities::GhostType::PINK:
+                ghost->resetMovingToStartTimer(10.0f);  // Na 10 sec
+                break;
+            }
         }
     }
 }

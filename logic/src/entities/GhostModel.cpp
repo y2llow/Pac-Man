@@ -166,7 +166,7 @@ void GhostModel::respawn() {
 
 void GhostModel::resetMovingToStartTimer(float TimeWaiting) {}
 void RedGhostModel::resetMovingToStartTimer(float TimeWaiting) { m_MovingToStartTimer = TimeWaiting; }
-void BlueGhostModel::resetMovingToStartTimer(float TimeWaiting) { m_MovingToStartTimer = TimeWaiting; }
+void BlueGhostModel::resetMovingToStartTimer(float timeWaiting) {m_MovingToStartTimer = timeWaiting;}
 void OrangeGhostModel::resetMovingToStartTimer(float TimeWaiting) { m_MovingToStartTimer = TimeWaiting; }
 void PinkGhostModel::resetMovingToStartTimer(float TimeWaiting) { m_MovingToStartTimer = TimeWaiting; }
 

@@ -102,40 +102,48 @@ class RedGhostModel : public GhostModel {
 public:
     RedGhostModel(const Vector2f& position, const Vector2f& size);
     void updateMovement(float deltaTime) override;
-    void resetMovingToStartTimer(float timeWaiting) override;
+    void resetMovingToStartTimer(float timeWaiting = INITIAL_RELEASE_TIME) override;
+    [[nodiscard]]float getMovingToStartTimer() const {return m_MovingToStartTimer;}
 
 private:
-    float m_MovingToStartTimer = 0.0f;
+    static constexpr float INITIAL_RELEASE_TIME = 0.0f;
+    float m_MovingToStartTimer = INITIAL_RELEASE_TIME;
 };
 
 class BlueGhostModel : public GhostModel {
 public:
     BlueGhostModel(const Vector2f& position, const Vector2f& size);
     void updateMovement(float deltaTime) override;
-    void resetMovingToStartTimer(float timeWaiting) override;
+    void resetMovingToStartTimer(float timeWaiting = INITIAL_RELEASE_TIME) override;
+    [[nodiscard]] float getMovingToStartTimer() const { return m_MovingToStartTimer; }
 
 private:
-    float m_MovingToStartTimer = 0.0f;
+    static constexpr float INITIAL_RELEASE_TIME = 0;
+    float m_MovingToStartTimer = INITIAL_RELEASE_TIME;
 };
 
 class OrangeGhostModel : public GhostModel {
 public:
     OrangeGhostModel(const Vector2f& position, const Vector2f& size);
     void updateMovement(float deltaTime) override;
-    void resetMovingToStartTimer(float timeWaiting) override;
+    void resetMovingToStartTimer(float timeWaiting = INITIAL_RELEASE_TIME) override;
+    [[nodiscard]] float getMovingToStartTimer() const { return m_MovingToStartTimer; }
 
 private:
-    float m_MovingToStartTimer = 5.0f;
+    static constexpr float INITIAL_RELEASE_TIME = 5.0f;
+    float m_MovingToStartTimer = INITIAL_RELEASE_TIME;
 };
 
 class PinkGhostModel : public GhostModel {
 public:
     PinkGhostModel(const Vector2f& position, const Vector2f& size);
     void updateMovement(float deltaTime) override;
-    void resetMovingToStartTimer(float timeWaiting) override;
+    void resetMovingToStartTimer(float timeWaiting = INITIAL_RELEASE_TIME) override;
+    [[nodiscard]] float getMovingToStartTimer() const { return m_MovingToStartTimer; }
 
 private:
-    float m_MovingToStartTimer = 10.0f;
+    static constexpr float INITIAL_RELEASE_TIME = 10.0f;
+    float m_MovingToStartTimer = INITIAL_RELEASE_TIME;
 };
 
 } // namespace pacman::logic::entities
