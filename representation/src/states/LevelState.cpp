@@ -195,13 +195,6 @@ void LevelState::update(float deltaTime) {
         // Update Pacman death animatie tijdens game over
         if (m_world && m_world->getPacman()) {
             m_world->getPacman()->update(deltaTime);
-
-            // Update views voor animaties
-            for (const auto& view : m_factory->getViews()) {
-                if (view) {
-                    view->update(deltaTime);
-                }
-            }
         }
 
         // Na 3 seconden, terug naar menu
@@ -249,16 +242,6 @@ void LevelState::update(float deltaTime) {
         }
     }
 
-    // Update alle views (animaties, posities)
-    if (m_factory) {
-        for (const auto& view : m_factory->getViews()) {
-            if (view) {
-                view->update(deltaTime);
-            }
-        }
-        m_factory->cleanupCollectedViews();  // Verwijder views van verzamelde items
-    }
-
     // Update UI text met huidige score en lives
     if (m_world) {
         int scoreValue = m_world->Getscore()->getCurrentScore();
@@ -271,6 +254,13 @@ void LevelState::update(float deltaTime) {
         sf::FloatRect livesBounds = m_livesText.getLocalBounds();
         float padding = m_window.getSize().x * 0.005f;
         m_livesText.setPosition(m_window.getSize().x - livesBounds.width - padding * 3, padding);
+    } if (m_factory) {
+        for (const auto& view : m_factory->getViews()) {
+            if (view) {
+                view->update(deltaTime);
+            }
+        }
+        m_factory->cleanupCollectedViews();  // Verwijder views van verzamelde items
     }
 }
 

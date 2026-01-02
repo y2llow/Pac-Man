@@ -287,8 +287,6 @@ void World::standardGhostMovement(const std::shared_ptr<pacman::logic::entities:
                     auto& rng = core::Random::getInstance();
                     int newDirection = rng.getRandomElement(validDirs);
 
-                    // std::cout << "*** STUCK - Forcing direction: " << newDirection << " ***" << std::endl;
-
                     ghost->SetDirection(newDirection);
 
                     nextPosition = ghost->calculateNextPosition(deltaTime);
@@ -345,48 +343,36 @@ void World::RedGhostMovement(const std::shared_ptr<GhostModel>& ghost, float del
     standardGhostMovement(ghost, deltaTime);
 
 }
-
 void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float deltaTime) {
-    // Two ghosts, when in chasing mode, should always move in the direction that Pac-Man is
-    // currently facing. Concretely, it should move in the direction that minizes the Manhattan
-    // distance to the locations “in front of” Pac-Man. For this, look at the viable actions from
-    // the set {up, down, left, right} and compute for each viable action what the Manhattan
-    // distance to Pac-Man would have been if the ghost had taken one step in that particular
-    // direction. Ties between the best actions are broken at random.
-
     int pacmanDirection = getPacman()->getDirection();
     Vector2f pacmanPos = getPacman()->getPosition();
 
-    // Calculate the position "in front of" Pac-Man (multiple steps ahead for better targeting)
+    // Calculate target position in front of Pac-Man
     Vector2f targetPos = pacmanPos;
-    float lookAheadDistance = 0.3f; // How far ahead to look (adjust as needed)
+    float lookAheadDistance = 0.3f; // (-1 ; 1)
 
     switch (pacmanDirection) {
     case 0: targetPos.x -= lookAheadDistance; break; // Left
     case 1: targetPos.y += lookAheadDistance; break; // Down
     case 2: targetPos.x += lookAheadDistance; break; // Right
     case 3: targetPos.y -= lookAheadDistance; break; // Up
-    default: ;
+    default: break;
     }
 
-    // Get all viable directions (0=left, 1=down, 2=right, 3=up)
+    // Get viable directions with their distances
     std::vector<int> viableDirections;
     std::vector<float> distances;
     float bestDistance = std::numeric_limits<float>::max();
 
     for (int dir = 0; dir < 4; dir++) {
-        // Calculate where ghost would be if it moved in this direction
         Vector2f ghostNextPos = ghost->calculateNextPositionInDirection(
             ghost->getPosition(), dir, deltaTime);
 
-        // Check if this move is viable (doesn't collide with walls)
         if (GhostWouldCollideWithWalls(*ghost, ghostNextPos)) {
             continue; // Skip invalid directions
         }
 
-        // Calculate Manhattan distance from this potential position to target
         float dist = getManhattanDistance(ghostNextPos, targetPos);
-
         viableDirections.push_back(dir);
         distances.push_back(dist);
 
@@ -395,34 +381,47 @@ void World::BlueGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
         }
     }
 
-    // If no viable directions, keep current direction (shouldn't happen)
+    // Edge case: No viable directions
     if (viableDirections.empty()) {
         TrappedGhostMovement(ghost, deltaTime);
         return;
     }
 
-    // Find all directions that have the best distance (for tie-breaking)
+    // Find ALL directions with best distance (for tie-breaking)
     std::vector<int> bestDirections;
+    constexpr float EPSILON = 0.001f;
+
     for (size_t i = 0; i < viableDirections.size(); i++) {
-        if (std::abs(distances[i] - bestDistance) < 0.001f) { // Float comparison with epsilon
+        if (std::abs(distances[i] - bestDistance) < EPSILON) {
             bestDirections.push_back(viableDirections[i]);
         }
     }
 
-    // Choose direction: if tie, break randomly
+    // Direction selection strategy
     int chosenDirection;
-    if (bestDirections.size() > 1) {
-        // Tie - break randomly
-        auto& rng = core::Random::getInstance();
-        chosenDirection = rng.getRandomElement(bestDirections);
-    } else {
+
+    if (bestDirections.size() == 1) {
+        // Only one best option - take it
         chosenDirection = bestDirections[0];
     }
+    else {
+        // Multiple equally good options
+        // Strategy 1: Prefer current direction if it's among the best
+        int currentDir = ghost->getDirection();
+        auto it = std::find(bestDirections.begin(), bestDirections.end(), currentDir);
 
-    // Set the chosen direction
+        if (it != bestDirections.end()) {
+            // Current direction is still optimal - keep going
+            chosenDirection = currentDir;
+        } else {
+            // Current direction is not optimal - pick randomly from best
+            auto& rng = core::Random::getInstance();
+            chosenDirection = rng.getRandomElement(bestDirections);
+        }
+    }
+
+    // Set direction and move
     ghost->SetDirection(chosenDirection);
-
-    // Now use the standard predictive movement with the new direction
     standardGhostMovement(ghost, deltaTime);
 }
 
@@ -547,8 +546,6 @@ void World::PinkGhostMovement(const std::shared_ptr<GhostModel>& ghost, float de
 
     // Always move in the current direction
     standardGhostMovement(ghost, deltaTime);
-    // ghost->updateMovement( deltaTime);
-
 }
 
 Vector2f World::findClosestPositionToWallForGhost(const Vector2f& currentPos, int direction, float deltaTime, GhostModel& ghost) const {

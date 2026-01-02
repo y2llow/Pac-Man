@@ -34,9 +34,9 @@ void Game::run() {
     while (m_window->isOpen()) {
         float deltaTime = stopwatch.tick();
 
-        processEvents();
-        update(deltaTime); // logic
-        render(); // representation
+        processEvents(); // knoppen op de menu en pause screen of rezise van scherm
+        update(deltaTime); // game loop
+        render(); // entities en tekst
     }
 }
 
