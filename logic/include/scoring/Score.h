@@ -44,7 +44,7 @@ private:
 
     float m_timeSinceLastCoin;
     float m_scoreDecreaseTimer;
-    int m_lives = 5;
+    int m_lives = 3;
 
     static constexpr int SCORE_DECREASE_RATE = 5.0f;
     static constexpr float MAX_COIN_CHAIN_TIME = 3.0f;
