@@ -9,12 +9,12 @@ TextureManager& TextureManager::getInstance() {
 bool TextureManager::loadTexture(const std::string& id, const std::string& filename) {
     auto texture = std::make_unique<sf::Texture>();
     if (!texture->loadFromFile(filename)) {
-        std::cerr << "Failed to load texture: " << filename << " with ID: " << id << std::endl;
+        std::cerr << "p to load texture: " << filename << " with ID: " << id << std::endl;
         return false;
     }
     
     m_textures[id] = std::move(texture);
-    std::cout << "Loaded texture: " << id << " from " << filename << std::endl;
+    // std::cout << "Loaded texture: " << id << " from " << filename << std::endl;
     return true;
 }
 

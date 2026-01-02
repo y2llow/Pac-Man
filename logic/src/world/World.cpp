@@ -121,9 +121,9 @@ void World::createEntitiesFromMap() {
         }
     }
 
-    std::cout << "World: Created " << m_walls.size() << " walls, "
-              << m_coins.size() << " coins, and "
-              << m_ghosts.size() << " ghosts" << std::endl;
+    // std::cout << "World: Created " << m_walls.size() << " walls, "
+    //           << m_coins.size() << " coins, and "
+    //           << m_ghosts.size() << " ghosts" << std::endl;
 }
 
 void World::update(float deltaTime) {

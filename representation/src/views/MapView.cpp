@@ -67,7 +67,7 @@ void MapView::createWallShapes(const MapModel& mapModel, const sf::Vector2u& win
 
 
 
-    std::cout << "MapView: Created " << m_wallShapes.size() << " textured wall shapes" << std::endl;
+    // std::cout << "MapView: Created " << m_wallShapes.size() << " textured wall shapes" << std::endl;
 }
 
 void MapView::createCoinShapes(const MapModel& mapModel, const sf::Vector2u& windowSize) {
@@ -107,10 +107,6 @@ void MapView::createCoinShapes(const MapModel& mapModel, const sf::Vector2u& win
 
         m_wallShapes.push_back(wallShape);
     }
-
-
-
-    std::cout << "MapView: Created " << m_wallShapes.size() << " textured wall shapes" << std::endl;
 }
 
 void MapView::draw(sf::RenderWindow& window) {

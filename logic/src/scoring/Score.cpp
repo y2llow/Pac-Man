@@ -53,7 +53,7 @@ void pacman::logic::scoring::Score::onPacManDied() {
     // Optional: Penalty for death or just notification
     m_currentScore += PACMAN_DEATH_BONUS;
 
-    std::cout << "Pac-Man died! Current score: " << m_currentScore << std::endl;
+    // std::cout << "Pac-Man died! Current score: " << m_currentScore << std::endl;
 }
 
 void pacman::logic::scoring::Score::loseLife() {

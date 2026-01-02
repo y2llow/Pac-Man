@@ -43,8 +43,8 @@ bool MapModel::loadFromFile(const std::string& filename) {
 
     createWallsFromGrid();
 
-    std::cout << "Map loaded: " << m_gridSize.x << "x" << m_gridSize.y
-              << " with " << m_walls.size() << " walls" << std::endl;
+    // std::cout << "Map loaded: " << m_gridSize.x << "x" << m_gridSize.y
+    //           << " with " << m_walls.size() << " walls" << std::endl;
     return true;
 }
 
